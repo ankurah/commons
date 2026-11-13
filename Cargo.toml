@@ -1,0 +1,39 @@
+[package]
+name    = "ankurah-commons"
+version = "0.0.0"
+edition.workspace = true
+license.workspace = true
+# Not yet: crates.io refuses git dependencies, and this builds against an unreleased
+# revision of Ankurah.
+publish = false
+
+[features]
+default         = ["identity"]
+full            = ["identity", "records", "health", "highlights", "git", "intention-graph", "messaging"]
+identity        = []
+records         = ["identity"]
+health          = ["identity"]
+highlights      = []
+git             = []
+intention-graph = ["identity"]
+messaging       = ["highlights", "intention-graph"]
+
+[dependencies]
+ankurah = { workspace = true }
+serde   = { workspace = true }
+strum   = { workspace = true }
+
+[workspace]
+resolver = "2"
+members  = ["mint"]
+
+[workspace.package]
+edition = "2021"
+license = "MIT OR Apache-2.0"
+
+[workspace.dependencies]
+ankurah = { git = "https://github.com/ankurah/ankurah", rev = "a164293ec1162b7ac1003141640120d08ba87018", features = ["derive"] }
+# At the revision of `ankurah`: crates from two revisions would not share Ankurah's types.
+ankurah-storage-sled = { git = "https://github.com/ankurah/ankurah", rev = "a164293ec1162b7ac1003141640120d08ba87018" }
+serde   = { version = "1", features = ["derive"] }
+strum   = { version = "0.26", features = ["derive"] }
