@@ -25,15 +25,17 @@ strum   = { workspace = true }
 
 [workspace]
 resolver = "2"
-members  = ["mint"]
+# mint/ needs Ankurah's node identity branch, which is not on Ankurah's main yet: see mint/README.md.
+exclude  = ["mint"]
 
 [workspace.package]
 edition = "2021"
 license = "MIT OR Apache-2.0"
 
 [workspace.dependencies]
-ankurah = { git = "https://github.com/ankurah/ankurah", rev = "a164293ec1162b7ac1003141640120d08ba87018", features = ["derive"] }
-# At the revision of `ankurah`: crates from two revisions would not share Ankurah's types.
-ankurah-storage-sled = { git = "https://github.com/ankurah/ankurah", rev = "a164293ec1162b7ac1003141640120d08ba87018" }
+# A revision of Ankurah's main. An application that uses this crate pins the same revision:
+# crates from two revisions would not share Ankurah's types.
+ankurah = { git = "https://github.com/ankurah/ankurah", rev = "5d8a000ba9b1375be9307e2aab6887886be35dda", features = ["derive"] }
+ankurah-storage-sled = { git = "https://github.com/ankurah/ankurah", rev = "5d8a000ba9b1375be9307e2aab6887886be35dda" }
 serde   = { version = "1", features = ["derive"] }
 strum   = { version = "0.26", features = ["derive"] }

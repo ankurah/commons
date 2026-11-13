@@ -6,6 +6,10 @@ that two applications, or two nodes, mean the same thing by "a message" or "a ta
 **Status: draft. Nothing here is minted, and no id is final.** The draft covers
 models used by Fwd Centaur and proposed by BLE Activity Logger.
 
+The crate builds against a revision of Ankurah's main branch, named in `Cargo.toml`.
+An application that uses it pins the same revision. Until a mint is kept, a node that
+uses these models mints their definitions itself, under ids of its own.
+
 ## Layout
 
 One crate, `ankurah-commons`, with a module per namespace, one file per model:
@@ -20,7 +24,8 @@ One crate, `ankurah-commons`, with a module per namespace, one file per model:
     src/git/               repositories, where a marked part sits in a file, and where
                            a body of work happens
     src/support.rs         what the namespaces share that is not a model
-    mint/                  the tool that mints the definitions and checks a mint
+    mint/                  the tool that mints the definitions and checks a mint; it
+                           builds against Ankurah's node identity branch (mint/README.md)
 
 The Rust declarations are the source: each `#[derive(Model)]` struct states a
 model, its properties, how each is stored and which are optional.
@@ -73,9 +78,8 @@ owner might be the same person while an importer creates the record a day later.
 Recording an owner leaves authorization to the application's access policy.
 
 A query that filters or sorts on properties of two components of one entity, such
-as "the open tasks assigned to me", is on Ankurah's main branch as a typed query
-over a tuple of views; the revision this crate builds against does not have it
-yet. Still missing from Ankurah: a typed way to make an entity with several
+as "the open tasks assigned to me", is a typed query over a tuple of views in
+Ankurah. Still missing from Ankurah: a typed way to make an entity with several
 components in one step.
 
 ## Publishing

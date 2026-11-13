@@ -5,6 +5,12 @@ registers each model and keeps each definition as two files, the event that crea
 and its state, with a page a reader can follow; `verify` checks those files. Whether a
 mint is kept is the runner's choice.
 
+The tool uses parts of Ankurah that exist only on its node identity branch
+(`feat/node-identity-attestation`), so it is outside the workspace while the crate builds
+against Ankurah's main. It builds and its tests pass at commit `a545fe9` of this
+repository, where the whole workspace pins that branch at `a164293e`. It returns to the
+workspace when the branch reaches Ankurah's main.
+
 A kept mint is for seeding: another node, on a fresh store, is given the files before
 it is built, and then uses the very same ids. Before building the node, the user opens
 its storage engine and, in one storage transaction, calls
