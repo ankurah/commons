@@ -72,7 +72,7 @@ pub const NAMESPACES: &[Namespace] = &[
             declared::<intention_graph::Decision>(),
             declared::<intention_graph::Intention>(),
             declared::<intention_graph::Link>(),
-            declared::<intention_graph::Reading>(),
+            declared::<intention_graph::Perspective>(),
             declared::<intention_graph::Scope>(),
             declared::<intention_graph::Submission>(),
             declared::<intention_graph::Task>(),

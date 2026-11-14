@@ -43,8 +43,9 @@ pub enum LinkKind {
     Serves,
     /// Intention or decision, claim: the want or the choice assumes the claim.
     RestsOn,
-    /// Principal, intention: an agent names what governs its current work.
-    WorksUnder,
+    /// Intention, principal: the intention is assigned to the principal's
+    /// session. One link per assignment; an intention may have several.
+    AssignedTo,
 }
 string_enum!(LinkKind);
 
