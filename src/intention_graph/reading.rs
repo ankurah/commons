@@ -24,6 +24,7 @@ string_enum!(Stance);
 /// were read.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "intention-graph.reading")]
+#[model(no_ffi)]
 pub struct Reading {
     /// The intention, claim or decision read.
     pub of: EntityId,

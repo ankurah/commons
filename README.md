@@ -30,6 +30,12 @@ One crate, `ankurah-commons`, with a module per namespace, one file per model:
 The Rust declarations are the source: each `#[derive(Model)]` struct states a
 model, its properties, how each is stored and which are optional.
 
+Every model is marked `no_ffi`, so the derive generates no JavaScript or Swift
+bindings for it. Without the mark the crate does not compile in a build that
+turns on Ankurah's `wasm` or `uniffi` derive, because it depends on neither
+`wasm-bindgen` nor `uniffi`. Bindings can come later, behind a feature, when an
+application needs them.
+
 ## Features
 
 Each namespace is a cargo feature of the same name, which also turns on the

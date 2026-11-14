@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 /// A heart rate observed for one person, including at rest or during recovery.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "health.heart_rate")]
+#[model(no_ffi)]
 pub struct HeartRate {
     /// The person whose heart rate was observed.
     pub measured_person: Ref<Principal>,

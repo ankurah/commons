@@ -24,6 +24,7 @@ string_enum!(IntentionStatus);
 // not recorded yet; `Assignment` could say it.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "intention-graph.intention")]
+#[model(no_ffi)]
 pub struct Intention {
     #[active_type(LWW)]
     pub title: String,

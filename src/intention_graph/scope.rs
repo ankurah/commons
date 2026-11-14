@@ -21,6 +21,7 @@ string_enum!(ScopeStatus);
 /// namespace. All are on the same entity.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "intention-graph.scope")]
+#[model(no_ffi)]
 pub struct Scope {
     #[active_type(LWW)]
     pub status: ScopeStatus,

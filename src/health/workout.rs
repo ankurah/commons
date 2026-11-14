@@ -5,4 +5,5 @@ use serde::{Deserialize, Serialize};
 /// Its performer and times come from PhysicalActivity.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "health.workout")]
+#[model(no_ffi)]
 pub struct Workout {}

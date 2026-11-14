@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 /// Applications enforce read and write permissions through their access policies.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "records.ownership")]
+#[model(no_ffi)]
 pub struct Ownership {
     pub owner: Ref<Principal>,
 }

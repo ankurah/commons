@@ -10,6 +10,7 @@ use serde::{Deserialize, Serialize};
 /// on the same entity.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "intention-graph.claim")]
+#[model(no_ffi)]
 pub struct Claim {
     #[active_type(LWW)]
     pub title: String,

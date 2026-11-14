@@ -7,6 +7,7 @@ use serde::{Deserialize, Serialize};
 /// never edited does not carry it.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "records.last_edit")]
+#[model(no_ffi)]
 pub struct LastEdit {
     #[active_type(LWW)]
     pub edited: i64,

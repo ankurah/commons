@@ -17,6 +17,7 @@ string_enum!(PrincipalKind);
 /// replaced it, when an agent was relaunched, is a `supersedes` link.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "identity.principal")]
+#[model(no_ffi)]
 pub struct Principal {
     #[active_type(LWW)]
     pub kind: PrincipalKind,

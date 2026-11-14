@@ -7,6 +7,7 @@ use serde::{Deserialize, Serialize};
 /// asks nothing.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "records.assignment")]
+#[model(no_ffi)]
 pub struct Assignment {
     /// None while the record waits on no one in particular.
     pub assignee: Option<Ref<Principal>>,

@@ -35,7 +35,7 @@ license = "MIT OR Apache-2.0"
 [workspace.dependencies]
 # A revision of Ankurah's main. An application that uses this crate pins the same revision:
 # crates from two revisions would not share Ankurah's types.
-ankurah = { git = "https://github.com/ankurah/ankurah", rev = "5d8a000ba9b1375be9307e2aab6887886be35dda", features = ["derive"] }
-ankurah-storage-sled = { git = "https://github.com/ankurah/ankurah", rev = "5d8a000ba9b1375be9307e2aab6887886be35dda" }
+ankurah = { git = "https://github.com/ankurah/ankurah", rev = "5919b1a06b5c3e462597d4627521354f9052f4bb", features = ["derive"] }
+ankurah-storage-sled = { git = "https://github.com/ankurah/ankurah", rev = "5919b1a06b5c3e462597d4627521354f9052f4bb" }
 serde   = { version = "1", features = ["derive"] }
 strum   = { version = "0.26", features = ["derive"] }

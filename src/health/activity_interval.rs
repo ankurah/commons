@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 /// A named portion of one physical activity, such as a work interval, rest, or lap.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "health.activity_interval")]
+#[model(no_ffi)]
 pub struct ActivityInterval {
     pub activity: Ref<PhysicalActivity>,
     /// An open name in snake case, such as work, rest, or lap.

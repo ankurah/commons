@@ -22,6 +22,7 @@ string_enum!(DiffSide);
 /// `highlights` namespace.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "git.file_anchor")]
+#[model(no_ffi)]
 pub struct FileAnchor {
     pub repository: Ref<Repository>,
     /// Relative to the repository.

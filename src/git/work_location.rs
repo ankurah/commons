@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 /// from the `intention-graph` namespace, when the scope is first given a place.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "git.work_location")]
+#[model(no_ffi)]
 pub struct WorkLocation {
     /// The repository, named by the key of its upstream remote, never by a
     /// directory. None, with no branches, once the scope's place is cleared:

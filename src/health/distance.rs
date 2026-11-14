@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 /// Indoor equipment may supply an equivalent distance.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "health.distance")]
+#[model(no_ffi)]
 pub struct Distance {
     pub meters: f64,
 }

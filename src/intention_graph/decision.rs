@@ -22,6 +22,7 @@ string_enum!(DecisionStatus);
 /// repealed is `Closure`, both on the same entity.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "intention-graph.decision")]
+#[model(no_ffi)]
 pub struct Decision {
     /// Counted per project; cited as `D<number>`.
     pub number: i64,

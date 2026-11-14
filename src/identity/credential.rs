@@ -9,6 +9,7 @@ use serde::{Deserialize, Serialize};
 // identity work may replace this with a key.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "identity.credential")]
+#[model(no_ffi)]
 pub struct Credential {
     /// For a person, the account at the service that signed them in, such as
     /// `github:<numeric id>`. For an agent, the session it runs in, such as

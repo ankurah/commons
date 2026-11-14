@@ -65,6 +65,7 @@ string_enum!(LinkStatus);
 // OPEN: one model with a `kind`, as here, or one model for each kind?
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "intention-graph.link")]
+#[model(no_ffi)]
 pub struct Link {
     #[active_type(LWW)]
     pub kind: LinkKind,

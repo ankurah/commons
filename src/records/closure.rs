@@ -7,6 +7,7 @@ use serde::{Deserialize, Serialize};
 /// How it ended is the record's own `status`.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "records.closure")]
+#[model(no_ffi)]
 pub struct Closure {
     /// None again once the record is reopened, because a component cannot be
     /// taken off an entity.

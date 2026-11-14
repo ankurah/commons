@@ -26,6 +26,7 @@ string_enum!(TaskStatus);
 /// same entity.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "intention-graph.task")]
+#[model(no_ffi)]
 pub struct Task {
     #[active_type(LWW)]
     pub title: String,

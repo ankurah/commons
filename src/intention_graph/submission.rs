@@ -7,6 +7,7 @@ use serde::{Deserialize, Serialize};
 /// also carries `Task`.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "intention-graph.submission")]
+#[model(no_ffi)]
 pub struct Submission {
     pub submitted_by: Ref<Principal>,
     /// The commits, test runs and the like that show the work is done.

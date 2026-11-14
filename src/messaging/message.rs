@@ -32,6 +32,7 @@ string_enum!(Priority);
 /// it asks that principal, and with none it asks no one in particular.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "messaging.message")]
+#[model(no_ffi)]
 pub struct Message {
     /// A record named in the text is written as `[[<its id>]]`, or
     /// `[[<its id>@<version>]]` for a highlight at one version of its file.

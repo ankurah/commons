@@ -7,6 +7,7 @@ use serde::{Deserialize, Serialize};
 /// whoever made the record.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "records.attribution")]
+#[model(no_ffi)]
 pub struct Attribution {
     pub speaker: Ref<Principal>,
 }

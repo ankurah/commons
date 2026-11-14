@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 /// One bout of physical activity by one person.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "health.physical_activity")]
+#[model(no_ffi)]
 pub struct PhysicalActivity {
     /// The human who did the activity.
     pub performed_by: Ref<Principal>,

@@ -10,6 +10,7 @@ use serde::{Deserialize, Serialize};
 /// is the link's `Closure`.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "messaging.mention")]
+#[model(no_ffi)]
 pub struct Mention {
     /// Its place among the names in the text, counted from one.
     #[active_type(LWW)]
