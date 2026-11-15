@@ -11,12 +11,13 @@ pub enum IntentionStatus {
 }
 string_enum!(IntentionStatus);
 
-/// Something a person or an agent wants to be true, in their own words.
+/// A statement of something wanted, which each party is aligned or not
+/// aligned with. It belongs to no one: it is not anyone's words.
 ///
-/// Who wrote it down is `Creation`; whose want it is, when someone else wrote
-/// it down, is `Attribution`; its last rewording is `LastEdit`; how it was
-/// fulfilled or withdrawn is `Closure`. All are on the same entity. Each
-/// session it is assigned to is a `Link` of kind `assigned_to`.
+/// Who wrote it down is `Creation`; its last rewording is `LastEdit`; how it
+/// was fulfilled or withdrawn is `Closure`. All are on the same entity. What
+/// people said in support of it are `Excerpt` records, and each session it is
+/// assigned to is a `Link` of kind `assigned_to`.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "intention-graph.intention")]
 #[model(no_ffi)]
@@ -24,7 +25,7 @@ pub struct Intention {
     #[active_type(LWW)]
     pub title: String,
     #[active_type(LWW)]
-    pub words: String,
+    pub description: String,
     #[active_type(LWW)]
     pub status: IntentionStatus,
 }

@@ -3,8 +3,8 @@
 //! them.
 //!
 //! `task`, `decision`, `scope` and `link` are what Fwd Centaur has today, and
-//! `submission` is what it keeps inside a task. `intention`, `claim` and
-//! `perspective` are new.
+//! `submission` is what it keeps inside a task. `intention`, `claim`,
+//! `excerpt` and `perspective` are new.
 //!
 //! What every kind of record shares is not repeated here: who made it, who
 //! last edited it, whom it waits on and who closed it are components from
@@ -12,6 +12,7 @@
 
 mod claim;
 mod decision;
+mod excerpt;
 mod intention;
 mod link;
 mod perspective;
@@ -21,6 +22,7 @@ mod task;
 
 pub use claim::*;
 pub use decision::*;
+pub use excerpt::*;
 pub use intention::*;
 pub use link::*;
 pub use perspective::*;

@@ -70,6 +70,7 @@ pub const NAMESPACES: &[Namespace] = &[
         models: &[
             declared::<intention_graph::Claim>(),
             declared::<intention_graph::Decision>(),
+            declared::<intention_graph::Excerpt>(),
             declared::<intention_graph::Intention>(),
             declared::<intention_graph::Link>(),
             declared::<intention_graph::Perspective>(),
