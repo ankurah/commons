@@ -1,4 +1,5 @@
 use crate::identity::Principal;
+use crate::property::Timestamp;
 use crate::support::string_enum;
 use ankurah::{property::Ref, Model};
 use serde::{Deserialize, Serialize};
@@ -18,8 +19,8 @@ string_enum!(DecisionStatus);
 
 /// A choice someone recorded so that others can rely on it.
 ///
-/// Who wrote it down is `Creation`, and how it was rejected, superseded or
-/// repealed is `Closure`, both on the same entity.
+/// Who wrote it down is `Created`, and how it was rejected, superseded or
+/// repealed is `Closed`, both on the same entity.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "intention-graph.decision")]
 #[model(no_ffi)]
@@ -44,5 +45,5 @@ pub struct Decision {
     /// decision is only proposed.
     pub decided_by: Option<Ref<Principal>>,
     #[active_type(LWW)]
-    pub decided: Option<i64>,
+    pub decided: Option<Timestamp>,
 }

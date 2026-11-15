@@ -14,16 +14,21 @@ uses these models mints their definitions itself, under ids of its own.
 
 One crate, `ankurah-commons`, with a module per namespace, one file per model:
 
-    src/intention_graph/   tasks, decisions, intentions and the links between them
+    src/intention_graph/   intentions, the claims and perspectives about them, and
+                           decisions, tasks and scopes
+    src/graph/             edges between records, and the kinds of edge
     src/messaging/         messages and mentions
     src/identity/          the people and agents who act
     src/records/           what any record says about its own life: who made it, whom
                            it waits on, who closed it
     src/health/            physical activity, workouts, distance and heart rate
-    src/highlights/        parts of documents that someone marked
+    src/text/              parts of documents that someone marked, and words someone
+                           said, quoted
     src/git/               repositories, where a marked part sits in a file, and where
                            a body of work happens
-    src/support.rs         what the namespaces share that is not a model
+    src/property.rs        the property types the namespaces share: Timestamp and DynRef
+    src/support.rs         what the namespaces share that is not a model or a property
+                           type
     mint/                  the tool that mints the definitions and checks a mint; it
                            builds against Ankurah's node identity branch (mint/README.md)
 
@@ -40,15 +45,19 @@ application needs them.
 
 Each namespace is a cargo feature of the same name, which also turns on the
 namespaces its models refer to; `identity` is the default, and `full` turns on all
-seven:
+eight:
 
     identity          identity
     records           records, identity
     health            health, identity
-    highlights        highlights
+    text              text
     git               git
+    graph             graph
     intention-graph   intention-graph, identity
-    messaging         messaging, highlights, intention-graph, identity
+    messaging         messaging, text, graph, intention-graph, identity
+
+One more feature, `jiff`, converts between the Commons' `Timestamp` and
+`jiff::Timestamp`.
 
 A feature chooses what a build compiles, not what is minted: a kept mint is always
 whole, whatever features a build uses, because a seeded store cannot be given more
@@ -63,22 +72,23 @@ entities carry it and others do not, or when several kinds of record share it.
     a walk        PhysicalActivity, with Distance when known
     a workout     PhysicalActivity + Workout, with Ownership when an owner is known
     a pulse       HeartRate, which can also be observed before or after exercise
-    a task        Task + Creation + Assignment, later Submission and Closure
-    a comment     Message + Creation, later LastEdit and Closure
-    a question    Message + Creation + Assignment, later Closure
-    a mention     Link + Mention + Creation, later Closure
-    a decision    Decision + Creation, later Closure
-    an intention  Intention + Creation, later LastEdit and Closure; Attribution
-                  when someone else wrote it down
-    a scope       Scope + Creation, WorkLocation when it has a place in git,
-                  later Closure
-    a link        Link + Creation, later Closure
-    a highlight   Fragment + FileAnchor + Creation
-    a person or   Principal, Credential once something signs in as it
-    an agent
+    a task        Task + Created + Assignment, later Submission and Closed
+    a comment     Message + Created, later Edited and Closed
+    a question    Message + Created + Assignment, later Closed
+    a mention     DynEdge + Mention + Created, later Closed
+    a decision    Decision + Created, later Closed
+    an intention  Intention + Created, later Edited and Closed
+    a quotation   Quotation + Created; Attribution when someone else recorded it
+    a scope       Scope + Created, WorkLocation when it has a place in git,
+                  later Closed
+    an edge       DynEdge + Created, with Via, Note and RelativePosition when
+                  they apply, later Closed; Checked on a checked step
+    a highlight   Fragment + FileAnchor + Created
+    a person or   Principal, Credential once something signs in as it, later
+    an agent      Closed when retired
 
 On a personal workout, `PhysicalActivity.performed_by` names the person who exercised.
-`Ownership.owner` names the principal whose record it is, and `Creation.created_by`
+`Ownership.owner` names the principal whose record it is, and `Created.by`
 names the principal that created the record. On an imported ride the performer and
 owner might be the same person while an importer creates the record a day later.
 Recording an owner leaves authorization to the application's access policy.

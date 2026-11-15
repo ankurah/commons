@@ -10,11 +10,12 @@ pub enum PrincipalKind {
 }
 string_enum!(PrincipalKind);
 
-/// A person or an agent taking part in a project: who acts, not how they are
-/// recognised when they sign in.
+/// A person or an agent: who acts, not how they are recognised when they sign
+/// in.
 ///
-/// What signs in as it is `Credential`, on the same entity. The principal that
-/// replaced it, when an agent was relaunched, is a `supersedes` link.
+/// What signs in as it is `Credential`, on the same entity. Its retirement is
+/// `Closed`; a retired principal stays, so that what it did is still
+/// attributed to it.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "identity.principal")]
 #[model(no_ffi)]
@@ -26,13 +27,4 @@ pub struct Principal {
     pub handle: String,
     #[active_type(LWW)]
     pub display_name: String,
-    /// False once retired. The principal stays, so that what it did is still
-    /// attributed to it.
-    pub active: bool,
-    /// Whether the principal belongs to the project whose graph holds it, as
-    /// opposed to one that only read there or was only named there.
-    pub member: Option<bool>,
-    /// When the principal last wrote anything.
-    #[active_type(LWW)]
-    pub last_active: Option<i64>,
 }

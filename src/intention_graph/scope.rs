@@ -1,3 +1,4 @@
+use crate::property::Timestamp;
 use crate::support::string_enum;
 use ankurah::Model;
 use serde::{Deserialize, Serialize};
@@ -16,8 +17,8 @@ string_enum!(ScopeStatus);
 
 /// A body of work with one aim, which tasks are worked in.
 ///
-/// Who opened it is `Creation`; when it was finished or abandoned is
-/// `Closure`; where its work happens in git is `WorkLocation`, from the `git`
+/// Who opened it is `Created`; when it was finished or abandoned is
+/// `Closed`; where its work happens in git is `WorkLocation`, from the `git`
 /// namespace. All are on the same entity.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "intention-graph.scope")]
@@ -30,10 +31,10 @@ pub struct Scope {
     /// What the work in it is trying to achieve.
     // OPEN: how does this text relate to `Intention`? As a component on this
     // entity it would bring a second title and a second status; as a record
-    // of its own, the scope would serve it by a link.
+    // of its own, the scope would serve it by an edge.
     #[active_type(LWW)]
     pub intention: String,
     /// When work on it began, which need not be when it was opened.
     #[active_type(LWW)]
-    pub started: Option<i64>,
+    pub started: Option<Timestamp>,
 }

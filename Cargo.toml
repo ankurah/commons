@@ -9,17 +9,21 @@ publish = false
 
 [features]
 default         = ["identity"]
-full            = ["identity", "records", "health", "highlights", "git", "intention-graph", "messaging"]
+full            = ["identity", "records", "health", "text", "git", "graph", "intention-graph", "messaging"]
 identity        = []
 records         = ["identity"]
 health          = ["identity"]
-highlights      = []
+text            = []
 git             = []
+graph           = []
 intention-graph = ["identity"]
-messaging       = ["highlights", "intention-graph"]
+messaging       = ["text", "graph", "intention-graph"]
+# Conversions between `property::Timestamp` and `jiff::Timestamp`.
+jiff            = ["dep:jiff"]
 
 [dependencies]
 ankurah = { workspace = true }
+jiff    = { workspace = true, optional = true }
 serde   = { workspace = true }
 strum   = { workspace = true }
 
@@ -37,5 +41,6 @@ license = "MIT OR Apache-2.0"
 # crates from two revisions would not share Ankurah's types.
 ankurah = { git = "https://github.com/ankurah/ankurah", rev = "5919b1a06b5c3e462597d4627521354f9052f4bb", features = ["derive"] }
 ankurah-storage-sled = { git = "https://github.com/ankurah/ankurah", rev = "5919b1a06b5c3e462597d4627521354f9052f4bb" }
+jiff    = { version = "0.2", default-features = false, features = ["std"] }
 serde   = { version = "1", features = ["derive"] }
 strum   = { version = "0.26", features = ["derive"] }

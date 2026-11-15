@@ -8,7 +8,7 @@ use ankurah::{
     core::schema::{registration::RegistrationError, ModelStructDescriptor},
     Context, Model, ModelId,
 };
-use ankurah_commons::{git, health, highlights, identity, intention_graph, messaging, records};
+use ankurah_commons::{git, graph, health, identity, intention_graph, messaging, records, text};
 
 /// A namespace of the Commons: the module named `name`, with `-` written `_`, and the
 /// models it declares.
@@ -46,10 +46,14 @@ pub const NAMESPACES: &[Namespace] = &[
         models: &[
             declared::<records::Assignment>(),
             declared::<records::Attribution>(),
-            declared::<records::Closure>(),
-            declared::<records::Creation>(),
-            declared::<records::LastEdit>(),
+            declared::<records::Checked>(),
+            declared::<records::Closed>(),
+            declared::<records::Created>(),
+            declared::<records::Edited>(),
+            declared::<records::Note>(),
             declared::<records::Ownership>(),
+            declared::<records::RelativePosition>(),
+            declared::<records::Via>(),
         ],
     },
     Namespace {
@@ -63,16 +67,15 @@ pub const NAMESPACES: &[Namespace] = &[
             declared::<health::Workout>(),
         ],
     },
-    Namespace { name: "highlights", models: &[declared::<highlights::Fragment>()] },
+    Namespace { name: "text", models: &[declared::<text::Fragment>(), declared::<text::Quotation>()] },
     Namespace { name: "git", models: &[declared::<git::FileAnchor>(), declared::<git::Repository>(), declared::<git::WorkLocation>()] },
+    Namespace { name: "graph", models: &[declared::<graph::DynEdge>(), declared::<graph::EdgeKind>()] },
     Namespace {
         name: "intention-graph",
         models: &[
             declared::<intention_graph::Claim>(),
             declared::<intention_graph::Decision>(),
-            declared::<intention_graph::Excerpt>(),
             declared::<intention_graph::Intention>(),
-            declared::<intention_graph::Link>(),
             declared::<intention_graph::Perspective>(),
             declared::<intention_graph::Scope>(),
             declared::<intention_graph::Submission>(),

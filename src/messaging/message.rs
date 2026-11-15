@@ -1,6 +1,7 @@
-use crate::highlights::Fragment;
-use crate::intention_graph::{Decision, Link, Scope, Task};
+use crate::graph::DynEdge;
+use crate::intention_graph::{Decision, Scope, Task};
 use crate::support::string_enum;
+use crate::text::Fragment;
 use ankurah::{property::Ref, Model};
 use serde::{Deserialize, Serialize};
 
@@ -24,8 +25,8 @@ string_enum!(Priority);
 
 /// Something one principal said, about a record or in reply to another message.
 ///
-/// Who said it, and when, is `Creation`: a message is its creator's own
-/// words. A later edit is `LastEdit`; who resolved it is `Closure`. All are
+/// Who said it, and when, is `Created`: a message is its creator's own
+/// words. A later edit is `Edited`; who resolved it is `Closed`. All are
 /// on the same entity.
 ///
 /// A message that asks something also carries `Assignment`: with an assignee
@@ -48,7 +49,7 @@ pub struct Message {
 
     // What the message is about; more than one may be set.
     // OPEN: four typed fields, as here, or one `about` that takes any record?
-    // The four make this namespace depend on intention-graph and highlights, and
+    // The four make this namespace depend on intention-graph and text, and
     // let one query find the open messages about a task.
     pub task: Option<Ref<Task>>,
     pub decision: Option<Ref<Decision>>,
@@ -66,6 +67,6 @@ pub struct Message {
     #[active_type(LWW)]
     pub transition: Option<String>,
     /// Set on the message written as the first comment of a checklist step:
-    /// that step's `step_of` link.
-    pub first_of_step: Option<Ref<Link>>,
+    /// that step's `step_of` edge.
+    pub first_of_step: Option<Ref<DynEdge>>,
 }

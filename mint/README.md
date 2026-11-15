@@ -144,7 +144,7 @@ any other way is not seen.
   types does.
 - **A reference property does not say what it refers to.** Registration writes a
   reference property's target model empty (Ankurah issue 513), so the definition of,
-  say, `records.creation`'s `created_by` does not name `identity.principal`, and an
+  say, `records.created`'s `by` does not name `identity.principal`, and an
   absent target says nothing about what a Rust `Ref<T>` refers to.
 - **Only a definition's creation is handled.** A definition changed after it was
   minted, renamed or with a property made optional, would have further events after

@@ -1,5 +1,6 @@
 use super::PhysicalActivity;
 use crate::identity::Principal;
+use crate::property::Timestamp;
 use ankurah::{property::Ref, Model};
 use serde::{Deserialize, Serialize};
 
@@ -12,9 +13,9 @@ pub struct HeartRateSummary {
     pub measured_person: Ref<Principal>,
     /// The activity this window describes, including a recovery window after its end.
     pub activity: Option<Ref<PhysicalActivity>>,
-    /// Start and end of the measurement window in Unix milliseconds, [start, end).
-    pub window_start: i64,
-    pub window_end: i64,
+    /// Start and end of the measurement window, [start, end).
+    pub window_start: Timestamp,
+    pub window_end: Timestamp,
     /// Number of valid readings included in the range, at least one.
     pub sample_count: i64,
     pub min_bpm: f64,

@@ -1,4 +1,5 @@
 use crate::identity::Principal;
+use crate::property::Timestamp;
 use ankurah::{property::Ref, Model};
 use serde::{Deserialize, Serialize};
 
@@ -12,9 +13,9 @@ pub struct PhysicalActivity {
     /// An open activity name in snake case, such as walking, yoga, or indoor_skiing.
     #[active_type(LWW)]
     pub kind: String,
-    /// Start of the activity in Unix milliseconds.
-    pub started_at: i64,
-    /// End of the activity in Unix milliseconds, when known. Pauses may fall within these bounds.
+    /// Start of the activity.
+    pub started_at: Timestamp,
+    /// End of the activity, when known. Pauses may fall within these bounds.
     #[active_type(LWW)]
-    pub ended_at: Option<i64>,
+    pub ended_at: Option<Timestamp>,
 }

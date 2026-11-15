@@ -8,9 +8,9 @@ use serde::{Deserialize, Serialize};
 /// This says nothing about which document, or where in it. A second component
 /// on the same entity says that: `FileAnchor`, in the `git` namespace, for a
 /// file kept in git. The two together are a highlight. Who marked it, and
-/// when, is `Creation`.
+/// when, is `Created`.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
-#[model(label = "highlights.fragment")]
+#[model(label = "text.fragment")]
 #[model(no_ffi)]
 pub struct Fragment {
     /// The marked text. Empty when the whole document is marked.

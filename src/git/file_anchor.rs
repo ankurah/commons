@@ -19,7 +19,7 @@ string_enum!(DiffSide);
 
 /// Where a highlight sits in a file kept in git: a run of lines in one version
 /// of the file. Added to an entity that also carries `Fragment`, from the
-/// `highlights` namespace.
+/// `text` namespace.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "git.file_anchor")]
 #[model(no_ffi)]

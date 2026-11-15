@@ -2,19 +2,14 @@
 //! claims they rest on, the decisions that read them and the tasks that serve
 //! them.
 //!
-//! `task`, `decision`, `scope` and `link` are what Fwd Centaur has today, and
-//! `submission` is what it keeps inside a task. `intention`, `claim`,
-//! `excerpt` and `perspective` are new.
-//!
 //! What every kind of record shares is not repeated here: who made it, who
 //! last edited it, whom it waits on and who closed it are components from
-//! the `records` namespace, added to the same entity.
+//! the `records` namespace, added to the same entity. How records connect is
+//! the `graph` namespace's edges.
 
 mod claim;
 mod decision;
-mod excerpt;
 mod intention;
-mod link;
 mod perspective;
 mod scope;
 mod submission;
@@ -22,9 +17,7 @@ mod task;
 
 pub use claim::*;
 pub use decision::*;
-pub use excerpt::*;
 pub use intention::*;
-pub use link::*;
 pub use perspective::*;
 pub use scope::*;
 pub use submission::*;

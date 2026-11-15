@@ -1,4 +1,5 @@
 use super::PhysicalActivity;
+use crate::property::Timestamp;
 use ankurah::{property::Ref, Model};
 use serde::{Deserialize, Serialize};
 
@@ -11,9 +12,9 @@ pub struct ActivityInterval {
     /// An open name in snake case, such as work, rest, or lap.
     #[active_type(LWW)]
     pub kind: String,
-    /// Start in Unix milliseconds, inclusive.
-    pub started_at: i64,
-    /// End in Unix milliseconds, exclusive, when known.
+    /// Start, inclusive.
+    pub started_at: Timestamp,
+    /// End, exclusive, when known.
     #[active_type(LWW)]
-    pub ended_at: Option<i64>,
+    pub ended_at: Option<Timestamp>,
 }

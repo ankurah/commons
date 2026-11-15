@@ -1,4 +1,5 @@
 use crate::identity::Principal;
+use crate::property::Timestamp;
 use crate::support::string_enum;
 use ankurah::{
     property::{Json, Ref},
@@ -21,8 +22,8 @@ string_enum!(TaskStatus);
 
 /// A piece of work someone can pick up and finish.
 ///
-/// Who filed it is `Creation`, whom it is assigned to is `Assignment`, how it
-/// was handed in is `Submission`, and how it ended is `Closure`, all on the
+/// Who filed it is `Created`, whom it is assigned to is `Assignment`, how it
+/// was handed in is `Submission`, and how it ended is `Closed`, all on the
 /// same entity.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "intention-graph.task")]
@@ -50,12 +51,12 @@ pub struct Task {
     // dated too. The views that hide a task until it is due also filter on
     // `status`, so that waits for a query across two components.
     #[active_type(LWW)]
-    pub not_before: Option<i64>,
+    pub not_before: Option<Timestamp>,
     /// 0 is most urgent.
     #[active_type(LWW)]
     pub priority: Option<i64>,
     /// An array of strings.
     pub labels: Json,
     /// When anything about the task last changed, its status included.
-    pub updated: i64,
+    pub updated: Timestamp,
 }

@@ -1,4 +1,5 @@
 use crate::identity::Principal;
+use crate::property::Timestamp;
 use ankurah::{property::Ref, Model};
 use serde::{Deserialize, Serialize};
 
@@ -9,9 +10,9 @@ use serde::{Deserialize, Serialize};
 pub struct HeartRate {
     /// The person whose heart rate was observed.
     pub measured_person: Ref<Principal>,
-    /// Time of the observation in Unix milliseconds. For live readings without a
-    /// sensor timestamp, the recorder uses the time it received the reading.
-    pub observed_at: i64,
+    /// Time of the observation. For live readings without a sensor timestamp,
+    /// the recorder uses the time it received the reading.
+    pub observed_at: Timestamp,
     /// A valid heart rate in beats per minute. Device codes for missing readings are omitted.
     pub beats_per_minute: f64,
 }
