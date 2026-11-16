@@ -1,9 +1,7 @@
-minter ed25519 71e93d7b46131743283fa655871bdefaa3c67c27c1153df632010ecb06e8e090
-
-model     text.quotation  Quotation  id ljjSVSmPpEeDJ8HAIWpEj7M3lbj8GM03Yla76XkAByQ  at 1794795263549  nonce f524e51d283ca0917656872e95ff7900c20f2b595790e994e6ceff0a24b06f4c
-property  text    string    lww      id vNURytNoAWQwnByUhzLjUYyYx27jmwGL-6TYrsOGzXE  at 1794795263549  nonce e28bc4ce29e12852f12fbe8ea5f837af47d0e378b360b3ef4ac78005cb964239
-link      text    required           id y7X-lGgYi9iwvR6uFGbQhAg4uYJrOrv2Qu3i1yjxMGQ  at 1794795263549  nonce ffe14c4cd9cf5b3d4b68f7547e6a2be1b5ef644d96e87944cb9737cb6862044c
-property  said    i64       lww      id rfUzYgWoGZPWevCODLYJOW5mpCcfLVZR_QAdk3cuSN4  at 1794795263549  nonce eefbf82d14debe444809ef1208f86f294780d322d8f22a21e1f83d7882495d6d
-link      said    optional           id rPo1iv3PSvmsDxOzW1pqe76rQIWBkhIniJvz5Dq74FI  at 1794795263549  nonce eeef9de7a5bd5470c8b21277a9d919ef84418141bb5ffc0113cb278172a40eca
-property  source  entityid  lww      id Ygh7JC6AOOslhEUCU_pRSZXdSmntso2dSnFboX1M_6U  at 1794795263549  nonce bff14c0addd5d19b9de6624c6d3679180cc2d82b808751be4428086591d2a5ea
-link      source  optional           id CBS5IuDa-aMkemqC_TK6wovHZNKsWCT0iHnVMKjmRmU  at 1794795263549  nonce 81e4e452288f26dbbb2a154e6518ab095dc1b44743f3dcf244e8cbc87d8f5cfa
+model     text.quotation  Quotation  id UpLx9aFmM5nZGI_yfZoUoIck6Fk05F_D89zGilEEoLE  at 1794795263549  nonce f524e51d283ca0917656872e95ff7900c20f2b595790e994e6ceff0a24b06f4c
+property  text    string    lww      id 95tSKcm6MH1wnFNnw2K_AEcW_QkwyLn4h4gi7dA0djI  at 1794795263549  nonce e28bc4ce29e12852f12fbe8ea5f837af47d0e378b360b3ef4ac78005cb964239
+link      text    required           id bdl49OdxmWR-N5yl8OiY-FhruDCDXvLPWZwBFizcfRw  at 1794795263549  nonce ffe14c4cd9cf5b3d4b68f7547e6a2be1b5ef644d96e87944cb9737cb6862044c
+property  said    i64       lww      id ymCkWj0VZjVMc6gRzrMgwazCc_G04wM0brtjyS9H8J4  at 1794795263549  nonce eefbf82d14debe444809ef1208f86f294780d322d8f22a21e1f83d7882495d6d
+link      said    optional           id X8UpEDk8pzVbze9b1HodP3UzQOaCewkH_KlhZiyGids  at 1794795263549  nonce eeef9de7a5bd5470c8b21277a9d919ef84418141bb5ffc0113cb278172a40eca
+property  source  entityid  lww      id 1B3hxhMRFIWLZG1i3NS3Rixs_kI88YL13FJbcKfbX5o  at 1794795263549  nonce bff14c0addd5d19b9de6624c6d3679180cc2d82b808751be4428086591d2a5ea
+link      source  optional           id ei3DczQiVrUpcEekRdgVcZNN3H-oli3ipj6WxYXfP6o  at 1794795263549  nonce 81e4e452288f26dbbb2a154e6518ab095dc1b44743f3dcf244e8cbc87d8f5cfa

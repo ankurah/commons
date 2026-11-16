@@ -1,5 +1,3 @@
-minter ed25519 71e93d7b46131743283fa655871bdefaa3c67c27c1153df632010ecb06e8e090
-
-model     health.distance  Distance  id -tuUjGCeG8G5TMG2P6uWCVJXMoYj4i3SNyXv4yZphm4  at 1794795263469  nonce c319119ed72b0e6d354152ebec6380309cdc31f4e4954844322e654c7fe4bd4c
-property  meters  f64  lww           id Jz1P6-6lOjqwKC801Jgp0cdxYa9S_Gd73j4CU5F69cY  at 1794795263469  nonce cc35de341af2b6d912f7a407b3c8d660241045f46abeb32a54b9d25871572c46
-link      meters  required           id xHffOp66C1wLuLyW5QUohVPg86RS2TGTRQUhZWOW_Fs  at 1794795263469  nonce 4d507b1f2252fb49e2cfa8ba6dfa52d3b53dcecda8bab6bc97a2b4375724ebd6
+model     health.distance  Distance  id WBfBouIRGwozhLge5M5YCwLarOaPLr4ngTYr6IFafDo  at 1794795263469  nonce c319119ed72b0e6d354152ebec6380309cdc31f4e4954844322e654c7fe4bd4c
+property  meters  f64  lww           id -_XFMjEA3xhBpOIqiv0OUIn9vmMqK2UK6BguEcnF36E  at 1794795263469  nonce cc35de341af2b6d912f7a407b3c8d660241045f46abeb32a54b9d25871572c46
+link      meters  required           id ldItTh_qmW9lnh5cRHkBXBVcKjae8o16lAa3u_yzCwo  at 1794795263469  nonce 4d507b1f2252fb49e2cfa8ba6dfa52d3b53dcecda8bab6bc97a2b4375724ebd6

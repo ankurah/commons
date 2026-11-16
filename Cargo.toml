@@ -23,10 +23,11 @@ messaging = []
 jiff      = ["dep:jiff"]
 
 [dependencies]
-ankurah = { workspace = true }
-jiff    = { workspace = true, optional = true }
-serde   = { workspace = true }
-strum   = { workspace = true }
+ankurah   = { workspace = true }
+jiff      = { workspace = true, optional = true }
+serde     = { workspace = true }
+strum     = { workspace = true }
+thiserror = { workspace = true }
 
 [dev-dependencies]
 ankurah-storage-sled = { workspace = true }
@@ -35,18 +36,19 @@ tokio                = { version = "1", features = ["macros", "rt"] }
 
 [workspace]
 resolver = "2"
-# mint/ needs Ankurah's node identity branch, which is not on Ankurah's main yet: see mint/README.md.
-exclude  = ["mint"]
+members  = ["mint"]
 
 [workspace.package]
 edition = "2021"
 license = "MIT OR Apache-2.0"
 
 [workspace.dependencies]
-# A revision of Ankurah's main. An application that uses this crate pins the same revision:
-# crates from two revisions would not share Ankurah's types.
-ankurah = { git = "https://github.com/ankurah/ankurah", rev = "5919b1a06b5c3e462597d4627521354f9052f4bb", features = ["derive"] }
-ankurah-storage-sled = { git = "https://github.com/ankurah/ankurah", rev = "5919b1a06b5c3e462597d4627521354f9052f4bb" }
-jiff    = { version = "0.2", default-features = false, features = ["std"] }
-serde   = { version = "1", features = ["derive"] }
-strum   = { version = "0.26", features = ["derive"] }
+# Ankurah's branch `fwd-pin/portable-genesis`: its main at 5919b1a0, and a node that imports
+# events made outside it. An application that uses this crate pins the same revision: crates
+# from two revisions would not share Ankurah's types.
+ankurah = { git = "https://github.com/ankurah/ankurah", rev = "42e754d5900f6aa1feb73c1e4997aa2dce0b042e", features = ["derive"] }
+ankurah-storage-sled = { git = "https://github.com/ankurah/ankurah", rev = "42e754d5900f6aa1feb73c1e4997aa2dce0b042e" }
+jiff      = { version = "0.2", default-features = false, features = ["std"] }
+serde     = { version = "1", features = ["derive"] }
+strum     = { version = "0.26", features = ["derive"] }
+thiserror = "2"

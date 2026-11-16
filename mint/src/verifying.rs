@@ -9,8 +9,7 @@
 //!   the edge kinds' file states the kinds the `graph` namespace's table lists, in order;
 //! - every creation event rebuilt from a file has the id its line gives.
 //!
-//! It does not check who minted the events, since nothing is signed, nor what state each
-//! event makes, which is not rebuilt.
+//! It does not check who minted the events, since nothing is signed.
 
 use std::{
     collections::BTreeSet,
@@ -22,8 +21,8 @@ use ankurah::{core::schema::ModelStructDescriptor, Model};
 use ankurah_commons::{
     akev::{EdgeKinds, ModelDefinitions, ParseError},
     graph::EdgeKind,
+    rebuilding::RebuildError,
 };
-use ankurah_commons_mint::rebuilding::{self, RebuildError};
 use thiserror::Error;
 
 use crate::{
@@ -84,9 +83,9 @@ pub fn verify(src: &Path, namespaces: &[Namespace]) -> Result<Verified, VerifyEr
             let path = writing::model_file(&directory, descriptor.name)
                 .map_err(|failure| VerifyError { path: directory.clone(), failure: Failure::Unplaced(failure) })?;
             let failed = |failure| VerifyError { path: path.clone(), failure };
-            let definitions = ModelDefinitions::parse(&read(&path)?).map_err(|error| failed(Failure::Unparsable(error)))?;
+            let (definitions, ids) = ModelDefinitions::parse(&read(&path)?).map_err(|error| failed(Failure::Unparsable(error)))?;
             as_declared(&definitions, descriptor).map_err(failed)?;
-            events += rebuilding::model_events(&definitions).map_err(|error| failed(Failure::NotRebuilt(error)))?.len();
+            events += definitions.events_as_stated(&ids).map_err(|error| failed(Failure::NotRebuilt(error)))?.len();
             if descriptor.label == EdgeKind::descriptor().label {
                 edge_kind = Some(definitions);
             }
@@ -95,13 +94,13 @@ pub fn verify(src: &Path, namespaces: &[Namespace]) -> Result<Verified, VerifyEr
         if !namespace.edge_kinds.is_empty() {
             let path = directory.join(EDGE_KINDS_FILE);
             let failed = |failure| VerifyError { path: path.clone(), failure };
-            let kinds = EdgeKinds::parse(&read(&path)?).map_err(|error| failed(Failure::Unparsable(error)))?;
+            let (kinds, ids) = EdgeKinds::parse(&read(&path)?).map_err(|error| failed(Failure::Unparsable(error)))?;
             let stated = kinds.kinds.iter().map(|kind| (kind.name.as_str(), kind.description.as_str()));
             if !stated.eq(namespace.edge_kinds.iter().copied()) {
                 return Err(failed(Failure::NotAsListed));
             }
             let edge_kind = edge_kind.as_ref().ok_or(failed(Failure::NoEdgeKindModel))?;
-            events += rebuilding::edge_kind_events(&kinds, edge_kind).map_err(|error| failed(Failure::NotRebuilt(error)))?.len();
+            events += kinds.events_as_stated(edge_kind, &ids).map_err(|error| failed(Failure::NotRebuilt(error)))?.len();
             checked.insert(path);
         }
     }

@@ -1,26 +1,15 @@
-use std::sync::OnceLock;
-
 use super::*;
-use crate::{
-    namespaces::NAMESPACES,
-    registering::{self, MintedNamespace},
-};
+use crate::{minting, namespaces::NAMESPACES};
 use tempfile::TempDir;
 
-/// Every namespace, minted once for all the tests, because minting takes a second or two.
-fn minted() -> &'static [MintedNamespace] {
-    static MINTED: OnceLock<Vec<MintedNamespace>> = OnceLock::new();
-    MINTED.get_or_init(|| {
-        let runtime = tokio::runtime::Runtime::new().expect("a runtime to mint in");
-        runtime.block_on(registering::mint(NAMESPACES)).expect("the namespaces mint")
-    })
+fn sources() -> PathBuf {
+    Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap().join("src")
 }
 
-/// A copy of the crate's Rust sources, with `minted` written into it as `mint` writes it.
-fn written() -> TempDir {
+/// A copy of the crate's Rust sources, with the kept mint's files.
+fn copied() -> TempDir {
     let copy = tempfile::tempdir().unwrap();
-    copy_sources(&Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap().join("src"), copy.path());
-    writing::write(copy.path(), minted()).unwrap();
+    copy_sources(&sources(), copy.path());
     copy
 }
 
@@ -31,10 +20,22 @@ fn copy_sources(from: &Path, to: &Path) {
         if path.is_dir() {
             fs::create_dir(&target).unwrap();
             copy_sources(&path, &target);
-        } else if path.extension().is_some_and(|extension| extension == "rs") {
+        } else if path.extension().is_some_and(|extension| extension == "rs" || extension == writing::EXTENSION) {
             fs::copy(&path, &target).unwrap();
         }
     }
+}
+
+/// Mints into `src` as `mint` does.
+fn mint(src: &Path) {
+    writing::write(src, &minting::mint(src, NAMESPACES).unwrap()).unwrap();
+}
+
+/// A copy of the sources with the kept mint minted again.
+fn minted() -> TempDir {
+    let src = copied();
+    mint(src.path());
+    src
 }
 
 fn failure(src: &TempDir) -> VerifyError {
@@ -48,9 +49,15 @@ fn edit(path: &Path, from: &str, to: &str) {
     fs::write(path, text.replacen(from, to, 1)).unwrap();
 }
 
+/// Each entity keeps its time and nonce, so minting the kept mint again under the same
+/// declarations and the same format of Ankurah's events writes every file as it was.
 #[test]
-fn a_kept_mint_verifies() {
-    let src = written();
+fn minting_the_kept_mint_again_changes_no_file_and_it_verifies() {
+    let src = minted();
+    for kept in writing::minted_files(&sources()).unwrap() {
+        let minted = src.path().join(kept.strip_prefix(sources()).unwrap());
+        assert_eq!(fs::read_to_string(&minted).unwrap(), fs::read_to_string(&kept).unwrap(), "{}", kept.display());
+    }
     let verified = verify(src.path(), NAMESPACES).unwrap();
     let models = NAMESPACES.iter().map(|namespace| namespace.models.len()).sum::<usize>();
     let definitions: usize =
@@ -59,10 +66,22 @@ fn a_kept_mint_verifies() {
     assert_eq!((verified.files, verified.events), (models + 1, definitions + edge_kinds));
 }
 
+/// An entity the kept mint lacks is minted with a time and nonce drawn for it.
+#[test]
+fn a_model_the_kept_mint_lacks_is_minted_anew() {
+    let src = copied();
+    let intention = src.path().join("cognition").join("intention.akev");
+    let kept = fs::read_to_string(&intention).unwrap();
+    fs::remove_file(&intention).unwrap();
+    mint(src.path());
+    assert_ne!(fs::read_to_string(&intention).unwrap(), kept);
+    verify(src.path(), NAMESPACES).unwrap();
+}
+
 /// A creation field changed in the writer's form still parses, but rebuilds another event.
 #[test]
 fn a_changed_creation_field_fails_the_rebuild_naming_the_file() {
-    let src = written();
+    let src = minted();
     let file = src.path().join("cognition").join("intention.akev");
     let text = fs::read_to_string(&file).unwrap();
     let digit = text.find(" nonce ").unwrap() + " nonce ".len();
@@ -77,7 +96,7 @@ fn a_changed_creation_field_fails_the_rebuild_naming_the_file() {
 /// struct or to the table of edge kinds fails.
 #[test]
 fn a_file_that_states_other_than_the_sources_fails_naming_it() {
-    let src = written();
+    let src = minted();
     let intention = src.path().join("cognition").join("intention.akev");
     edit(&intention, "required", "optional");
     let error = failure(&src);
@@ -94,7 +113,7 @@ fn a_file_that_states_other_than_the_sources_fails_naming_it() {
 
 #[test]
 fn a_missing_or_stray_file_fails_naming_it() {
-    let src = written();
+    let src = minted();
     let intention = src.path().join("cognition").join("intention.akev");
     let kept = fs::read_to_string(&intention).unwrap();
     fs::remove_file(&intention).unwrap();

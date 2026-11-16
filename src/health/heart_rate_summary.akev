@@ -1,17 +1,15 @@
-minter ed25519 71e93d7b46131743283fa655871bdefaa3c67c27c1153df632010ecb06e8e090
-
-model     health.heart_rate_summary  HeartRateSummary  id 7GMEQOtHHhSfR94LcCp5rNP8rzNfAYd4g2abd9ItIn0  at 1794795263486  nonce 346a3240755c2203a7a1f4f8a7295f3a567ec938b84b328fb9f5018c4206139e
-property  measured_person  entityid  lww               id jrvMJ_FolO9aJ0DpdiGc_6MRftI-vwxWNGCMI_v6WS8  at 1794795263486  nonce 0cb5aece4041f61366a798a659050c6a103e39954174ddda5fe6aca5fac00bc2
-link      measured_person  required                    id vnzwyDNOTL-RUrx97baeTjOEkiYtH446MkbxcU-Oyak  at 1794795263486  nonce e900fe450503b96d45e1760d8863c6d0f3a8f8fbbf411ad4a697475a7331b00b
-property  activity         entityid  lww               id eL3m7HD7ox3-JzSIHl3-K8Qr8Jfpdsc-rD4RKGuB_98  at 1794795263486  nonce dd1b495cbbf25f54d089a3fb03f15aa8e72c4a975fd91849ed0f52d94ea298d5
-link      activity         optional                    id bvN45DIXNzFFuNUYlJn-a1mJjZhbRb7czGMQpx2H6j4  at 1794795263486  nonce 8fb9d4758ec22edac87f58990cc915f252d8ecac1615112852d5e7881af39926
-property  window_start     i64       lww               id ZXgnByrpuyQwzdW0_qgYuE6q_8ZLeAzezwTfahm-DBI  at 1794795263486  nonce b3ad77831693d69cdd1dd1b425877b844143d71b24ce81ed4fb73a571e9c2e9e
-link      window_start     required                    id INmIktVuTPUNXRX5qqksK_iFKGj3ryjc66OU7FgDZPc  at 1794795263486  nonce 3b7b44aa65aef110cf45c61d3dd89a09aea09d27469fffaa70ee3c98b88621dd
-property  window_end       i64       lww               id iVRPCqh04Tq9XcKIHH8SbyBo2rQtxlY8Z2CV9OlIGHc  at 1794795263486  nonce efeff0273bf2b766177f4b6f11361ce1cf537b206591947a8663b2d857ff0d0d
-link      window_end       required                    id 16fcYg3V8yYyZCTdWYe0LkHhj_cZVD2qNhJSRUJgnmo  at 1794795263486  nonce 88d49d47537510c34f31b3a83cbab73f365de3b0fb0d7618cf1585c96cff3b2d
-property  sample_count     i64       lww               id noQoEcX78XhoB-VypcVcq1Qj2vvAiid2ElKXYlNrrc4  at 1794795263486  nonce 656010e9cdf09a05ef9ff4b25da07d78acaf7789cea39bbeacb22a855c458990
-link      sample_count     required                    id u3a7UVDLeuPZn4F-xPgUsau-QBQewTHxQS7ZGFdRF9Q  at 1794795263486  nonce cf4a3aade253ce8c04d20d55a965dba7b10bad3427f60cedeec141f3043c3041
-property  min_bpm          f64       lww               id x0EJ6_K3ha6RcoaJtL4k7WehqLRXBqCvtFzhpsojE2g  at 1794795263486  nonce 66168f21c1bc21013c8ca239a950bd9c4d97b3b675bb2647760e1746eb0bb081
-link      min_bpm          required                    id NB0F0cv6kUoKnTuuisLBVzzvS4b-SxuFQafjPoa4ceo  at 1794795263487  nonce 38b79b0bb004cf6dcde755ea9ac9891066500d05be3459d501b259b5802dfdb0
-property  max_bpm          f64       lww               id XgtpgmVTaYU7iAx_KVdXY-SSwGYnc32tqhgek6ExZfM  at 1794795263487  nonce 58d455eca6b581e1910486beba5b84756f8c84c3a33c3cf6e136fe78c736589d
-link      max_bpm          required                    id cZbuwz33KA4In3dlE4wno87sNgZS_X_ETQB_FtmApE8  at 1794795263487  nonce fc3d1ecc6b3b0d59e9f94cfafb37ef2c6f97e61035eeb8aa13495d14ad0edcac
+model     health.heart_rate_summary  HeartRateSummary  id ABJk8PXGYqZtdHOInmA-bpSzSxqf_rWGp0MvucPqa6k  at 1794795263486  nonce 346a3240755c2203a7a1f4f8a7295f3a567ec938b84b328fb9f5018c4206139e
+property  measured_person  entityid  lww               id ovxQM9oCKZXve92OOMZm9nZxv5dwWHXTs__fsIEfWec  at 1794795263486  nonce 0cb5aece4041f61366a798a659050c6a103e39954174ddda5fe6aca5fac00bc2
+link      measured_person  required                    id SK6dm8MYV54idBqqO2KkCJTO99yWA6y0M-1MN-rUI-8  at 1794795263486  nonce e900fe450503b96d45e1760d8863c6d0f3a8f8fbbf411ad4a697475a7331b00b
+property  activity         entityid  lww               id OuWZdE6-vjtaXVeFcADelRnzRB9HO92270zuR22xweM  at 1794795263486  nonce dd1b495cbbf25f54d089a3fb03f15aa8e72c4a975fd91849ed0f52d94ea298d5
+link      activity         optional                    id ddWWI1kAuLsr_QN7jHQFvF8fgGmTAMyUtlwim2OvXLI  at 1794795263486  nonce 8fb9d4758ec22edac87f58990cc915f252d8ecac1615112852d5e7881af39926
+property  window_start     i64       lww               id Br5NJjrLWE_LB8_kE_A-2E7awF8rJQpb6QhZbzenZ3g  at 1794795263486  nonce b3ad77831693d69cdd1dd1b425877b844143d71b24ce81ed4fb73a571e9c2e9e
+link      window_start     required                    id owyhcUHp3zz0qibCKlbI5mExm2YWSj_lbHt8gXistWw  at 1794795263486  nonce 3b7b44aa65aef110cf45c61d3dd89a09aea09d27469fffaa70ee3c98b88621dd
+property  window_end       i64       lww               id UU74poOAnWXTIYz7xsDQGojx0HVgClH4JNE3egCvhro  at 1794795263486  nonce efeff0273bf2b766177f4b6f11361ce1cf537b206591947a8663b2d857ff0d0d
+link      window_end       required                    id KD6m3aJ3dmDAO1RYL3-VZeNKdFbUN88hstm4pES6Bw8  at 1794795263486  nonce 88d49d47537510c34f31b3a83cbab73f365de3b0fb0d7618cf1585c96cff3b2d
+property  sample_count     i64       lww               id ug1V-DH6oVgir1GQQSVKwQXQsOHq0nUKB9_fk_gxHrk  at 1794795263486  nonce 656010e9cdf09a05ef9ff4b25da07d78acaf7789cea39bbeacb22a855c458990
+link      sample_count     required                    id rCyYCwkzUkiINvR2Kmdp3Rcja90rhcYQBJTueyfCBzc  at 1794795263486  nonce cf4a3aade253ce8c04d20d55a965dba7b10bad3427f60cedeec141f3043c3041
+property  min_bpm          f64       lww               id eGttzYnezEWtmYw4YSWAqSQNWdGqwGL1Vfe-9crTIgw  at 1794795263486  nonce 66168f21c1bc21013c8ca239a950bd9c4d97b3b675bb2647760e1746eb0bb081
+link      min_bpm          required                    id 367UChe6xkJWUyv0c6S4WOJn-K-ffJ5I3jQUu3-0y1o  at 1794795263487  nonce 38b79b0bb004cf6dcde755ea9ac9891066500d05be3459d501b259b5802dfdb0
+property  max_bpm          f64       lww               id 68fkGWZswuO6Ma0iv0R7bSjOlsIn2-cCcrIkj3pI0Sg  at 1794795263487  nonce 58d455eca6b581e1910486beba5b84756f8c84c3a33c3cf6e136fe78c736589d
+link      max_bpm          required                    id c4B44mtIBIVFq52j_eEb-y2a1EBFL3sp8KDvHnwNhLo  at 1794795263487  nonce fc3d1ecc6b3b0d59e9f94cfafb37ef2c6f97e61035eeb8aa13495d14ad0edcac

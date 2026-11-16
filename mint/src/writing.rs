@@ -1,27 +1,18 @@
 //! Writes what `mint` minted into the crate's sources, as `.akev` files: each model's
 //! definitions beside the struct that declares it, `<model>.akev` beside `<model>.rs`, and
-//! the records of the kinds of edge in `graph/edge_kinds.akev`. Each file is checked, before
-//! it is written, to rebuild exactly the events the minting node made.
+//! the records of the kinds of edge in `graph/edge_kinds.akev`. A file the kept mint has is
+//! replaced.
 
 use std::{
-    collections::BTreeMap,
-    fs::{self, OpenOptions},
-    io::{self, Write},
+    fs, io,
     path::{Path, PathBuf},
 };
 
-use ankurah::{
-    proto::{EntityId, Event, Identity},
-    Model,
-};
-use ankurah_commons::{
-    akev::{Creation, EdgeKindRecord, EdgeKinds, ModelDefinitions, PropertyDefinition},
-    graph::EdgeKind,
-};
-use ankurah_commons_mint::rebuilding::{self, RebuildError};
+use ankurah::Model;
+use ankurah_commons::{graph::EdgeKind, rebuilding::RebuildError};
 use thiserror::Error;
 
-use crate::registering::MintedNamespace;
+use crate::minting::MintedNamespace;
 
 /// What ends the name of a minted file.
 pub const EXTENSION: &str = "akev";
@@ -32,29 +23,16 @@ pub const EDGE_KINDS_FILE: &str = "edge_kinds.akev";
 /// Why the minted files could not be written.
 #[derive(Debug, Error)]
 pub enum WriteError {
-    #[error("{} is already a minted file; remove every .akev file to mint again", .0.display())]
-    Exists(PathBuf),
     #[error("no file in {} is named {file}, where {model} is declared", .directory.display())]
     NoSource { model: String, directory: PathBuf, file: String },
     #[error("{count} files in {} are named {file}", .directory.display())]
     SeveralSources { count: usize, directory: PathBuf, file: String },
-    #[error("the minting node holds no creation event of {0}")]
-    NoCreation(EntityId),
     #[error("{label}'s definitions: {source}")]
     NotRebuilt { label: String, source: RebuildError },
     #[error("the edge kinds are minted with no definitions of their model beside them")]
     NoEdgeKindModel,
     #[error("{}: {source}", path.display())]
     Io { path: PathBuf, source: io::Error },
-}
-
-/// Refuses `src` if it holds a minted file already, so that `mint` stops before minting what
-/// it could not write and never replaces a kept mint.
-pub fn refuse_kept(src: &Path) -> Result<(), WriteError> {
-    match minted_files(src)?.into_iter().next() {
-        Some(path) => Err(WriteError::Exists(path)),
-        None => Ok(()),
-    }
 }
 
 /// Every `.akev` file under `dir`, in no particular order.
@@ -111,62 +89,22 @@ fn snake_case(name: &str) -> String {
 pub fn write(src: &Path, minted: &[MintedNamespace]) -> Result<(), WriteError> {
     for namespace in minted {
         let directory = src.join(namespace.name.replace('-', "_"));
-        let creations: BTreeMap<EntityId, &Event> = namespace.entities.iter().map(|entity| (entity.id, &entity.creation)).collect();
-        let creation = |id: EntityId| {
-            let event = creations.get(&id).ok_or(WriteError::NoCreation(id))?;
-            let Some(Identity::Ed25519(minter)) = event.minter() else { return Err(WriteError::NoCreation(id)) };
-            Ok((minter, Creation { id, at: event.timestamp(), nonce: *event.nonce() }))
-        };
-        let mut edge_kind = None;
-        for model in &namespace.models {
-            let (minter, model_creation) = creation(model.id)?;
-            let mut properties = Vec::with_capacity(model.properties.len());
-            for property in &model.properties {
-                properties.push(PropertyDefinition {
-                    name: property.name.clone(),
-                    value_type: property.value_type.clone(),
-                    backend: property.backend.clone(),
-                    optional: property.optional,
-                    property: creation(property.id)?.1,
-                    link: creation(property.link_id)?.1,
-                });
-            }
-            let definitions =
-                ModelDefinitions { minter, label: model.label.clone(), name: model.name.clone(), model: model_creation, properties };
-            rebuilding::model_events(&definitions).map_err(|source| WriteError::NotRebuilt { label: model.label.clone(), source })?;
-            create(&model_file(&directory, &model.name)?, &definitions.write())?;
-            if model.label == EdgeKind::descriptor().label {
-                edge_kind = Some(definitions);
-            }
+        for definitions in &namespace.models {
+            let text = definitions.write().map_err(|source| WriteError::NotRebuilt { label: definitions.label.clone(), source })?;
+            replace(&model_file(&directory, &definitions.name)?, &text)?;
         }
-        if let Some(first) = namespace.edge_kinds.first() {
-            let edge_kind = edge_kind.as_ref().ok_or(WriteError::NoEdgeKindModel)?;
-            let minter = creation(first.id)?.0;
-            let kinds = namespace
-                .edge_kinds
-                .iter()
-                .map(|kind| {
-                    let record = creation(kind.id)?.1;
-                    Ok(EdgeKindRecord { name: kind.name.to_owned(), description: kind.description.to_owned(), record })
-                })
-                .collect::<Result<_, WriteError>>()?;
-            let kinds = EdgeKinds { minter, kinds };
-            let label = edge_kind.label.clone();
-            rebuilding::edge_kind_events(&kinds, edge_kind).map_err(|source| WriteError::NotRebuilt { label, source })?;
-            create(&directory.join(EDGE_KINDS_FILE), &kinds.write())?;
+        if let Some(edge_kinds) = &namespace.edge_kinds {
+            let label = EdgeKind::descriptor().label;
+            let edge_kind = namespace.models.iter().find(|definitions| definitions.label == label).ok_or(WriteError::NoEdgeKindModel)?;
+            let text = edge_kinds.write(edge_kind).map_err(|source| WriteError::NotRebuilt { label: label.to_owned(), source })?;
+            replace(&directory.join(EDGE_KINDS_FILE), &text)?;
         }
     }
     Ok(())
 }
 
-/// Writes `text` into a new file at `path`, refusing one that exists.
-fn create(path: &Path, text: &str) -> Result<(), WriteError> {
-    OpenOptions::new()
-        .write(true)
-        .create_new(true)
-        .open(path)
-        .and_then(|mut file| file.write_all(text.as_bytes()))
-        .map_err(|source| io_error(path, source))
+fn replace(path: &Path, text: &str) -> Result<(), WriteError> {
+    fs::write(path, text).map_err(|source| io_error(path, source))
 }
 
 fn io_error(path: &Path, source: io::Error) -> WriteError {

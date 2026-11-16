@@ -1,7 +1,5 @@
-minter ed25519 71e93d7b46131743283fa655871bdefaa3c67c27c1153df632010ecb06e8e090
-
-model     work.submission  Submission  id QWu_xMqdKAlAL81C455QGPzNmGqugxAfmMENy9vjOOU  at 1794795263914  nonce 6f70fd1395b803c60fc3ec4e2408f748f90a04957b654b8e69ecdb935065931c
-property  of        entityid  lww      id AdCUKFZyDjvdz01GnWAqp_AGrnPEEae8ZzbbkV3fKvA  at 1794795263914  nonce f4a0d64d5c4b0937a977ccfefc61021d38eb951be706ea6d345ea309b1342b53
-link      of        required           id w-8nqE0sO6gh95uYY45IAsG1VIxlt-KgrcdsOBFxc-U  at 1794795263914  nonce 7b7b0aef831b0119118736ff3edcd1bd2b9ed698210215344bc266af24911f40
-property  evidence  string    lww      id xciQJtMffz-1wglqBaU7xxtSMwaghHyJjhXMeCBhoBs  at 1794795263914  nonce 9783e1a55cdeb14b3d750e245e5b806e27c28f5a7080ae0f1b94822139d884e7
-link      evidence  required           id jfA5ne87_Uiu9rqSqCnu8WVz2chtqP8LiFHikTlHeCs  at 1794795263915  nonce b6f641daf867fca606eb48904b3488ff270400c8803826d2497bb043926cbaae
+model     work.submission  Submission  id vc9YgO8iHlsyARnnjQgKWwTQMbAjaQaoHHOKnHGYMFI  at 1794795263914  nonce 6f70fd1395b803c60fc3ec4e2408f748f90a04957b654b8e69ecdb935065931c
+property  of        entityid  lww      id d5NMYDDAtPXWYAQktcNtSSubJ0YTxkshgfgOHR9cCCQ  at 1794795263914  nonce f4a0d64d5c4b0937a977ccfefc61021d38eb951be706ea6d345ea309b1342b53
+link      of        required           id 4FgAPKlrYxY12Y8TAGyGbUhDe58VlDrzFE5ueKr7k2Y  at 1794795263914  nonce 7b7b0aef831b0119118736ff3edcd1bd2b9ed698210215344bc266af24911f40
+property  evidence  string    lww      id V23FeeQTh0UT5en2HGOV5lYIGu6ZXBAnmSPgCisvinI  at 1794795263914  nonce 9783e1a55cdeb14b3d750e245e5b806e27c28f5a7080ae0f1b94822139d884e7
+link      evidence  required           id bXrI98IMNxNCvAgw5ZgGyPpLKHD8KbOIf4Oj42nAtbs  at 1794795263915  nonce b6f641daf867fca606eb48904b3488ff270400c8803826d2497bb043926cbaae

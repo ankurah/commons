@@ -1,7 +1,5 @@
-minter ed25519 71e93d7b46131743283fa655871bdefaa3c67c27c1153df632010ecb06e8e090
-
-model     git.work_location  WorkLocation  id nkymqLbDladIPLA2yLuHpmpgpj4tTv-NEL7QjRsnpRo  at 1794795263650  nonce 351e72912a80dd50b580411a2bc11bd8d12c92c83f43517ab35b788a7f6b2bd2
-property  repository  entityid  lww        id 8tL7OMOAjvGh6WOHDfatG9FhqsTm-Sh_qCBKc2mHAV4  at 1794795263650  nonce 7d26c5687720fec0ea5788aaa0e531be42904c5568d29b1164f10d5f21f72c11
-link      repository  optional             id kmzAEPvPyqkvFsPQLiTRh2YWAny8aOagx7a8ZyqwrsU  at 1794795263650  nonce 88ef3219de5c9e67ec737671a9901c9c0adb6c31640b3bbda3ffec4968cedcd9
-property  branches    json      lww        id 8BkqqtdRVYWF0Ymt0UnTxolG3pee9-RDvVAFL8LlFWo  at 1794795263650  nonce c486239cdd1794c9fe3d0105c1a278170342ae56060d1659cb46120f5c345cf7
-link      branches    required             id wQLx53cfaC6PIF24x4c3az-cRxTiL0VsRjHPgSkqu-A  at 1794795263650  nonce 816b29a4820060cc40c88a488f98afcd87fa55b11d5bb809e3e95e00402e07d8
+model     git.work_location  WorkLocation  id R8za6z12K9IMC6UQcO-7xxzfAEO19W1nOd-5-bTOpB4  at 1794795263650  nonce 351e72912a80dd50b580411a2bc11bd8d12c92c83f43517ab35b788a7f6b2bd2
+property  repository  entityid  lww        id 5hoQtGk3aJ01Rh3waEbIQmewNsmi05j7vgH_rG9jRuA  at 1794795263650  nonce 7d26c5687720fec0ea5788aaa0e531be42904c5568d29b1164f10d5f21f72c11
+link      repository  optional             id SzdUX6OP6y-Nq4BkKoO3IWXEJKuFT8mWptCBqkAp8Hs  at 1794795263650  nonce 88ef3219de5c9e67ec737671a9901c9c0adb6c31640b3bbda3ffec4968cedcd9
+property  branches    json      lww        id -Ba421-NnCBV4M5pjXZvbjzM9x7-TxPHhAoetaHjPpQ  at 1794795263650  nonce c486239cdd1794c9fe3d0105c1a278170342ae56060d1659cb46120f5c345cf7
+link      branches    required             id LHvprYJP6yiEmjqXdKrzLmzA1fXSlJUQ_fWaNI-PlIA  at 1794795263650  nonce 816b29a4820060cc40c88a488f98afcd87fa55b11d5bb809e3e95e00402e07d8

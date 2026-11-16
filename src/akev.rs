@@ -1,13 +1,14 @@
 //! `.akev` files: minted creation events, written as text, so that a reader sees what was
-//! minted and a node rebuilds the events' bytes from what it reads.
+//! minted and a node rebuilds the events' bytes from what it reads (`crate::rebuilding`).
 //!
 //! A file states one model's definitions, beside the model's struct, or the records of
-//! the kinds of edge the Commons mints. It opens with the minter every event names. Each
-//! entity then takes one line: what it is first, then its id and what its creation event
-//! holds that its values do not, the time it was minted and its nonce. An edge kind's
-//! description takes the indented line beneath its kind, so that free text needs no
-//! escaping. The id checks the rebuilt event, since an entity's id is the hash of its
-//! creation event.
+//! the kinds of edge the Commons mints. Each entity takes one line: what it is first, then
+//! its id and what its creation event holds that its values do not, the time it was minted
+//! and its nonce. An edge kind's description takes the indented line beneath its kind, so
+//! that free text needs no escaping.
+//!
+//! An entity's id is the hash of its creation event, so the ids follow from the rest of the
+//! text: a file states them for its readers, and they check the events rebuilt from it.
 //!
 //! A file parses only in exactly the form the writer gives it, so that two readers never
 //! disagree about one.
@@ -16,11 +17,13 @@ use std::fmt;
 
 use ankurah::EntityId;
 
-/// What a creation event holds besides its minter and what the values on its line give.
+use crate::rebuilding::RebuildError;
+
+/// What a creation event holds besides the values on its entity's line: the time it was
+/// minted and its nonce, both chosen when it was minted.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Creation {
-    pub id: EntityId,
-    /// Unix milliseconds, as the minting node read its clock.
+    /// Unix milliseconds, as the clock read when the entity was minted.
     pub at: u64,
     pub nonce: [u8; 32],
 }
@@ -29,8 +32,6 @@ pub struct Creation {
 /// model-property link that gives the model that property.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ModelDefinitions {
-    /// The ed25519 public key that every event names as its minter.
-    pub minter: [u8; 32],
     pub label: String,
     /// The name of the model's struct.
     pub name: String,
@@ -51,8 +52,6 @@ pub struct PropertyDefinition {
 /// The records of the kinds of edge the Commons mints.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct EdgeKinds {
-    /// The ed25519 public key that every event names as its minter.
-    pub minter: [u8; 32],
     pub kinds: Vec<EdgeKindRecord>,
 }
 
@@ -72,8 +71,6 @@ pub struct ParseError {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Problem {
-    /// The first line names no ed25519 minter, or no blank line follows it.
-    Minter,
     /// Not the line this place in the file takes, or a missing one.
     Unexpected,
     /// A field that does not read as what it holds.
@@ -87,7 +84,6 @@ pub enum Problem {
 impl fmt::Display for ParseError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let problem = match self.problem {
-            Problem::Minter => "expected `minter ed25519 <public key in hex>` and a blank line".to_owned(),
             Problem::Unexpected => "not a line this place in the file takes".to_owned(),
             Problem::Field(field) => format!("its {field} does not read"),
             Problem::LinkToAnother => "a link that names a property other than the one above it".to_owned(),
@@ -100,69 +96,100 @@ impl fmt::Display for ParseError {
 impl std::error::Error for ParseError {}
 
 impl ModelDefinitions {
-    pub fn write(&self) -> String {
-        let names = self.properties.iter().map(|property| property.name.len()).max().unwrap_or(0);
-        let types = self.properties.iter().map(|property| property.value_type.len()).max().unwrap_or(0);
-        let mut lines = vec![Line::new("model", format!("{}  {}", self.label, self.name), &self.model)];
-        for property in &self.properties {
-            let typed = format!("{:<names$}  {:<types$}  {}", property.name, property.value_type, property.backend);
-            lines.push(Line::new("property", typed, &property.property));
-            let link = format!("{:<names$}  {}", property.name, if property.optional { "optional" } else { "required" });
-            lines.push(Line::new("link", link, &property.link));
-        }
-        write_lines(&self.minter, &lines)
+    /// The file that states these definitions, each line with the id of the creation event
+    /// rebuilt for its entity.
+    pub fn write(&self) -> Result<String, RebuildError> {
+        let ids: Vec<EntityId> = self.events()?.iter().map(|event| event.entity_id).collect();
+        Ok(self.text(&ids))
     }
 
-    pub fn parse(text: &str) -> Result<Self, ParseError> {
-        let mut reader = Reader::new(text)?;
+    /// Reads a file in exactly the form the writer gives it: the definitions it states, and
+    /// the id each line states, in the file's order. The ids are read, not checked:
+    /// `events_as_stated` checks them.
+    pub fn parse(text: &str) -> Result<(Self, Vec<EntityId>), ParseError> {
+        let mut reader = Reader::new(text);
+        let mut ids = Vec::new();
         let (label, name, model) = match reader.tokens().as_deref() {
-            Some(["model", label, name, tail @ ..]) => (label.to_string(), name.to_string(), reader.creation(tail)?),
+            Some(["model", label, name, tail @ ..]) => (label.to_string(), name.to_string(), reader.creation(tail, &mut ids)?),
             _ => return Err(reader.unexpected()),
         };
         let mut properties = Vec::new();
         while let Some(tokens) = reader.tokens() {
             let ["property", name, value_type, backend, tail @ ..] = tokens.as_slice() else { return Err(reader.unexpected()) };
             let (name, value_type, backend, property) =
-                (name.to_string(), value_type.to_string(), backend.to_string(), reader.creation(tail)?);
+                (name.to_string(), value_type.to_string(), backend.to_string(), reader.creation(tail, &mut ids)?);
             let (optional, link) = match reader.tokens().as_deref() {
-                Some(["link", linked, optional, tail @ ..]) if *linked == name => (reader.optional(optional)?, reader.creation(tail)?),
+                Some(["link", linked, optional, tail @ ..]) if *linked == name => {
+                    (reader.optional(optional)?, reader.creation(tail, &mut ids)?)
+                }
                 Some(["link", ..]) => return Err(reader.error(Problem::LinkToAnother)),
                 _ => return Err(reader.unexpected()),
             };
             properties.push(PropertyDefinition { name, value_type, backend, optional, property, link });
         }
-        let definitions = ModelDefinitions { minter: reader.minter, label, name, model, properties };
-        canonical(text, &definitions.write())?;
-        Ok(definitions)
+        let definitions = ModelDefinitions { label, name, model, properties };
+        canonical(text, &definitions.text(&ids))?;
+        Ok((definitions, ids))
+    }
+
+    /// The writer's form, given an id for each entity in the file's order.
+    fn text(&self, ids: &[EntityId]) -> String {
+        let names = self.properties.iter().map(|property| property.name.len()).max().unwrap_or(0);
+        let types = self.properties.iter().map(|property| property.value_type.len()).max().unwrap_or(0);
+        let mut ids = ids.iter();
+        let mut lines = vec![Line::new("model", format!("{}  {}", self.label, self.name), ids.next(), &self.model)];
+        for property in &self.properties {
+            let typed = format!("{:<names$}  {:<types$}  {}", property.name, property.value_type, property.backend);
+            lines.push(Line::new("property", typed, ids.next(), &property.property));
+            let link = format!("{:<names$}  {}", property.name, if property.optional { "optional" } else { "required" });
+            lines.push(Line::new("link", link, ids.next(), &property.link));
+        }
+        write_lines(&lines)
     }
 }
 
 impl EdgeKinds {
-    pub fn write(&self) -> String {
-        let names = self.kinds.iter().map(|kind| kind.name.len()).max().unwrap_or(0);
-        let lines: Vec<Line> = self
-            .kinds
-            .iter()
-            .map(|kind| Line { description: Some(&kind.description), ..Line::new("kind", format!("{:<names$}", kind.name), &kind.record) })
-            .collect();
-        write_lines(&self.minter, &lines)
+    /// The file that states these records of the model `edge_kind` defines, each line with
+    /// the id of the creation event rebuilt for its record.
+    pub fn write(&self, edge_kind: &ModelDefinitions) -> Result<String, RebuildError> {
+        let ids: Vec<EntityId> = self.events(edge_kind)?.iter().map(|event| event.entity_id).collect();
+        Ok(self.text(&ids))
     }
 
-    pub fn parse(text: &str) -> Result<Self, ParseError> {
-        let mut reader = Reader::new(text)?;
+    /// Reads a file in exactly the form the writer gives it: the records it states, and the
+    /// id each line states, in the file's order. The ids are read, not checked:
+    /// `events_as_stated` checks them.
+    pub fn parse(text: &str) -> Result<(Self, Vec<EntityId>), ParseError> {
+        let mut reader = Reader::new(text);
+        let mut ids = Vec::new();
         let mut kinds = Vec::new();
         while let Some(tokens) = reader.tokens() {
             let ["kind", name, tail @ ..] = tokens.as_slice() else { return Err(reader.unexpected()) };
-            let (name, record) = (name.to_string(), reader.creation(tail)?);
+            let (name, record) = (name.to_string(), reader.creation(tail, &mut ids)?);
             let description = reader.description()?;
             kinds.push(EdgeKindRecord { name, description, record });
         }
         if kinds.is_empty() {
             return Err(reader.unexpected());
         }
-        let edge_kinds = EdgeKinds { minter: reader.minter, kinds };
-        canonical(text, &edge_kinds.write())?;
-        Ok(edge_kinds)
+        let edge_kinds = EdgeKinds { kinds };
+        canonical(text, &edge_kinds.text(&ids))?;
+        Ok((edge_kinds, ids))
+    }
+
+    /// The writer's form, given an id for each record in the file's order.
+    fn text(&self, ids: &[EntityId]) -> String {
+        let names = self.kinds.iter().map(|kind| kind.name.len()).max().unwrap_or(0);
+        let mut ids = ids.iter();
+        let lines: Vec<Line> = self
+            .kinds
+            .iter()
+            .map(|kind| Line {
+                description: Some(&kind.description),
+                ..Line::new("kind", format!("{:<names$}", kind.name), ids.next(), &kind.record)
+            })
+            .collect();
+        write_lines(&lines)
     }
 }
 
@@ -170,25 +197,28 @@ impl EdgeKinds {
 struct Line<'a> {
     keyword: &'static str,
     values: String,
+    id: &'a EntityId,
     creation: &'a Creation,
     description: Option<&'a str>,
 }
 
 impl<'a> Line<'a> {
-    fn new(keyword: &'static str, values: String, creation: &'a Creation) -> Self {
-        Line { keyword, values, creation, description: None }
+    /// `id` is the next of the ids given for the file's entities, one for each.
+    fn new(keyword: &'static str, values: String, id: Option<&'a EntityId>, creation: &'a Creation) -> Self {
+        Line { keyword, values, id: id.expect("an id for every entity in the file"), creation, description: None }
     }
 }
 
-/// Lays the lines out under the minter, each line's values padded to the widest, so that
-/// ids and creation fields line up.
-fn write_lines(minter: &[u8; 32], lines: &[Line]) -> String {
+/// Lays the lines out, each line's values padded to the widest, so that ids and creation
+/// fields line up.
+fn write_lines(lines: &[Line]) -> String {
     let keywords = lines.iter().map(|line| line.keyword.len()).max().unwrap_or(0);
     let values = lines.iter().map(|line| line.values.len()).max().unwrap_or(0);
-    let mut text = format!("minter ed25519 {}\n\n", hex(minter));
+    let mut text = String::new();
     for line in lines {
-        let Creation { id, at, nonce } = line.creation;
-        let row = format!("{:<keywords$}  {:<values$}  id {}  at {at}  nonce {}", line.keyword, line.values, id.to_base64(), hex(nonce));
+        let Creation { at, nonce } = line.creation;
+        let id = line.id.to_base64();
+        let row = format!("{:<keywords$}  {:<values$}  id {id}  at {at}  nonce {}", line.keyword, line.values, hex(nonce));
         text.push_str(&row);
         text.push('\n');
         if let Some(description) = line.description {
@@ -209,23 +239,16 @@ fn canonical(text: &str, written: &str) -> Result<(), ParseError> {
     Err(ParseError { line: line + 1, problem: Problem::NotCanonical })
 }
 
-/// Reads a file's lines in order, after its minter.
+/// Reads a file's lines in order.
 struct Reader<'t> {
-    lines: std::iter::Peekable<std::iter::Enumerate<std::str::Lines<'t>>>,
-    minter: [u8; 32],
-    /// The number of the line read last, counted from one.
+    lines: std::iter::Enumerate<std::str::Lines<'t>>,
+    /// The number of the line read last, counted from one; one before any is read.
     line: usize,
 }
 
 impl<'t> Reader<'t> {
-    fn new(text: &'t str) -> Result<Self, ParseError> {
-        let mut lines = text.lines().enumerate().peekable();
-        let minter = match (lines.next(), lines.next()) {
-            (Some((_, first)), Some((_, ""))) => first.strip_prefix("minter ed25519 ").and_then(unhex),
-            _ => None,
-        };
-        let minter = minter.ok_or(ParseError { line: 1, problem: Problem::Minter })?;
-        Ok(Reader { lines, minter, line: 2 })
+    fn new(text: &'t str) -> Self {
+        Reader { lines: text.lines().enumerate(), line: 1 }
     }
 
     /// The next line's fields, split at runs of spaces; none at the end of the file.
@@ -245,11 +268,12 @@ impl<'t> Reader<'t> {
         }
     }
 
-    /// The fields that end every entity's line: `id <id>  at <ms>  nonce <hex>`.
-    fn creation(&self, tail: &[&str]) -> Result<Creation, ParseError> {
+    /// The fields that end every entity's line, `id <id>  at <ms>  nonce <hex>`, adding the
+    /// id to `ids`.
+    fn creation(&self, tail: &[&str], ids: &mut Vec<EntityId>) -> Result<Creation, ParseError> {
         let ["id", id, "at", at, "nonce", nonce] = tail else { return Err(self.unexpected()) };
+        ids.push(EntityId::from_base64(id).map_err(|_| self.error(Problem::Field("id")))?);
         Ok(Creation {
-            id: EntityId::from_base64(id).map_err(|_| self.error(Problem::Field("id")))?,
             at: at.parse().map_err(|_| self.error(Problem::Field("time")))?,
             nonce: unhex(nonce).ok_or(self.error(Problem::Field("nonce")))?,
         })
@@ -293,7 +317,7 @@ mod tests {
     use super::*;
 
     fn creation(byte: u8) -> Creation {
-        Creation { id: EntityId::from_bytes([byte; 32]), at: 1_794_794_543_822, nonce: [byte; 32] }
+        Creation { at: 1_794_794_543_822, nonce: [byte; 32] }
     }
 
     fn intention() -> ModelDefinitions {
@@ -306,7 +330,6 @@ mod tests {
             link: creation(byte + 1),
         };
         ModelDefinitions {
-            minter: [9; 32],
             label: "example.intention".to_owned(),
             name: "Intention".to_owned(),
             model: creation(1),
@@ -314,24 +337,27 @@ mod tests {
         }
     }
 
-    /// The writer's form, fixed to its last byte, reads back as what was written.
+    fn ids(bytes: impl IntoIterator<Item = u8>) -> Vec<EntityId> {
+        bytes.into_iter().map(|byte| EntityId::from_bytes([byte; 32])).collect()
+    }
+
+    /// The writer's form, fixed to its last byte, reads back as what was written, with the ids
+    /// its lines state.
     #[test]
     fn a_minted_file_round_trips_through_its_text() {
         let tail = |byte: u8| {
             let id = EntityId::from_bytes([byte; 32]).to_base64();
             format!("id {id}  at 1794794543822  nonce {}", format!("{byte:02x}").repeat(32))
         };
-        let text = intention().write();
+        let text = intention().text(&ids(1..=5));
         assert_eq!(
             text,
             format!(
-                "minter ed25519 {}\n\n\
-                 model     example.intention  Intention  {}\n\
+                "model     example.intention  Intention  {}\n\
                  property  title        string  lww      {}\n\
                  link      title        required         {}\n\
                  property  description  string  lww      {}\n\
                  link      description  optional         {}\n",
-                "09".repeat(32),
                 tail(1),
                 tail(2),
                 tail(3),
@@ -339,30 +365,28 @@ mod tests {
                 tail(5)
             )
         );
-        assert_eq!(ModelDefinitions::parse(&text), Ok(intention()));
+        assert_eq!(ModelDefinitions::parse(&text), Ok((intention(), ids(1..=5))));
 
         let kinds = EdgeKinds {
-            minter: [9; 32],
             kinds: vec![EdgeKindRecord {
                 name: "links".to_owned(),
                 description: "From a thing to a thing.".to_owned(),
                 record: creation(6),
             }],
         };
-        let text = kinds.write();
-        assert_eq!(text, format!("minter ed25519 {}\n\nkind  links  {}\n    From a thing to a thing.\n", "09".repeat(32), tail(6)));
-        assert_eq!(EdgeKinds::parse(&text), Ok(kinds));
+        let text = kinds.text(&ids([6]));
+        assert_eq!(text, format!("kind  links  {}\n    From a thing to a thing.\n", tail(6)));
+        assert_eq!(EdgeKinds::parse(&text), Ok((kinds, ids([6]))));
     }
 
     #[test]
     fn a_file_not_in_the_writers_form_is_refused_naming_the_line() {
-        let text = intention().write();
+        let text = intention().text(&ids(1..=5));
         let refused = |text: &str| ModelDefinitions::parse(text).unwrap_err();
         let respaced = text.replacen("title        string", "title  string", 1);
-        assert_eq!(refused(&respaced), ParseError { line: 4, problem: Problem::NotCanonical });
+        assert_eq!(refused(&respaced), ParseError { line: 2, problem: Problem::NotCanonical });
         let relinked = text.replacen("link      title      ", "link      description", 1);
-        assert_eq!(refused(&relinked), ParseError { line: 5, problem: Problem::LinkToAnother });
-        assert_eq!(refused(&text.replacen("property", "proprety", 1)), ParseError { line: 4, problem: Problem::Unexpected });
-        assert_eq!(refused(&text.replacen("minter ed25519", "minter rsa", 1)), ParseError { line: 1, problem: Problem::Minter });
+        assert_eq!(refused(&relinked), ParseError { line: 3, problem: Problem::LinkToAnother });
+        assert_eq!(refused(&text.replacen("property", "proprety", 1)), ParseError { line: 2, problem: Problem::Unexpected });
     }
 }

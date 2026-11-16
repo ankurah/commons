@@ -1,5 +1,3 @@
-minter ed25519 71e93d7b46131743283fa655871bdefaa3c67c27c1153df632010ecb06e8e090
-
-model     records.ownership  Ownership  id -ZBYWMgYDnMKl8UUtgjIK92kE4iZyE7jdSKt327dU5M  at 1794795263451  nonce 373478a1ff50a7c00aa90232008d7738baae4a43fc2d732084e1ebac4a2ea5f8
-property  owner  entityid  lww          id 4LXLLGP6IgWi-3YNn62coDdgdnIq_QcbcRGB4sO04pA  at 1794795263451  nonce bc8604204c17c800064e062dcdb4048b6db58efd3b1ff7fbc151e38154f5bff2
-link      owner  required               id g0FK53oGeJMJfP4M55tan3yqARyharvZR2jguZb3HwA  at 1794795263451  nonce 367ee1a6b38bed70c1dad46363ab9de39cc3fddda7f0941d2e3443dc393db145
+model     records.ownership  Ownership  id QDbyx81eSYyg0U4Q6zFygOV8USLByHAYRnOPo5BcIkA  at 1794795263451  nonce 373478a1ff50a7c00aa90232008d7738baae4a43fc2d732084e1ebac4a2ea5f8
+property  owner  entityid  lww          id HZGDHguUBj2jRPaUFU-stkebCMx7zMxQP2GSb6MpjAI  at 1794795263451  nonce bc8604204c17c800064e062dcdb4048b6db58efd3b1ff7fbc151e38154f5bff2
+link      owner  required               id jN58GoDBlqcc07wyzlLKSggPLKH2w6rCQhb8ZW5RCx8  at 1794795263451  nonce 367ee1a6b38bed70c1dad46363ab9de39cc3fddda7f0941d2e3443dc393db145

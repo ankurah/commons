@@ -1,9 +1,7 @@
-minter ed25519 71e93d7b46131743283fa655871bdefaa3c67c27c1153df632010ecb06e8e090
-
-model     identity.principal  Principal  id K-wn_-q0fEj1kgt0eFxdswc4PyorC1VvRgPah0Nj9jU  at 1794795263388  nonce 8f80be064de69555e4be5c3554779515ef404332b63dd61601c2c9ce0d74617c
-property  kind          string  lww      id dDdPTVF6k_SYElMb55MXuQQXFCbru2eruEiHhW6dZBA  at 1794795263389  nonce 203e7264536ed1be15d0c882f4fbd08025b4096cbe0a0ff152d6291012d86497
-link      kind          required         id s86vPSoO6w8Ipv0tIkOPf5l48NpS9928pmsesbjKs9U  at 1794795263389  nonce 32faf4fba4d2488592c161530bb71e76fb7de25fe7d3a7820145bc2b06873ee7
-property  handle        string  lww      id vIVN9fv8Za9XjBQe64_q4p-jA78_uNvJQJwQdrOWYm4  at 1794795263389  nonce de34476c8295c5d0964972ddad5c7915c2b72b5b5f2192d381ad0b15a8ceaea0
-link      handle        required         id jhqtWKmxLT1U396N2uIsMcnaLd5-OpssM2Fn_n3MYs4  at 1794795263389  nonce 4ee120a0b41b063abdd777735c71a4ab65f48335be36a862f495a10640da494b
-property  display_name  string  lww      id OQ_3V1ig6UKRuIDye8FM1V49VHWZabK7n-MQlodrLIM  at 1794795263389  nonce e29bf237fa716512dd446662c618d22ef3fc56c1c411b7a2014717f620228457
-link      display_name  required         id u9ktQucyArcXxR--bpbILJE2op41CI6hLjbSg4BhJNI  at 1794795263389  nonce 753c6003276a0ed96ab3fa53333b436c8352384abcbe8f21c94d0eb54ecaf3de
+model     identity.principal  Principal  id ZITgy1aws0-JJAI_D6t__wr3kAKaAIPZImNVQr1YLmU  at 1794795263388  nonce 8f80be064de69555e4be5c3554779515ef404332b63dd61601c2c9ce0d74617c
+property  kind          string  lww      id SNpy8mNteUTuGD6sCFVjH_za0g0Y4PcFvHvL4oZItBo  at 1794795263389  nonce 203e7264536ed1be15d0c882f4fbd08025b4096cbe0a0ff152d6291012d86497
+link      kind          required         id wbySqJILMgo8SS7kapgwfsJn5gFN7Tws11-W9bsXG9w  at 1794795263389  nonce 32faf4fba4d2488592c161530bb71e76fb7de25fe7d3a7820145bc2b06873ee7
+property  handle        string  lww      id d8hkaJmIk-bvv_Nqoh-HakCLfy8V9XXdLKtUhwjm3d0  at 1794795263389  nonce de34476c8295c5d0964972ddad5c7915c2b72b5b5f2192d381ad0b15a8ceaea0
+link      handle        required         id oW31x8cRzDSTHYzkaLFitqszGXCE26ZMdRwuQuSB7bM  at 1794795263389  nonce 4ee120a0b41b063abdd777735c71a4ab65f48335be36a862f495a10640da494b
+property  display_name  string  lww      id rZShtG3Z-n1Iq4nQOY8jgmhBPc5u57D8adSW4C7JHuU  at 1794795263389  nonce e29bf237fa716512dd446662c618d22ef3fc56c1c411b7a2014717f620228457
+link      display_name  required         id B1Ugk0qxHN3cPksHv_Ce3BJApRaLCNfC2pfR-aukV4s  at 1794795263389  nonce 753c6003276a0ed96ab3fa53333b436c8352384abcbe8f21c94d0eb54ecaf3de

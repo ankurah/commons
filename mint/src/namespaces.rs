@@ -1,13 +1,8 @@
 //! The Commons' namespaces and the models each declares: the one list of what `mint`
-//! registers. A test below compares it with the `#[derive(Model)]` structs in the
+//! mints. A test below compares it with the `#[derive(Model)]` structs in the
 //! namespace modules' sources, so that a model added there and not here fails the tests.
 
-use std::{future::Future, pin::Pin};
-
-use ankurah::{
-    core::schema::{registration::RegistrationError, ModelStructDescriptor},
-    Context, Model, ModelId,
-};
+use ankurah::{core::schema::ModelStructDescriptor, Model};
 use ankurah_commons::{cognition, git, graph, health, identity, messaging, records, text, work};
 
 /// A namespace of the Commons: the module named `name`, with `-` written `_`, the models
@@ -20,24 +15,14 @@ pub struct Namespace {
     pub edge_kinds: &'static [(&'static str, &'static str)],
 }
 
-/// A model to mint: its declaration, and the call that registers it.
+/// A model to mint.
 pub struct DeclaredModel {
     /// The declaration `#[derive(Model)]` compiled from the model's struct.
     pub descriptor: fn() -> &'static ModelStructDescriptor,
-    /// Registers the model on the context's node, which mints its definitions there,
-    /// and returns the model's id.
-    pub register: for<'c> fn(&'c Context) -> Registration<'c>,
 }
 
-/// The registration of one model, under way.
-pub type Registration<'c> = Pin<Box<dyn Future<Output = Result<ModelId, RegistrationError>> + 'c>>;
-
-const fn declared<M: Model + 'static>() -> DeclaredModel {
-    DeclaredModel { descriptor: M::descriptor, register: register::<M> }
-}
-
-fn register<M: Model + 'static>(context: &Context) -> Registration<'_> {
-    Box::pin(context.resolve_model_id::<M>())
+const fn declared<M: Model>() -> DeclaredModel {
+    DeclaredModel { descriptor: M::descriptor }
 }
 
 /// Every namespace that declares models, in the order the workspace lists them, and
@@ -107,7 +92,7 @@ pub const NAMESPACES: &[Namespace] = &[
 ];
 
 /// The guard that keeps `NAMESPACES` complete, so that a model added to a namespace
-/// module, or a new namespace module, cannot be forgotten in the list `mint` registers.
+/// module, or a new namespace module, cannot be forgotten in the list `mint` mints.
 /// It relies on one convention: a model is a struct with `#[derive(Model, ..)]` written
 /// directly on it, in a file under its namespace's directory in `src/`. A model declared
 /// any other way is not seen.

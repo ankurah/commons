@@ -1,11 +1,9 @@
-minter ed25519 71e93d7b46131743283fa655871bdefaa3c67c27c1153df632010ecb06e8e090
-
-model     cognition.decision  Decision  id NYKhyI8GbmYaNhKRlEy9BRj6bFrGz46Py-U-Xrqp6YA  at 1794795263778  nonce d49d4979d5dd28a6123b309f3e63eb753de2cb3b02127b09ce1efabf1d764d9b
-property  title         string  lww     id pntbvJv04zh3yz7SR6AuKnnJ2rFWx9yYtITFlhSLN1k  at 1794795263778  nonce b2264c7e8cefe3c015c1896a91ffcc87d51e98ac562be2bf008023b4f71cf6c3
-link      title         required        id nzeWWP6--CJSP7QrDgCBeLcyjtEIfGA4tvTtu5zaYGY  at 1794795263778  nonce 1a5df47ecc5c5ef28e22ce5fbc1fd428a80e8216ad328b03f51f5a4120119544
-property  decision      string  lww     id FgNGmvr8urk0cfBIBF9a17eeBXvsIqcMCMGrAP_IW0A  at 1794795263778  nonce 3ae073cec050bb89e8728045ccddc3f011dfa0c088f8cdf5077ee3fc1f8b5de1
-link      decision      required        id syktV-4ePskYLqOoXfOe51-qpKOnJs8jobgLLlcZmEE  at 1794795263778  nonce 120a1c71b4ad7fc552a0da711095eb43e450a7c5b6216239c5ef4b1cbda55fb7
-property  context       string  lww     id mwcDh5NlMWFClC_Mt9YSOiI-Ka989jJe_1WGigyJuB0  at 1794795263778  nonce 9bc21823718cec51ce2c9de13b46e919dfbe051042892400b536cf919f4cd1d2
-link      context       optional        id VDnluUFBbx4w_LmE6ic_Eka3sZYvs7TCgNMBkTSimv0  at 1794795263778  nonce 3d0135a1399db5c1d30e989ec012bd989a91c5387dddbc66077f52f3eae66e0c
-property  consequences  string  lww     id AZolCih4SYuicF1ksAgKMVDWKN0iiyuvAF3KZix0Nsw  at 1794795263778  nonce f318763f3ffc52b37af30918ab7c97c001db1cd442951b3c76bab5e86a638caa
-link      consequences  optional        id -tUFKebqFw2k_akHfgBfHgMkM3HVXFIgjeMkKikPP8k  at 1794795263778  nonce 360679fcab61cbdf89612ef1c5fb6ffcd9b783435c8d6e0f1fd7a5c5407f1aa4
+model     cognition.decision  Decision  id mJYaRYRX0_9kv5a5VEAN8VQQ-BY0bav3bSxqxZUYt7s  at 1794795263778  nonce d49d4979d5dd28a6123b309f3e63eb753de2cb3b02127b09ce1efabf1d764d9b
+property  title         string  lww     id MlBySwOiMNUUic5TRD1yMTQCvzaoWWRLmGCAK-A4bsY  at 1794795263778  nonce b2264c7e8cefe3c015c1896a91ffcc87d51e98ac562be2bf008023b4f71cf6c3
+link      title         required        id UC16TwuClIEYaIoVvRCfkKksPwuHePrtItWubXTWX-Q  at 1794795263778  nonce 1a5df47ecc5c5ef28e22ce5fbc1fd428a80e8216ad328b03f51f5a4120119544
+property  decision      string  lww     id f4BAhrdmvd6NquujwcGmyFiJ8IUvs90OwZvEGn6FDrk  at 1794795263778  nonce 3ae073cec050bb89e8728045ccddc3f011dfa0c088f8cdf5077ee3fc1f8b5de1
+link      decision      required        id fjZQCrfdsE-omsMq1EjW8HqLTXbGUp24zBxMNLoDP4M  at 1794795263778  nonce 120a1c71b4ad7fc552a0da711095eb43e450a7c5b6216239c5ef4b1cbda55fb7
+property  context       string  lww     id zpa2AmqBRSy0nN1NkNg4uaYGaXtvYpjfAPuyg-RVo64  at 1794795263778  nonce 9bc21823718cec51ce2c9de13b46e919dfbe051042892400b536cf919f4cd1d2
+link      context       optional        id EraxawQzmlGPvTwBelmc_5q0bOkJI3JfYQF2nUHYdiI  at 1794795263778  nonce 3d0135a1399db5c1d30e989ec012bd989a91c5387dddbc66077f52f3eae66e0c
+property  consequences  string  lww     id mJKAzxaKJqrIIT1vpLxwEa-lETHbrl1uNTPppxOPnJs  at 1794795263778  nonce f318763f3ffc52b37af30918ab7c97c001db1cd442951b3c76bab5e86a638caa
+link      consequences  optional        id PzqmYWF0wQdHcoQMhvJJpDZ3eE3iRJ3nGQh6G9BY2WE  at 1794795263778  nonce 360679fcab61cbdf89612ef1c5fb6ffcd9b783435c8d6e0f1fd7a5c5407f1aa4

@@ -7,6 +7,7 @@
 
 pub mod akev;
 pub mod property;
+pub mod rebuilding;
 #[cfg(any(feature = "identity", feature = "records", feature = "git", feature = "work"))]
 mod support;
 

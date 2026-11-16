@@ -3,23 +3,20 @@ name    = "ankurah-commons-mint"
 version = "0.0.0"
 edition.workspace = true
 license.workspace = true
-# A tool, whose library rebuilds the events of .akev files: it stays unpublished
-# whatever the namespaces' crates later become.
+# A tool for this repository: it writes the kept mint into the crate's sources.
 publish = false
 
 [dependencies]
-ankurah              = { workspace = true }
-ankurah-storage-sled = { workspace = true }
+ankurah = { workspace = true }
 
 ankurah-commons = { path = "..", features = ["full"] }
 
-# The error type the sled store opens with.
-anyhow    = "1"
 clap      = { version = "4", features = ["derive"] }
-tempfile  = "3"
-thiserror = "2"
-tokio     = { version = "1", features = ["macros", "rt-multi-thread"] }
+# The nonces of entities a kept mint does not hold.
+rand      = "0.9"
+thiserror = { workspace = true }
 
 [dev-dependencies]
 # The guard on the list of models reads the namespaces' sources.
-syn         = { version = "2", features = ["full"] }
+syn      = { version = "2", features = ["full"] }
+tempfile = "3"

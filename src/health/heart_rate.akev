@@ -1,9 +1,7 @@
-minter ed25519 71e93d7b46131743283fa655871bdefaa3c67c27c1153df632010ecb06e8e090
-
-model     health.heart_rate  HeartRate     id rNzAvZ2r1XxzkaoptYGlfaXSxAL74FBmyyiZuNAhSb8  at 1794795263474  nonce 76b25405e1b5e8e1dfe45930882a0046f67f231b07c963b0ff6be7d0e5166c1f
-property  measured_person   entityid  lww  id qYT-9HBT0umuVIYQYZstJZT9ekAHRETF40GNNgR0Jb0  at 1794795263474  nonce eb7afc65b2afedc2a43bc925bbb3f8064d39c9f3b3ccaf33c741f2eb55b085bd
-link      measured_person   required       id T1hharTVyGummkaBmRrmEd69tyTOgof3KKWtFqnwUW8  at 1794795263474  nonce e71260137221234975ff6bc5b306bad2c240d6d0371e1ff27773f7cece43c384
-property  observed_at       i64       lww  id Zkf1I-R_3w_rGbI7zdBaPWXHUPjMCTGZZgs3S2qo9Nw  at 1794795263474  nonce 8dc522a87afe631e435e9cf782983d9701ad2eeac1cc207eb92a4faa1ddf02e7
-link      observed_at       required       id O8X2AFc2CUZ658xN0Z_6-EsHLppnFlRSdXLNBI5Vixo  at 1794795263474  nonce 904d1b170db39d72ab43007d5aa1e54a9c587ba7affa37ed71e2378ed4357ea2
-property  beats_per_minute  f64       lww  id WQsJM9I3qtFHo7MPxgvjV-013kthCEvk3zioiJGAuUU  at 1794795263474  nonce 62d6770f6be3d05fa814fae46419f24301ad2670260b4744c735e4f5c6be1558
-link      beats_per_minute  required       id Vqcd__vdkA8wXQurhm73waXicVUupEkXcMkYd8OkjS0  at 1794795263474  nonce fb82bcd8de7c4e832f1e29f183364d8e681c3bc98758fa1c1cd1d989a05bec8a
+model     health.heart_rate  HeartRate     id msX5so6J9VKpdQ_80j7dgIpzNn6n78WKafft5qOfccI  at 1794795263474  nonce 76b25405e1b5e8e1dfe45930882a0046f67f231b07c963b0ff6be7d0e5166c1f
+property  measured_person   entityid  lww  id chJxiUIeMQHbalkkd5BmozOoKHcjEDanMcLmti6bhiQ  at 1794795263474  nonce eb7afc65b2afedc2a43bc925bbb3f8064d39c9f3b3ccaf33c741f2eb55b085bd
+link      measured_person   required       id w3CeOr3mCdh6jCcse2pKC3tsN09rVjZohbFDo9yND-8  at 1794795263474  nonce e71260137221234975ff6bc5b306bad2c240d6d0371e1ff27773f7cece43c384
+property  observed_at       i64       lww  id x2solFLSc5NfjHpzlgjED-4Fy7CEwGZs4e1yynOGFkI  at 1794795263474  nonce 8dc522a87afe631e435e9cf782983d9701ad2eeac1cc207eb92a4faa1ddf02e7
+link      observed_at       required       id 7h8HpSQVOXv0Ajiu6zbv9if1bmuMXkH8sGHB3n-x1-g  at 1794795263474  nonce 904d1b170db39d72ab43007d5aa1e54a9c587ba7affa37ed71e2378ed4357ea2
+property  beats_per_minute  f64       lww  id ytJOMFpTSDNnNW7N0RR9ejzzPkjKIB00dgaKZQC4XF0  at 1794795263474  nonce 62d6770f6be3d05fa814fae46419f24301ad2670260b4744c735e4f5c6be1558
+link      beats_per_minute  required       id GZRXPk7rL5RFLwkPayrrTXLWyD3IPtqMkDSYOYWg6hc  at 1794795263474  nonce fb82bcd8de7c4e832f1e29f183364d8e681c3bc98758fa1c1cd1d989a05bec8a

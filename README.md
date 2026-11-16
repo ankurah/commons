@@ -3,18 +3,16 @@
 Definitions of models and their properties that Ankurah applications can share, so
 that two applications, or two nodes, mean the same thing by "a message" or "a task".
 
-**Status: draft, with a first mint kept, and no id final.** The draft covers models
+**Status: draft, with a mint kept, and no id final.** The draft covers models
 used by Fwd Centaur and proposed by BLE Activity Logger. The definitions of every model
 in the nine namespaces, 39 models with 107 properties and their links, and the 20 kinds
 of edge in the `graph` namespace's table are minted, unsigned, in the `.akev` files
-beside the structs. The mint was made with Ankurah's node identity branch at `a164293e`,
-which the mint tool needs (mint/README.md), so its events are in that branch's format,
-which the main revision this crate builds against does not read.
+beside the structs, in the format of the Ankurah revision this crate builds against.
 
-The crate builds against a revision of Ankurah's main branch, named in `Cargo.toml`.
-An application that uses it pins the same revision. Until a node can be seeded from the
-kept mint, a node that uses these models mints their definitions itself, under ids of
-its own.
+The crate builds against a revision of Ankurah named in `Cargo.toml`: its branch
+`fwd-pin/portable-genesis`, which is its main with a node that imports events made
+outside it. An application that uses the crate pins the same revision. A node that has
+not imported the kept mint mints the models' definitions itself, under ids of its own.
 
 ## Layout
 
@@ -47,9 +45,9 @@ beside each model's file the `.akev` file of its minted definitions:
     src/support.rs         what the namespaces share that is not a model or a property
                            type
     src/akev.rs            the text form of minted creation events, `.akev` files
-    mint/                  the tool that mints the definitions and checks a mint, and the
-                           library that rebuilds minted events from `.akev` files; it
-                           builds against Ankurah's node identity branch (mint/README.md)
+    src/rebuilding.rs      the creation events rebuilt from `.akev` files
+    mint/                  the tool that mints the definitions and checks a mint
+                           (mint/README.md)
 
 The Rust declarations are the source: each `#[derive(Model)]` struct states a
 model, its properties, how each is stored and which are optional.
@@ -138,21 +136,19 @@ that event once and keeping what was minted.
 from which its creation event is rebuilt exactly: each model's definitions beside the
 struct that declares it, and the edge kinds' records in `src/graph/edge_kinds.akev`. A
 mint that is kept is committed to this repository, and that text is then the
-authority. A node that uses the models writes the rebuilt events, with their states,
-into its store before it first starts, and from then on it uses the minted ids.
+authority. Each creation event names no system root and no author, so it is the same
+entity on every node. A node that imports the rebuilt events before it first registers
+the models (Ankurah's `Node::import_events`) uses the minted ids from then on.
 
-The first mint is unsigned, and the key it is minted under is discarded: what
-vouches for the events is this repository. Signed statements can be added later
-without changing an id.
+The mint is unsigned: what vouches for the events is this repository. Signed statements
+can be added later without changing an id.
 
 Still to come:
 
 - the minted ids written into the declarations, so that a node refuses to start
   on a store that lacks the definitions, where today it would mint its own;
 - changes to a definition after it is minted, as further events beside its
-  creation;
-- the state each minted event makes, which a seeded store needs and Ankurah offers no
-  public way to derive from the event.
+  creation.
 
 A comment that starts with `OPEN:` marks a question still to settle. Settling one that
 changes a model changes its definitions, which then need minting again.

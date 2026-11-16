@@ -1,51 +1,19 @@
 # ankurah-commons-mint
 
 Mints the definitions of the Commons' models and the Commons' kinds of edge, and checks
-a mint. `mint` registers each model, creates an `EdgeKind` record for each kind, and
-writes every entity it minted as a line of an `.akev` file, text from which the entity's
-creation event is rebuilt: each model's definitions beside the struct that declares it,
-and the edge kinds' records in `src/graph/edge_kinds.akev`. `verify` checks those files.
-Whether a mint is kept is the runner's choice. The library in this package,
-`rebuilding`, rebuilds the events from the files.
+a mint. `mint` writes every entity it mints as a line of an `.akev` file, text from which
+the entity's creation event is rebuilt (`ankurah_commons::rebuilding`): each model's
+definitions beside the struct that declares it, and the edge kinds' records in
+`src/graph/edge_kinds.akev`. `verify` checks those files.
 
-The tool uses parts of Ankurah that exist only on its node identity branch
-(`feat/node-identity-attestation`), so it is outside the workspace while the crate builds
-against Ankurah's main. It builds and its tests pass in a copy of the workspace
-that pins that branch at `a164293e` and lists `mint` among its members, as commit
-`a545fe9` of this repository did. It returns to the workspace when the branch reaches
-Ankurah's main. The events it mints are in that branch's format, which Ankurah's main
-does not read.
+Every creation event is a genesis in the format of the Ankurah revision the workspace
+pins. It names no system root and no author, so it is the same entity, with the same id,
+on every node that holds it, and a durable node takes it as it is
+(`Node::import_events`).
 
-A kept mint is for seeding: another node, on a fresh store, is given the minted entities
-before it is built, and then uses the very same ids. Before building the node, the user
-opens its storage engine and, in one storage transaction, calls `add_events` for every
-rebuilt event and `set_state(&Clock::default(), &state)` for every entity's state, then
-commits. The node then finds the definitions in its catalog, which is built from states,
-and registering models that declare exactly what was minted binds them to the minted
-ids. The states are not rebuilt yet: Ankurah offers no public way to apply an event to an
-empty entity.
-
-A seeder has three things to get right, because Ankurah reports none of them as an
-error:
-
-- **The commit's outcome.** On a store that already holds the definitions, `commit`
-  returns `StorageCommitOutcome::Conflict` and writes nothing. A second start looks
-  like that, and so does a larger mint over a smaller one: a seeded store cannot be
-  given more this way.
-- **Completeness.** Whatever the node's models declare that the seed lacks, a model, a
-  property or a model-property link, registration mints under the node's own key, with
-  other ids.
-- **Timing.** Definitions planted under a running node are not seen by it, and it mints
-  its own beside them.
-
-This tool does not seed.
-
-Nothing is signed. Every creation event names a minter, a public key, because Ankurah
-hashes one into the event's id. `mint` draws a fresh key for each run and discards it,
-so the minter is nobody's identity. `verify` shows that the files rebuild the events
-their ids name; it does not show who made them. What vouches for a kept mint is the
-repository it is committed to. Statements about the events can be added later without
-changing any id.
+Nothing is signed. `verify` shows that the files rebuild the events their ids name; it
+does not show who made them. What vouches for a kept mint is the repository it is
+committed to. Statements about the events can be added later without changing any id.
 
 ## Running it
 
@@ -53,36 +21,41 @@ changing any id.
     cargo run -p ankurah-commons-mint -- verify [--src <dir>]
 
 Both work on the namespaces' parent directory, the crate's `src/` by default. `mint`
-refuses a directory that holds an `.akev` file already, so that it never replaces a kept
-mint; a trial run is given a copy of `src/` with `--src`. A mint that is to be kept is
-written into `src/` and committed.
+replaces the kept mint's files there; git keeps the old ones. A trial run is given a copy
+of `src/` with `--src`. A mint that is to be kept is written into `src/` and committed.
 
 `verify` exits with a failure, naming the first file that fails and why, unless every
 check below passes.
 
 ## What `mint` writes
 
-1. It builds a durable Ankurah node on a store in a temporary directory, with no peer,
-   so that it registers models itself, under a key drawn for the run and discarded.
-2. It registers every model of every namespace. Registration creates the definitions,
-   as entities of Ankurah's catalog: one for the model, one for each of its properties,
-   and one model-property link for each property, which gives the model the property
-   and says whether it is optional.
-3. It creates, in one transaction, an `EdgeKind` record for each kind of edge in the
-   table in the `graph` namespace's source (`EDGE_KINDS`).
-4. It reads each model and property as the node's catalog lists it, and takes from the
-   store the event that created each entity, requiring exactly one, with no
-   attestation.
-5. It writes each model's definitions into `<model>.akev` beside the `<model>.rs` that
-   declares it, and the edge kinds' records into `src/graph/edge_kinds.akev`, after
-   checking that the text rebuilds exactly the events the node made.
+No node takes part. For each model of each namespace in the list below, `mint`:
 
-An `.akev` file opens with the minter every event names, a public key. Each entity then
-takes one line: what it is, its id, and what its creation event holds that its values do
-not, the time it was minted and its nonce. An edge kind's description takes the indented
-line beneath it.
+1. takes from the struct's declaration what registering it writes: a definition of the
+   model, its label and the name of its struct; a definition of each property, its
+   name, value type and backend; and a model-property link for each property, which
+   gives the model the property and says whether it is optional;
+2. gives each of those entities the time and nonce of its line in the kept mint, when
+   the kept mint has one, and otherwise the current time and a fresh nonce;
+3. rebuilds each entity's creation event, which gives its id, and writes the
+   definitions into `<model>.akev` beside the `<model>.rs` that declares it.
 
-    minter ed25519 <public key in hex>
+It does the same for a record of each kind of edge in the table in the `graph`
+namespace's source (`EDGE_KINDS`), its name and description, into
+`src/graph/edge_kinds.akev`.
+
+Minting a kept mint again therefore changes a file only where a declaration changed or
+where Ankurah's events changed format, and then only its ids. The ids the kept mint's
+lines state are not read, so a mint made in an earlier format keeps its times and nonces
+too.
+
+A test in the crate (`rebuilding`) checks that the events rebuilt from those values are
+exactly what a durable node writes when it registers a model or creates a record, but for
+the system root the node names.
+
+An `.akev` file takes one line for each entity: what it is, its id, and what its creation
+event holds that its values do not, the time it was minted and its nonce. An edge kind's
+description takes the indented line beneath it.
 
     model     <label>  <struct name>   id <id>  at <ms>  nonce <hex>
     property  <name>  <value type>  <backend>  id <id>  at <ms>  nonce <hex>
@@ -109,13 +82,12 @@ It checks, stopping at the first file that fails:
 
 It does not establish:
 
-- what state each event makes: the states are not rebuilt;
 - who made the events: nothing is signed;
 - that they are recent: an older mint of the same declarations verifies too.
 
 ## The list of models
 
-`src/namespaces.rs` lists every namespace and its models: what `mint` registers. It also
+`src/namespaces.rs` lists every namespace and its models: what `mint` mints. It also
 gives `graph` the table of edge kinds from that namespace's source. A test
 there keeps the list complete, so that a model added to a namespace, or a new
 namespace, cannot be forgotten: for every namespace's module, a directory in the
@@ -129,21 +101,16 @@ any other way is not seen.
 
 ## Known limits
 
-- **Ids last only as a kept mint.** Every run draws a fresh key, a new random nonce for
-  each event, and reads the clock, and all go into the event's id; the definitions that
-  refer to others carry those others' ids. So the ids differ on every run, and are
-  fixed only by keeping one run's output. The ids of a kept mint stay valid
-  only while the Ankurah revision's event format, the way its last-writer-wins backend
-  encodes values, and what a definition holds stay the same.
+- **Ids hold only for one format.** An entity's id is the hash of its creation event, so
+  the ids of a kept mint stay valid only while the Ankurah revision's event format, the
+  way its last-writer-wins backend encodes values, and what a definition holds stay the
+  same. Minting again after such a change keeps every time and nonce and gives new ids.
 - **A reference property does not say what it refers to.** Registration writes a
   reference property's target model empty (Ankurah issue 513), so the definition of,
   say, `records.created`'s `by` does not name `identity.principal`, and an
   absent target says nothing about what a Rust `Ref<T>` refers to. An `.akev` file
-  states no target model, and `mint` fails on a property that has one.
+  states no target model, and `mint` writes none, as registration writes none.
 - **Only a definition's creation is handled.** A definition changed after it was
   minted, renamed or with a property made optional, would have further events after
-  its creation. `mint` always starts from an empty store and an `.akev` line states a
-  creation, so neither handles those yet.
-- **No mint under a kept key.** Minting under a particular key that is kept, so that
-  whoever holds it could later be recognised by it, is not offered; it would be a new
-  mint, with new ids.
+  its creation. An `.akev` line states a creation, so `mint` gives a changed
+  declaration new definitions, with new ids, rather than changing the old ones.

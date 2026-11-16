@@ -2,8 +2,8 @@
 //! `.akev` files beside the models' structs, and checks those files. The crate's README
 //! says what the check establishes and what the tool does not settle.
 
+mod minting;
 mod namespaces;
-mod registering;
 mod verifying;
 mod writing;
 
@@ -15,16 +15,16 @@ use std::{
 use clap::Parser;
 use thiserror::Error;
 
-use crate::{namespaces::NAMESPACES, registering::MintError, verifying::VerifyError, writing::WriteError};
+use crate::{minting::MintError, namespaces::NAMESPACES, verifying::VerifyError, writing::WriteError};
 
 #[derive(Parser)]
 #[command(about = "Mints the definitions of the Commons' models and kinds of edge into .akev files, and checks them")]
 enum Command {
-    /// Register every model of every namespace on a throwaway node and create the kinds of
-    /// edge, and write each model's definitions beside its struct and the edge kinds'
-    /// records in the `graph` namespace, as `.akev` files.
+    /// Mint the definitions of every model of every namespace, and the records of the kinds
+    /// of edge, into `.akev` files beside the structs that declare them. An entity that the
+    /// kept mint there holds keeps its time and nonce.
     Mint {
-        /// The namespaces' parent directory, which must hold no `.akev` file yet.
+        /// The namespaces' parent directory.
         #[arg(long, default_value_os_t = sources())]
         src: PathBuf,
     },
@@ -47,10 +47,9 @@ enum CommandError {
     Verify(#[from] VerifyError),
 }
 
-#[tokio::main]
-async fn main() -> ExitCode {
+fn main() -> ExitCode {
     let result = match Command::parse() {
-        Command::Mint { src } => mint(&src).await,
+        Command::Mint { src } => mint(&src),
         Command::Verify { src } => verify(&src),
     };
     match result {
@@ -62,20 +61,19 @@ async fn main() -> ExitCode {
     }
 }
 
-/// The crate's own sources, where a kept mint lives.
+/// The crate's own sources, where the kept mint lives.
 fn sources() -> PathBuf {
     let mint = Path::new(env!("CARGO_MANIFEST_DIR"));
     mint.parent().expect("the mint crate sits in the workspace").join("src")
 }
 
-async fn mint(src: &Path) -> Result<(), CommandError> {
-    writing::refuse_kept(src)?;
-    let minted = registering::mint(NAMESPACES).await?;
+fn mint(src: &Path) -> Result<(), CommandError> {
+    let minted = minting::mint(src, NAMESPACES)?;
     writing::write(src, &minted)?;
 
     let models: usize = minted.iter().map(|namespace| namespace.models.len()).sum();
     let properties: usize = minted.iter().flat_map(|namespace| &namespace.models).map(|model| model.properties.len()).sum();
-    let edge_kinds: usize = minted.iter().map(|namespace| namespace.edge_kinds.len()).sum();
+    let edge_kinds: usize = minted.iter().flat_map(|namespace| &namespace.edge_kinds).map(|edge_kinds| edge_kinds.kinds.len()).sum();
     println!(
         "Minted {models} models in {} namespaces, with {properties} properties and their links, and {edge_kinds} edge kinds, into {}",
         minted.len(),

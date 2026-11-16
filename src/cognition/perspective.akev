@@ -1,7 +1,5 @@
-minter ed25519 71e93d7b46131743283fa655871bdefaa3c67c27c1153df632010ecb06e8e090
-
-model     cognition.perspective  Perspective  id xAveYzxhCOBKBU7aoHFmivWF4D-qtf0nU3hTo6tgfjg  at 1794795263883  nonce dc88b48462028804578fb114341d9d2b26a456634a3069d34e526766422d8afa
-property  of     json    lww                  id NVdJ3WRJl7XI9dCASseJLTnQ2qugEghSrS9Je7dkZ8k  at 1794795263883  nonce d3db956ddf8d4b1cb76c06c2a9d22e7bffd9897d9b9f2020ebcf792851f7d298
-link      of     required                     id pcbikA1sddhgEZoybhVnc7xfRkhM8cMOVEHhf6cp2RA  at 1794795263883  nonce 9cf7bea3c3d29360316cfc3d7a12a9a558f5b9c5cdc15d91f979e85b1a62f126
-property  words  string  lww                  id gUN2L3mUvhobSLP_6XBAEytbXgpF2-qh9DfUNDxHqmc  at 1794795263884  nonce b534da1c258429273c035ccded3a631dcb44fdfa1b96bc295e488374b9cca413
-link      words  required                     id Me6hzdRcxaKRylLnvdrV27enw3IbX23n1fhXx2M56Z0  at 1794795263884  nonce 05fe816d4cb7b0b23ebff03653b6cb09012d221fe1c8974dccb10fdd3954c694
+model     cognition.perspective  Perspective  id ybbjT_MNxMsbQudQ57t3Jd4SGtUlaBlf3orz-xffzaM  at 1794795263883  nonce dc88b48462028804578fb114341d9d2b26a456634a3069d34e526766422d8afa
+property  of     json    lww                  id Yu5KT5_2fskMY-wg_B92B4pEuapy6dqxTmmd08GyOu4  at 1794795263883  nonce d3db956ddf8d4b1cb76c06c2a9d22e7bffd9897d9b9f2020ebcf792851f7d298
+link      of     required                     id VfSaVDR5oieI4LT0x92Ki3ljTi3uy2yR8HmEtFK69U4  at 1794795263883  nonce 9cf7bea3c3d29360316cfc3d7a12a9a558f5b9c5cdc15d91f979e85b1a62f126
+property  words  string  lww                  id 2aVqWXQDLiGdV5wDts88vGVU2LDQVmKgfClS6_8xcig  at 1794795263884  nonce b534da1c258429273c035ccded3a631dcb44fdfa1b96bc295e488374b9cca413
+link      words  required                     id KOhyNBRZWsy4gZAKc4jGAg2kgWdrxXd7Ow89luX96uo  at 1794795263884  nonce 05fe816d4cb7b0b23ebff03653b6cb09012d221fe1c8974dccb10fdd3954c694
