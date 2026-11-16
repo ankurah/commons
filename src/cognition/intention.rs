@@ -8,6 +8,7 @@ use serde::{Deserialize, Serialize};
 /// ended, fulfilled or withdrawn, is `Closed`. All are on the same entity.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "cognition.intention")]
+#[model(id = "W_PUyePLDVZm5ly-2sTyWjIHyu4zihZ5QWcCUGG-mHY")]
 #[model(no_ffi)]
 pub struct Intention {
     #[active_type(LWW)]

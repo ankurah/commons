@@ -8,6 +8,7 @@ use serde::{Deserialize, Serialize};
 /// on the same entity. What supports it arrives by `supports` edges.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "cognition.claim")]
+#[model(id = "THctMWzZhys_PU4JvYUUl84QsAXk_rkigH31agBk4G8")]
 #[model(no_ffi)]
 pub struct Claim {
     #[active_type(LWW)]

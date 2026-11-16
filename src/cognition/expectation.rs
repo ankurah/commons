@@ -10,6 +10,7 @@ use serde::{Deserialize, Serialize};
 /// and it ends through `Closed`: held, failed or inconclusive.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "cognition.expectation")]
+#[model(id = "G08Dtf2xjJUfP8tCTnvtbJmox5B8tAhkxPqf58Ghxvs")]
 #[model(no_ffi)]
 pub struct Expectation {
     #[active_type(LWW)]

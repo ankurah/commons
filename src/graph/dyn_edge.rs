@@ -15,6 +15,7 @@ use serde::{Deserialize, Serialize};
 // remove a component from an entity.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "graph.dyn_edge")]
+#[model(id = "wY_SwOM6bWYB1vBXl7C1NfYzD_dI09LwL0-FPXB-vp4")]
 #[model(no_ffi)]
 pub struct DynEdge {
     pub from: DynRef,

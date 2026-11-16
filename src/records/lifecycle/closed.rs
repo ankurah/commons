@@ -13,6 +13,7 @@ use serde::{Deserialize, Serialize};
 // Ankurah can remove a component from an entity.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "records.closed")]
+#[model(id = "9J52GuMASQzfCUgKJ3PhFO7trfK9CjxVmTYUT65X-YY")]
 #[model(no_ffi)]
 pub struct Closed {
     #[active_type(LWW)]

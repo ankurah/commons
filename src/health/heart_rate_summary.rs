@@ -8,6 +8,7 @@ use serde::{Deserialize, Serialize};
 /// For a workout and its recovery, use separate summaries for the two windows.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "health.heart_rate_summary")]
+#[model(id = "ABJk8PXGYqZtdHOInmA-bpSzSxqf_rWGp0MvucPqa6k")]
 #[model(no_ffi)]
 pub struct HeartRateSummary {
     pub measured_person: Ref<Principal>,

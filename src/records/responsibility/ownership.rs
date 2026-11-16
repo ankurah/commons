@@ -7,6 +7,7 @@ use serde::{Deserialize, Serialize};
 /// Never on an intention, which belongs to no one.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "records.ownership")]
+#[model(id = "QDbyx81eSYyg0U4Q6zFygOV8USLByHAYRnOPo5BcIkA")]
 #[model(no_ffi)]
 pub struct Ownership {
     pub owner: Ref<Principal>,

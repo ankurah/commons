@@ -38,16 +38,19 @@ No node takes part. For each model of each namespace in the list below, `mint`:
 2. gives each of those entities the time and nonce of its line in the kept mint, when
    the kept mint has one, and otherwise the current time and a fresh nonce;
 3. rebuilds each entity's creation event, which gives its id, and writes the
-   definitions into `<model>.akev` beside the `<model>.rs` that declares it.
+   definitions into `<model>.akev` beside the `<model>.rs` that declares it;
+4. declares the model's id in its struct, `#[model(id = "<id>")]` on the line after
+   `#[model(label = "...")]`, in place of the id declared there.
 
 It does the same for a record of each kind of edge in the table in the `graph`
 namespace's source (`EDGE_KINDS`), its name and description, into
 `src/graph/edge_kinds.akev`.
 
-Minting a kept mint again therefore changes a file only where a declaration changed or
-where Ankurah's events changed format, and then only its ids. The ids the kept mint's
+Minting a kept mint again therefore changes nothing unless a declaration, or the format
+of Ankurah's events, changed; a new format changes only the ids. The ids the kept mint's
 lines state are not read, so a mint made in an earlier format keeps its times and nonces
-too.
+too. Nor are the ids the structs declare: a struct that declares none yet, or an old one,
+is minted all the same.
 
 A test in the crate (`rebuilding`) checks that the events rebuilt from those values are
 exactly what a durable node writes when it registers a model or creates a record, but for
@@ -74,9 +77,11 @@ It checks, stopping at the first file that fails:
 1. Every listed model has its file beside its struct, the `graph` namespace has the edge
    kinds' file, and no other `.akev` file is under the directory.
 2. Each file parses, in exactly the form the writer gives it.
-3. Each file states its model as the struct declares it: its label, its name, and its
-   properties in order, each with its value type, backend and whether it is optional.
-   The edge kinds' file states the kinds of the `graph` namespace's table, in order.
+3. Each file states its model as the struct declares it: its label, its name, its id,
+   and its properties in order, each with its value type, backend and whether it is
+   optional. The edge kinds' file states the kinds of the `graph` namespace's table, in
+   order. The declarations are the ones the tool was built with, so after a mint that
+   changed an id, `verify` passes once the tool is built again, as `cargo run` does.
 4. Every creation event rebuilt from a file has the id its line gives. An entity's id
    is the hash of its creation event, so the text is exactly what was minted.
 

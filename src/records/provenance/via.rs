@@ -10,6 +10,7 @@ use serde::{Deserialize, Serialize};
 // register a property outside a model.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "records.via")]
+#[model(id = "rJGiTNzdN5kxd_hM7FFF5I2Fs8HGIsPFIf--4aCx3Ng")]
 #[model(no_ffi)]
 pub struct Via {
     pub via: RefMap,

@@ -11,6 +11,7 @@ use serde::{Deserialize, Serialize};
 // which is still to be shaped.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "work.scope")]
+#[model(id = "iT1lR2sfIvf735FsTAYXpXI76PXKwkAxRZ5cyPti8gQ")]
 #[model(no_ffi)]
 pub struct Scope {
     #[active_type(LWW)]

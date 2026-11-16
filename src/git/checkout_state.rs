@@ -17,6 +17,7 @@ string_enum!(DiffSide);
 /// on the entity that carries its `FileAnchor`.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "git.checkout_state")]
+#[model(id = "ma3v4p3sBurgqG2sLcBeRjdDleP8lAqJ5oh9C2nyW40")]
 #[model(no_ffi)]
 pub struct CheckoutState {
     #[active_type(LWW)]

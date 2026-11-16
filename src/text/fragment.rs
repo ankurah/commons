@@ -11,6 +11,7 @@ use serde::{Deserialize, Serialize};
 /// when, is `Created`.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "text.fragment")]
+#[model(id = "T1jwWExgRbdiPf5B0tVDoKdrrLzioT9W8LoghZ8iOlY")]
 #[model(no_ffi)]
 pub struct Fragment {
     /// The marked text. Empty when the whole document is marked.

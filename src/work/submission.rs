@@ -10,6 +10,7 @@ use serde::{Deserialize, Serialize};
 /// return is `Closed`. All are on the same entity.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "work.submission")]
+#[model(id = "vc9YgO8iHlsyARnnjQgKWwTQMbAjaQaoHHOKnHGYMFI")]
 #[model(no_ffi)]
 pub struct Submission {
     /// The work handed in, such as a task.

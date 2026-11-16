@@ -7,6 +7,7 @@ use serde::{Deserialize, Serialize};
 /// account or session; a principal may have several. `Closed` when unbound.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "identity.identity_binding")]
+#[model(id = "vWU3HdKaBasO5kRllSoq1yZmNGvORMT24tH1lv5Fd0k")]
 #[model(no_ffi)]
 pub struct IdentityBinding {
     pub principal: Ref<Principal>,

@@ -13,6 +13,7 @@ use serde::{Deserialize, Serialize};
 // OPEN: whether to name it DivisiblePosition instead.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "records.fractional_position")]
+#[model(id = "dj9ZT3_8j6ryDe-JoSnrhkGdgOGoevly5WJIzkQ5rAw")]
 #[model(no_ffi)]
 pub struct FractionalPosition {
     #[active_type(LWW)]

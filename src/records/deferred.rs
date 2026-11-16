@@ -9,6 +9,7 @@ use serde::{Deserialize, Serialize};
 // waits, once Ankurah can remove a component from an entity.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "records.deferred")]
+#[model(id = "2KmnCWnswY4uxkb3nYmE8J2cFiiR_fIUESAmw0rDSzw")]
 #[model(no_ffi)]
 pub struct Deferred {
     #[active_type(LWW)]

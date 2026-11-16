@@ -34,9 +34,10 @@ pub enum SeedError {
 /// to its minted definitions, and registering it mints nothing.
 ///
 /// `node` must be durable, with its system root created or loaded. Seed it before it first
-/// binds any of the Commons' models, which a fetch or a query does as well as registration:
-/// a model bound before keeps that binding while the node runs. Seeding a node that holds
-/// the kept mint already changes nothing, so a node can be seeded at every start.
+/// binds any of the Commons' models, which a fetch, a query, a get or a create does as well
+/// as registration: a model declares its minted id, so binding it on a node not yet seeded
+/// fails with `RegistrationError::ExplicitModelIdNotFound`. Seeding a node that holds the
+/// kept mint already changes nothing, so a node can be seeded at every start.
 pub async fn seed<SE, PA>(node: &Node<SE, PA>) -> Result<(), SeedError>
 where
     SE: StorageEngine + Send + Sync + 'static,
@@ -142,5 +143,52 @@ mod tests {
     async fn seeding_a_seeded_node_again_changes_no_stored_event_or_state() {
         seeding_again_changes_nothing(SledStorageEngine::new_test().unwrap()).await;
         seeding_again_changes_nothing(SqliteStorageEngine::open_in_memory().await.unwrap()).await;
+    }
+
+    /// Each model declares its minted id, so on a node that was not seeded it fails to
+    /// register, rather than minting definitions of its own.
+    #[cfg(feature = "identity")]
+    #[tokio::test]
+    async fn without_the_seed_a_model_fails_to_register_with_a_typed_error() {
+        use crate::identity::Principal;
+        use ankurah::{core::schema::registration::RegistrationError, policy::DEFAULT_CONTEXT, Model};
+
+        let node = Node::new_durable(Arc::new(SledStorageEngine::new_test().unwrap()), PermissiveAgent::new());
+        node.system.create().await.unwrap();
+        let context = node.context_async(DEFAULT_CONTEXT).await.unwrap();
+        let declared = EntityId::from_base64(Principal::descriptor().explicit_id.unwrap()).unwrap();
+        let error = context.resolve_model_id::<Principal>().await.unwrap_err();
+        assert!(matches!(error, RegistrationError::ExplicitModelIdNotFound { model } if model == declared), "{error}");
+        assert_eq!(node.catalog.model_labels(), []);
+    }
+
+    /// A declaration of a minted model's label that names no id, as a build that bound the
+    /// model by its label declared it.
+    #[cfg(feature = "identity")]
+    #[derive(ankurah::Model, Debug, Clone)]
+    #[model(label = "identity.principal")]
+    #[model(no_ffi)]
+    pub struct Unminted {
+        #[active_type(LWW)]
+        pub handle: String,
+    }
+
+    /// A store can hold a definition that a node minted for a model's label before it was
+    /// seeded, as a build that bound the model by its label left it. The model, declaring its
+    /// minted id, binds to its minted definition all the same.
+    #[cfg(feature = "identity")]
+    #[tokio::test]
+    async fn a_model_binds_to_its_minted_definition_beside_another_of_its_label() {
+        use crate::identity::Principal;
+        use ankurah::{policy::DEFAULT_CONTEXT, Model};
+
+        let node = Node::new_durable(Arc::new(SledStorageEngine::new_test().unwrap()), PermissiveAgent::new());
+        node.system.create().await.unwrap();
+        let context = node.context_async(DEFAULT_CONTEXT).await.unwrap();
+        let unminted = context.resolve_model_id::<Unminted>().await.unwrap();
+        seed(&node).await.unwrap();
+        let declared = EntityId::from_base64(Principal::descriptor().explicit_id.unwrap()).unwrap();
+        assert_ne!(unminted, ModelId::EntityId(declared));
+        assert_eq!(context.resolve_model_id::<Principal>().await.unwrap(), ModelId::EntityId(declared));
     }
 }

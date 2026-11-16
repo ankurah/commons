@@ -8,6 +8,7 @@ use serde::{Deserialize, Serialize};
 /// recorded them, is `Attribution`. Both are on the same entity.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "text.quotation")]
+#[model(id = "UpLx9aFmM5nZGI_yfZoUoIck6Fk05F_D89zGilEEoLE")]
 #[model(no_ffi)]
 pub struct Quotation {
     #[active_type(LWW)]

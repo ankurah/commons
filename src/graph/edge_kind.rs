@@ -7,6 +7,7 @@ use serde::{Deserialize, Serialize};
 /// are, rather than made by each node.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "graph.edge_kind")]
+#[model(id = "yDVJXmGUhzHmue289YFApbB2-pPt8SiCG2NhiHy_zco")]
 #[model(no_ffi)]
 pub struct EdgeKind {
     /// In snake case, such as `depends_on`.

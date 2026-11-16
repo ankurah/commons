@@ -20,6 +20,7 @@ string_enum!(TaskStatus);
 /// hand-in of it is a `Submission` of its own.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "work.task")]
+#[model(id = "t2Eoj6lcrbxFPw7u3Ig0YOVhGQ1Qzq4GaylpGn8tP8w")]
 #[model(no_ffi)]
 pub struct Task {
     #[active_type(LWW)]

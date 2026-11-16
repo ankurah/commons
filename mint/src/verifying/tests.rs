@@ -50,13 +50,28 @@ fn edit(path: &Path, from: &str, to: &str) {
     fs::write(path, text.replacen(from, to, 1)).unwrap();
 }
 
+/// Every file under `dir`, the sources and the kept mint's.
+fn files(dir: &Path) -> Vec<PathBuf> {
+    let mut files = Vec::new();
+    for entry in fs::read_dir(dir).unwrap() {
+        let path = entry.unwrap().path();
+        if path.is_dir() {
+            files.extend(self::files(&path));
+        } else {
+            files.push(path);
+        }
+    }
+    files
+}
+
 /// Each entity keeps its time and nonce, so minting the kept mint again under the same
-/// declarations and the same format of Ankurah's events writes every file as it was.
+/// declarations and the same format of Ankurah's events writes every file as it was, the
+/// ids the declarations state with them.
 #[test]
 fn minting_the_kept_mint_again_changes_no_file_and_it_verifies() {
     let src = minted();
-    for kept in writing::minted_files(&sources()).unwrap() {
-        let minted = src.path().join(kept.strip_prefix(sources()).unwrap());
+    for minted in files(src.path()) {
+        let kept = sources().join(minted.strip_prefix(src.path()).unwrap());
         assert_eq!(fs::read_to_string(&minted).unwrap(), fs::read_to_string(&kept).unwrap(), "{}", kept.display());
     }
     let verified = verify(src.path(), NAMESPACES).unwrap();
@@ -67,16 +82,29 @@ fn minting_the_kept_mint_again_changes_no_file_and_it_verifies() {
     assert_eq!((verified.files, verified.events), (models + 1, definitions + edge_kinds));
 }
 
-/// An entity the kept mint lacks is minted with a time and nonce drawn for it.
+/// A model the kept mint lacks, whose struct declares no id yet, is minted with a time and
+/// nonce drawn for each entity, and its struct is given the new id. Until the declarations
+/// are built again, the tool's own still state the old one, and verify says so.
 #[test]
-fn a_model_the_kept_mint_lacks_is_minted_anew() {
+fn a_model_new_to_the_mint_is_minted_anew_and_given_its_id() {
     let src = copied();
     let intention = src.path().join("cognition").join("intention.akev");
+    let source = intention.with_extension("rs");
     let kept = fs::read_to_string(&intention).unwrap();
     fs::remove_file(&intention).unwrap();
+    let declared = fs::read_to_string(&source).unwrap();
+    let id_line = declared.lines().find(|line| line.starts_with("#[model(id = ")).unwrap();
+    fs::write(&source, declared.replacen(&format!("{id_line}\n"), "", 1)).unwrap();
+
     mint(src.path());
-    assert_ne!(fs::read_to_string(&intention).unwrap(), kept);
-    verify(src.path(), NAMESPACES).unwrap();
+    let minted = fs::read_to_string(&intention).unwrap();
+    assert_ne!(minted, kept);
+    let (_, ids) = ModelDefinitions::parse(&minted).unwrap();
+    let label_and_id = format!("#[model(label = \"cognition.intention\")]\n#[model(id = \"{}\")]\n", ids[0].to_base64());
+    assert!(fs::read_to_string(&source).unwrap().contains(&label_and_id));
+    let error = failure(&src);
+    assert_eq!(error.path, intention);
+    assert!(matches!(error.failure, Failure::NotAsDeclared("id")), "{error}");
 }
 
 /// A creation field changed in the writer's form still parses, but rebuilds another event.

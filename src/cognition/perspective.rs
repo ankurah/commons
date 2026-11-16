@@ -10,6 +10,7 @@ use serde::{Deserialize, Serialize};
 /// `Edited`. All are on the same entity.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "cognition.perspective")]
+#[model(id = "ybbjT_MNxMsbQudQ57t3Jd4SGtUlaBlf3orz-xffzaM")]
 #[model(no_ffi)]
 pub struct Perspective {
     /// The record it is of, at the head it read.
@@ -34,6 +35,7 @@ mod tests {
     async fn a_fetch_by_the_entity_a_perspective_is_of_finds_it() {
         let node = Node::new_durable(Arc::new(SledStorageEngine::new_test().unwrap()), PermissiveAgent::new());
         node.system.create().await.unwrap();
+        crate::seed(&node).await.unwrap();
         let context = node.context_async(DEFAULT_CONTEXT).await.unwrap();
         let [intention, claim] = [1, 2].map(|byte| EntityId::from_bytes([byte; 32]));
         let head = Clock::new(vec![(1, EventId::from_bytes([3; 32]))]).unwrap();

@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 /// A git repository.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "git.repository")]
+#[model(id = "fxNrHi50qgqHknTgutk7hcW4XEH1B-czuTZ1TLoTaNg")]
 #[model(no_ffi)]
 pub struct Repository {
     #[active_type(LWW)]

@@ -11,6 +11,7 @@ use serde::{Deserialize, Serialize};
 /// it asks that principal, and with none it asks no one in particular.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "messaging.message")]
+#[model(id = "R_Ft_laLg0H4VphuMecTyiSEokfleA9LzgJ2r5Q4RxA")]
 #[model(no_ffi)]
 pub struct Message {
     #[active_type(YrsString)]

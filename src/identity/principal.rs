@@ -18,6 +18,7 @@ string_enum!(PrincipalKind);
 /// is still attributed to it.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "identity.principal")]
+#[model(id = "ZITgy1aws0-JJAI_D6t__wr3kAKaAIPZImNVQr1YLmU")]
 #[model(no_ffi)]
 pub struct Principal {
     #[active_type(LWW)]

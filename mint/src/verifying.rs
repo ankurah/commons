@@ -4,7 +4,7 @@
 //! - every listed model has its file beside its struct, the `graph` namespace has the edge
 //!   kinds' file, and no other `.akev` file is there;
 //! - each file parses, in exactly the form the writer gives it;
-//! - each states its model as the struct declares it: its label, its name, and its
+//! - each states its model as the struct declares it: its label, its name, its id, and its
 //!   properties in order, each with its value type, backend and whether it is optional;
 //!   the edge kinds' file states the kinds the `graph` namespace's table lists, in order;
 //! - every creation event rebuilt from a file has the id its line gives.
@@ -17,7 +17,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use ankurah::core::schema::ModelStructDescriptor;
+use ankurah::{core::schema::ModelStructDescriptor, EntityId};
 use ankurah_commons::{
     akev::{EdgeKinds, ModelDefinitions, ParseError},
     namespaces::Namespace,
@@ -82,7 +82,8 @@ pub fn verify(src: &Path, namespaces: &[Namespace]) -> Result<Verified, VerifyEr
                 .map_err(|failure| VerifyError { path: directory.clone(), failure: Failure::Unplaced(failure) })?;
             let failed = |failure| VerifyError { path: path.clone(), failure };
             let (definitions, ids) = ModelDefinitions::parse(&read(&path)?).map_err(|error| failed(Failure::Unparsable(error)))?;
-            as_declared(&definitions, descriptor).map_err(failed)?;
+            // The model's line comes first.
+            as_declared(&definitions, ids[0], descriptor).map_err(failed)?;
             events += definitions.events_as_stated(&ids).map_err(|error| failed(Failure::NotRebuilt(error)))?.len();
             if Some(descriptor.label) == edge_kind_label {
                 edge_kind = Some(definitions);
@@ -119,15 +120,18 @@ fn read(path: &Path) -> Result<String, VerifyError> {
     })
 }
 
-/// Checks that `definitions` states the model `descriptor` declares, naming the first part
-/// that differs.
-fn as_declared(definitions: &ModelDefinitions, descriptor: &ModelStructDescriptor) -> Result<(), Failure> {
+/// Checks that `definitions`, whose model's line states the id `id`, state the model
+/// `descriptor` declares, naming the first part that differs.
+fn as_declared(definitions: &ModelDefinitions, id: EntityId, descriptor: &ModelStructDescriptor) -> Result<(), Failure> {
     let differs = |part| Err(Failure::NotAsDeclared(part));
     if definitions.label != descriptor.label {
         return differs("label");
     }
     if definitions.name != descriptor.name {
         return differs("name");
+    }
+    if descriptor.explicit_id != Some(id.to_base64().as_str()) {
+        return differs("id");
     }
     if definitions.properties.len() != descriptor.properties.len() {
         return differs("number of properties");

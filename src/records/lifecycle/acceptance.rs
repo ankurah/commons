@@ -21,6 +21,7 @@ string_enum!(AcceptanceStatus);
 // undertakes the intention.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "records.acceptance")]
+#[model(id = "Vjh2-m9dh74s9aJirrdXsBGhicRlsFqHQhcCUh5pGJk")]
 #[model(no_ffi)]
 pub struct Acceptance {
     #[active_type(LWW)]

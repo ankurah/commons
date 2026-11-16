@@ -9,6 +9,7 @@ use serde::{Deserialize, Serialize};
 /// or let go is `Closed`. All are on the same entity.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "cognition.intuition")]
+#[model(id = "jVjAHgOeKeN18NTHLAYfxbHwgblM4mXAvWsOef4dLmc")]
 #[model(no_ffi)]
 pub struct Intuition {
     #[active_type(LWW)]

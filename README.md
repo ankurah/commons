@@ -53,7 +53,8 @@ beside each model's file the `.akev` file of its minted definitions:
                            (mint/README.md)
 
 The Rust declarations are the source: each `#[derive(Model)]` struct states a
-model, its properties, how each is stored and which are optional.
+model, its properties, how each is stored and which are optional, and names the id the
+kept mint gives the model.
 
 Every model is marked `no_ffi`, so the derive generates no JavaScript or Swift
 bindings for it. Without the mark the crate does not compile in a build that
@@ -145,12 +146,11 @@ entity on every node.
 The mint is unsigned: what vouches for the events is this repository. Signed statements
 can be added later without changing an id.
 
-Still to come:
+Each struct declares the id its kept mint gives its model, `#[model(id = "...")]` on
+the line after its label, which the mint tool writes.
 
-- the minted ids written into the declarations, so that a node refuses to start
-  on a store that lacks the definitions, where today it would mint its own;
-- changes to a definition after it is minted, as further events beside its
-  creation.
+Still to come: changes to a definition after it is minted, as further events beside its
+creation.
 
 A comment that starts with `OPEN:` marks a question still to settle. Settling one that
 changes a model changes its definitions, which then need minting again.
@@ -165,7 +165,13 @@ definitions instead of minting their own:
     node.system.create().await?; // a fresh store; on one that holds a root, wait_system_ready()
     ankurah_commons::seed(&node).await?;
 
-Seed the node before it first binds any of the Commons' models. Registering a model
-binds it, and so do a fetch, a query, a get and a create of it; a model bound before
-the seed keeps that binding while the node runs. Seeding a store that holds the kept
-mint already changes nothing, so a node can be seeded at every start.
+Seed the node before it first binds any of the Commons' models: registering a model
+binds it, and so do a fetch, a query, a get and a create of it. Each model declares its
+minted id and binds by that id, never by its label. On a node not yet seeded it fails
+with Ankurah's `RegistrationError::ExplicitModelIdNotFound` rather than minting
+definitions of its own; on a seeded node it binds to its minted definition even where the
+store holds an older one under the same label, and finds its properties within that
+definition, by name.
+
+Seeding a store that holds the kept mint already changes nothing, so a node can be
+seeded at every start.

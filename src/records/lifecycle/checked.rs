@@ -12,6 +12,7 @@ use serde::{Deserialize, Serialize};
 // Ankurah can remove a component from an entity.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "records.checked")]
+#[model(id = "sh6695XIEJUgLvmIg7g5ihdRDxAu7WGcKMYhawLMnsg")]
 #[model(no_ffi)]
 pub struct Checked {
     #[active_type(LWW)]

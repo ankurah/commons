@@ -7,6 +7,7 @@ use serde::{Deserialize, Serialize};
 /// it ended, superseded or repealed, is `Closed`. All are on the same entity.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "cognition.decision")]
+#[model(id = "mJYaRYRX0_9kv5a5VEAN8VQQ-BY0bav3bSxqxZUYt7s")]
 #[model(no_ffi)]
 pub struct Decision {
     #[active_type(LWW)]

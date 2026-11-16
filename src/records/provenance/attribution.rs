@@ -8,6 +8,7 @@ use serde::{Deserialize, Serialize};
 /// else's, speaker unknown.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "records.attribution")]
+#[model(id = "DfGhlrbNm6EcEMTL1XOU1Cft54dEbjxZ1b0AX-R0ibE")]
 #[model(no_ffi)]
 pub struct Attribution {
     pub speaker: Option<Ref<Principal>>,

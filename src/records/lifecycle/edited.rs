@@ -8,6 +8,7 @@ use serde::{Deserialize, Serialize};
 /// updated at each later one; a record never edited does not carry it.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "records.edited")]
+#[model(id = "7cLoWNlfuRHc9Tv2jSytcS7OmQkAo11WknxRDMacEjM")]
 #[model(no_ffi)]
 pub struct Edited {
     #[active_type(LWW)]

@@ -11,6 +11,7 @@ use serde::{Deserialize, Serialize};
 /// is the edge's `Closed`.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "messaging.mention")]
+#[model(id = "2FN2YPKQwf1U6QazGL1fA6NsPQyAFqTNJTeVcG1WP7E")]
 #[model(no_ffi)]
 pub struct Mention {
     /// Its place among the names in the text, counted from one.

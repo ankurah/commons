@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 /// Whom a record waits on.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "records.assignment")]
+#[model(id = "PYDgBCw8YrEL-v1aXA0hLfQCc198-QalzjqywpCXwow")]
 #[model(no_ffi)]
 pub struct Assignment {
     /// None while the record waits on no one in particular.

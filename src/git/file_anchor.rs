@@ -9,6 +9,7 @@ use super::Repository;
 /// checkout.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "git.file_anchor")]
+#[model(id = "V1NIGvz1uewWPssVaOiWxlTHjV0RrImDwFzmOB6ueHw")]
 #[model(no_ffi)]
 pub struct FileAnchor {
     pub repository: Ref<Repository>,
