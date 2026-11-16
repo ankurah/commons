@@ -1,19 +1,20 @@
 //! Writes what `mint` minted into the crate's sources, as `.akev` files: each model's
 //! definitions beside the struct that declares it, `<model>.akev` beside `<model>.rs`, and
 //! the records of the kinds of edge in `graph/edge_kinds.akev`. A file the kept mint has is
-//! replaced. Each struct then declares its model's minted id, `#[model(id = "<id>")]` on the
-//! line after its label.
+//! replaced. Each struct is given its model's minted id (`declaring`).
 
 use std::{
     fs, io,
     path::{Path, PathBuf},
 };
 
-use ankurah::EntityId;
 use ankurah_commons::rebuilding::RebuildError;
 use thiserror::Error;
 
-use crate::minting::MintedNamespace;
+use crate::{
+    declaring::{self, DeclareError},
+    minting::MintedNamespace,
+};
 
 /// What ends the name of a minted file.
 pub const EXTENSION: &str = "akev";
@@ -32,8 +33,8 @@ pub enum WriteError {
     NotRebuilt { label: String, source: RebuildError },
     #[error("the edge kinds are minted with no definitions of their model beside them")]
     NoEdgeKindModel,
-    #[error("{} has no line `#[model(label = \"{label}\")]`, or more than one", path.display())]
-    NoLabel { path: PathBuf, label: String },
+    #[error(transparent)]
+    Declare(#[from] DeclareError),
     #[error("{}: {source}", path.display())]
     Io { path: PathBuf, source: io::Error },
 }
@@ -93,48 +94,67 @@ fn snake_case(name: &str) -> String {
     snake
 }
 
-/// Writes the files of `minted` into `src`, the namespaces' parent directory.
+/// Writes the files of `minted` into `src`, the namespaces' parent directory. Every file's
+/// text is made before any is written, so that a declaration that cannot be given its id
+/// stops the mint with every file as it was.
 pub fn write(src: &Path, minted: &[MintedNamespace]) -> Result<(), WriteError> {
+    let mut files = Vec::new();
     for MintedNamespace { namespace, models, edge_kinds } in minted {
         let directory = src.join(namespace.name);
         for definitions in models {
             let not_rebuilt = |source| WriteError::NotRebuilt { label: definitions.label.clone(), source };
             let source = model_source(&directory, &definitions.name)?;
-            replace(&source.with_extension(EXTENSION), &definitions.write().map_err(not_rebuilt)?)?;
             // The model's event comes first.
             let id = definitions.events().map_err(not_rebuilt)?[0].entity_id;
-            declare_id(&source, &definitions.label, id)?;
+            let text = fs::read_to_string(&source).map_err(|error| io_error(&source, error))?;
+            let declared = declaring::declared(&source, &text, &definitions.name, id)?;
+            files.push((source.with_extension(EXTENSION), definitions.write().map_err(not_rebuilt)?));
+            files.push((source, declared));
         }
         if let (Some(records), Some(listed)) = (edge_kinds, &namespace.edge_kinds) {
             let label = (listed.model)().label;
             let edge_kind = models.iter().find(|definitions| definitions.label == label).ok_or(WriteError::NoEdgeKindModel)?;
             let text = records.write(edge_kind).map_err(|source| WriteError::NotRebuilt { label: label.to_owned(), source })?;
-            replace(&directory.join(EDGE_KINDS_FILE), &text)?;
+            files.push((directory.join(EDGE_KINDS_FILE), text));
+        }
+    }
+    for (path, text) in &files {
+        // An unchanged file is left alone, so that a mint that changes nothing touches nothing.
+        if fs::read_to_string(path).ok().as_ref() != Some(text) {
+            fs::write(path, text).map_err(|source| io_error(path, source))?;
         }
     }
     Ok(())
 }
 
-fn replace(path: &Path, text: &str) -> Result<(), WriteError> {
-    fs::write(path, text).map_err(|source| io_error(path, source))
-}
-
-/// Declares `id` in the source at `path` as the id of the model labelled `label`, on the line
-/// after the label's, in place of the id declared there.
-fn declare_id(path: &Path, label: &str, id: EntityId) -> Result<(), WriteError> {
-    let text = fs::read_to_string(path).map_err(|source| io_error(path, source))?;
-    let mut lines: Vec<String> = text.split_inclusive('\n').map(str::to_owned).collect();
-    let label_line = format!("#[model(label = \"{label}\")]");
-    let labels: Vec<usize> = lines.iter().enumerate().filter(|(_, line)| line.trim_end() == label_line).map(|(index, _)| index).collect();
-    let [label_index] = labels[..] else { return Err(WriteError::NoLabel { path: path.to_owned(), label: label.to_owned() }) };
-    let id_line = format!("#[model(id = \"{}\")]\n", id.to_base64());
-    match lines.get(label_index + 1) {
-        Some(line) if line.starts_with("#[model(id = ") => lines[label_index + 1] = id_line,
-        _ => lines.insert(label_index + 1, id_line),
-    }
-    replace(path, &lines.concat())
-}
-
 fn io_error(path: &Path, source: io::Error) -> WriteError {
     WriteError::Io { path: path.to_owned(), source }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{
+        copies::{copied, edit, files},
+        minting,
+    };
+    use ankurah::EntityId;
+    use ankurah_commons::namespaces::NAMESPACES;
+
+    /// A struct that cannot be given its id stops the mint before any file is written, even
+    /// those of models it comes after.
+    #[test]
+    fn a_declaration_that_cannot_take_its_id_stops_the_mint_with_every_file_as_it_was() {
+        let src = copied();
+        let cognition = src.path().join("cognition");
+        // A model the mint would write again, listed before the one it cannot write.
+        fs::remove_file(cognition.join("claim.akev")).unwrap();
+        let second = format!("#[model(no_ffi, id = \"{}\")]", EntityId::from_bytes([1; 32]).to_base64());
+        edit(&cognition.join("intention.rs"), "#[model(no_ffi)]", &second);
+        let before = files(src.path());
+
+        let error = write(src.path(), &minting::mint(src.path(), NAMESPACES).unwrap()).unwrap_err();
+        assert!(matches!(error, WriteError::Declare(DeclareError::SeveralIds { count: 2, .. })), "{error}");
+        assert_eq!(files(src.path()), before);
+    }
 }

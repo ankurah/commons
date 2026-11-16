@@ -2,6 +2,9 @@
 //! `.akev` files beside the models' structs, and checks those files. The crate's README
 //! says what the check establishes and what the tool does not settle.
 
+#[cfg(test)]
+mod copies;
+mod declaring;
 mod minting;
 mod verifying;
 mod writing;

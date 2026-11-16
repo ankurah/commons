@@ -39,8 +39,13 @@ No node takes part. For each model of each namespace in the list below, `mint`:
    the kept mint has one, and otherwise the current time and a fresh nonce;
 3. rebuilds each entity's creation event, which gives its id, and writes the
    definitions into `<model>.akev` beside the `<model>.rs` that declares it;
-4. declares the model's id in its struct, `#[model(id = "<id>")]` on the line after
-   `#[model(label = "...")]`, in place of the id declared there.
+4. gives the struct its model's id: it parses the source and replaces the literal of the
+   `id` option of the struct's `#[model(...)]` attributes, or, when the struct declares
+   none, adds `#[model(id = "<id>")]` after the attribute that gives its label. Other
+   options, attributes and comments stay as written.
+
+Every file's text is made before any file is written, so a struct that declares two ids,
+or whose attributes do not read, stops the mint with every file as it was.
 
 It does the same for a record of each kind of edge in the table in the `graph`
 namespace's source (`EDGE_KINDS`), its name and description, into

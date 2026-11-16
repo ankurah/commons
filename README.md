@@ -146,8 +146,8 @@ entity on every node.
 The mint is unsigned: what vouches for the events is this repository. Signed statements
 can be added later without changing an id.
 
-Each struct declares the id its kept mint gives its model, `#[model(id = "...")]` on
-the line after its label, which the mint tool writes.
+Each struct declares the id its kept mint gives its model, `#[model(id = "...")]`, which
+the mint tool writes.
 
 Still to come: changes to a definition after it is minted, as further events beside its
 creation.

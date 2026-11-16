@@ -1,36 +1,7 @@
 use super::*;
-use crate::minting;
+use crate::copies::{copied, edit, files, mint, sources};
 use ankurah_commons::namespaces::NAMESPACES;
 use tempfile::TempDir;
-
-fn sources() -> PathBuf {
-    Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap().join("src")
-}
-
-/// A copy of the crate's Rust sources, with the kept mint's files.
-fn copied() -> TempDir {
-    let copy = tempfile::tempdir().unwrap();
-    copy_sources(&sources(), copy.path());
-    copy
-}
-
-fn copy_sources(from: &Path, to: &Path) {
-    for entry in fs::read_dir(from).unwrap() {
-        let path = entry.unwrap().path();
-        let target = to.join(path.file_name().unwrap());
-        if path.is_dir() {
-            fs::create_dir(&target).unwrap();
-            copy_sources(&path, &target);
-        } else if path.extension().is_some_and(|extension| extension == "rs" || extension == writing::EXTENSION) {
-            fs::copy(&path, &target).unwrap();
-        }
-    }
-}
-
-/// Mints into `src` as `mint` does.
-fn mint(src: &Path) {
-    writing::write(src, &minting::mint(src, NAMESPACES).unwrap()).unwrap();
-}
 
 /// A copy of the sources with the kept mint minted again.
 fn minted() -> TempDir {
@@ -43,37 +14,13 @@ fn failure(src: &TempDir) -> VerifyError {
     verify(src.path(), NAMESPACES).unwrap_err()
 }
 
-/// Edits the first occurrence of `from` in the file at `path`.
-fn edit(path: &Path, from: &str, to: &str) {
-    let text = fs::read_to_string(path).unwrap();
-    assert!(text.contains(from), "{} holds no `{from}`", path.display());
-    fs::write(path, text.replacen(from, to, 1)).unwrap();
-}
-
-/// Every file under `dir`, the sources and the kept mint's.
-fn files(dir: &Path) -> Vec<PathBuf> {
-    let mut files = Vec::new();
-    for entry in fs::read_dir(dir).unwrap() {
-        let path = entry.unwrap().path();
-        if path.is_dir() {
-            files.extend(self::files(&path));
-        } else {
-            files.push(path);
-        }
-    }
-    files
-}
-
 /// Each entity keeps its time and nonce, so minting the kept mint again under the same
 /// declarations and the same format of Ankurah's events writes every file as it was, the
 /// ids the declarations state with them.
 #[test]
 fn minting_the_kept_mint_again_changes_no_file_and_it_verifies() {
     let src = minted();
-    for minted in files(src.path()) {
-        let kept = sources().join(minted.strip_prefix(src.path()).unwrap());
-        assert_eq!(fs::read_to_string(&minted).unwrap(), fs::read_to_string(&kept).unwrap(), "{}", kept.display());
-    }
+    assert_eq!(files(src.path()), files(&sources()));
     let verified = verify(src.path(), NAMESPACES).unwrap();
     let models = NAMESPACES.iter().map(|namespace| namespace.models.len()).sum::<usize>();
     let definitions: usize =

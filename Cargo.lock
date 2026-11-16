@@ -90,7 +90,9 @@ dependencies = [
  "ankurah",
  "ankurah-commons",
  "clap",
+ "proc-macro2",
  "rand 0.9.5",
+ "syn 2.0.119",
  "tempfile",
  "thiserror 2.0.21",
 ]

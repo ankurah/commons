@@ -11,10 +11,13 @@ ankurah = { workspace = true }
 
 ankurah-commons = { path = "..", features = ["full"] }
 
-clap      = { version = "4", features = ["derive"] }
+clap        = { version = "4", features = ["derive"] }
+# Where in a struct's source its model's id is declared.
+proc-macro2 = { version = "1", features = ["span-locations"] }
 # The nonces of entities a kept mint does not hold.
-rand      = "0.9"
-thiserror = { workspace = true }
+rand        = "0.9"
+syn         = { workspace = true }
+thiserror   = { workspace = true }
 
 [dev-dependencies]
 tempfile = { workspace = true }
