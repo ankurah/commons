@@ -50,9 +50,9 @@ license = "MIT OR Apache-2.0"
 # Ankurah's branch `fwd-pin/portable-genesis`: its main at 5919b1a0, and a node that imports
 # events made outside it. An application that uses this crate pins the same revision: crates
 # from two revisions would not share Ankurah's types.
-ankurah = { git = "https://github.com/ankurah/ankurah", rev = "42e754d5900f6aa1feb73c1e4997aa2dce0b042e", features = ["derive"] }
-ankurah-storage-sled = { git = "https://github.com/ankurah/ankurah", rev = "42e754d5900f6aa1feb73c1e4997aa2dce0b042e" }
-ankurah-storage-sqlite = { git = "https://github.com/ankurah/ankurah", rev = "42e754d5900f6aa1feb73c1e4997aa2dce0b042e" }
+ankurah = { git = "https://github.com/ankurah/ankurah", rev = "6ffaa3367698639e261b37a3c010dc0162f36443", features = ["derive"] }
+ankurah-storage-sled = { git = "https://github.com/ankurah/ankurah", rev = "6ffaa3367698639e261b37a3c010dc0162f36443" }
+ankurah-storage-sqlite = { git = "https://github.com/ankurah/ankurah", rev = "6ffaa3367698639e261b37a3c010dc0162f36443" }
 jiff      = { version = "0.2", default-features = false, features = ["std"] }
 serde     = { version = "1", features = ["derive"] }
 strum     = { version = "0.26", features = ["derive"] }
