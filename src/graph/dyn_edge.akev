@@ -1,0 +1,9 @@
+minter ed25519 71e93d7b46131743283fa655871bdefaa3c67c27c1153df632010ecb06e8e090
+
+model     graph.dyn_edge  DynEdge  id bV2LF-MuZWmbKeGiQt19G77b7D8VzFaaKCtjd4JwULI  at 1794795263664  nonce 84ce7343233d100cf763b6061ff6d88f7692de34ed88fcc46e56cda45816789a
+property  from  entityid  lww      id DMbiLlsdD5K2TxHdbZusOWqMDthpucHiJ6aCT_1gBo8  at 1794795263664  nonce 2322344a1023f1887412fdc9528b74b2b9a77ad2e1085549f2cd39721e95db83
+link      from  required           id nvBAFiuifx7GcvaEr3qVmzRWC5O_iUDBOJsma8Ludu8  at 1794795263664  nonce 16626b4d46e82c164490ac262364d1cdae7d02ff524d00b1176e91ca3a1d78ce
+property  to    entityid  lww      id xHyW-1II8wrm-4oR6eo_pxp9eXVySj1hdeN7dOCTprI  at 1794795263664  nonce 24eee70da05822a6db66ce8059982c89683fd296f1342e4a371da986b5ff1a8e
+link      to    required           id -4w5eHQo2mga_NCFquueelnHc3atRngnlugIVj7jmLY  at 1794795263664  nonce 8cba997b4b2800138466242561ea0dc523073af3e1501b726e3d3a54295a29d3
+property  kind  entityid  lww      id ul6IJokxFi05IQ2IMWtnlEWaNi2uJTN_y8qTuh9cfu0  at 1794795263664  nonce 6ef35454f7a15a87ff1d7952e90dcc0992a0e18c4a3c257eeba1d19f6eb33b46
+link      kind  required           id yU_xpE7LFp-4XycQjxw1mMtlpGBv_81EXTmR5fL-P5o  at 1794795263664  nonce e2204f44f52eec6e453e560ee8dd064069316d12d628d68fe002c40bc9852c49

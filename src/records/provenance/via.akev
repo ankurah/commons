@@ -1,0 +1,5 @@
+minter ed25519 71e93d7b46131743283fa655871bdefaa3c67c27c1153df632010ecb06e8e090
+
+model     records.via  Via  id NF3fxTDr4LRZ4NQUqfd23yz4Pda9z3WumEiapQ2Afjs  at 1794795263439  nonce 792f826f796caf138215338e8d82293a8f4b8cb7d1c3a87ed4eca8a88e3d4057
+property  via  json  lww    id IX6Kgz_w83-fOmA3hZhMwN620yUIQTkHgen7RJrZIJk  at 1794795263440  nonce 8712835dced390d4a8ab0832317066b0b3be5eda8046d3bbd6a1e36b8e5551a0
+link      via  required     id PxkQ-7QSc31VUSznBXguElhwjX0VL7hlUGHpD-5MqbQ  at 1794795263440  nonce 2850357bff8779b2b585d31d3e7287da9927add3681788375be295f5df0b0278

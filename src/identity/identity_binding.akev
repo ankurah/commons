@@ -1,0 +1,7 @@
+minter ed25519 71e93d7b46131743283fa655871bdefaa3c67c27c1153df632010ecb06e8e090
+
+model     identity.identity_binding  IdentityBinding  id 0GyCjlrBkM_KTl4szo4qJPc4Gl35nkRy00gMTeo-d0I  at 1794795263384  nonce 4d010c949022a0e1c32deb6cfd0453df4f2cbd6bf08487d2f3907c87b99b43e7
+property  principal  entityid  lww                    id BFC414kuJkiPUmVNrJb3rYGJ-nyMtjDotiSlEn2EnVs  at 1794795263384  nonce 93bf4c3890d65803759827c7389d0e290e00e5e2175eb0e7d2f89143859c2525
+link      principal  required                         id YT_foF-ihv_Qx6ONNbanJWWJ1r0hIoOQjbESUqaVCY0  at 1794795263384  nonce 4f24e6cce56616346e5885653f59b7949bbd414e218beeebdaa57b2f3f8321be
+property  subject    string    lww                    id OjCiiuMnYbZZIbSa69ZotiCJ-44ap49t_z6nFTtdJ50  at 1794795263384  nonce 3b449c11af485025f3aafc3d5995de04f38c605b9f4340f9aa4d72d7a2095b4b
+link      subject    required                         id TcdOER1SQQFVXOSbFj6VyVGotrnUO5Y8CYubES5iwlA  at 1794795263384  nonce 2223647c72a590c9ee28e1dc5f1de675fe517cfee7c1696cf74ca099d62d1a3a

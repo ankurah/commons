@@ -1,0 +1,7 @@
+minter ed25519 71e93d7b46131743283fa655871bdefaa3c67c27c1153df632010ecb06e8e090
+
+model     cognition.intuition  Intuition  id _g2p4IA1GqVs72yn5ffip5E4SakvpCYzjvYYEAE5-fk  at 1794795263865  nonce 082cda21f026b02d1b2a6ca4efa7210c512b84b126ac7adc73b5b7235209a47a
+property  title  string  lww              id dJjt_hayz5JyCX6CLBR58kCo0dS53gUxQLzonsdmkvQ  at 1794795263865  nonce 9bfd7063bdbcee9ddb6b1fdc2940c4c18eb82cbf4045e56ebc150d54ca9a460b
+link      title  required                 id auRixzWqVtmXK4zWY3OHskvltXMxDSz4XIe9UjQD7m8  at 1794795263865  nonce 57adce8180e5a3c13242b8969c300bbe0a5466008d0c5ccb43d634e25d140f5c
+property  words  string  lww              id UF8oFKM1qch_J1zY4miUPfXbhOzpYVGCm2SsptD_qiA  at 1794795263865  nonce 01bb8f8495b6a2b802cf10b2a54ccabc76f2c3fac2c32468c95dbc1ab5bfe535
+link      words  required                 id XV9VVhvUH6r7vj3AgvcTVzTsQvQB7equngDuGrqOUTo  at 1794795263865  nonce 13768444bf1faf07fde9ec79153a96a9d34171b264e74bb891666f7ee44d4d15

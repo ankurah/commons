@@ -1,0 +1,15 @@
+minter ed25519 71e93d7b46131743283fa655871bdefaa3c67c27c1153df632010ecb06e8e090
+
+model     git.file_anchor  FileAnchor  id Oph_VB3BWNh1vNv4vWZ2pSGKl7xwr408uNEcNq34tzI  at 1794795263599  nonce fa876df77032d7e7096ff47a26072261f71678b63f5328ff39600c1fc19ca430
+property  repository  entityid  lww    id ctAm5h4TqdDB8lkh1jlK8pPGju73b5k6Okt3_4OeiKE  at 1794795263599  nonce 2a7ab856a691d8be92c56f0ea39e44ebdfad5c86770af6b3a2d91f0325c7f252
+link      repository  required         id n8-jP3lXf4O1YbduS5JQAA6z0Jd-rNwg-4XqJIkZxx0  at 1794795263599  nonce a71383ba6026851262fa2bddd77aa5d31c4392aca11d1648d11d2e49cd2c289d
+property  path        string    lww    id Zv93NwCWxRC0ZryMgXso4X6uV8HKsdeUvb-t8s6drUg  at 1794795263599  nonce 2a6672d5d9079bd2d98a1590b6d6d4d129b4146581fcf8382427801e01a90e82
+link      path        required         id 7Elv--QAPtHvpFU6RHGrGFt3aaxYZ1HcwM0JX_tzxEo  at 1794795263599  nonce d980e65e7994e5312c7ac91f9a36727ef99c32aefc07260e7ff2cb7e4949e235
+property  basis_blob  string    lww    id Sw3-xlVDP3c508Mmu5RNiEa9nPPGA7gVlOqs36lkiws  at 1794795263600  nonce 5589f301399b38f3f199a1f00a3bd531ba6ec9fd09906ce2e3dc0fcf7105cc1d
+link      basis_blob  optional         id U2HfBih0F4fogezMyiHE3JeY7pYyh8UEr6iiF0bMR6o  at 1794795263600  nonce 34a81a45245f293823eb77ca958e3de6226fcc719ec0bec48c3785b372b44b84
+property  start_line  i64       lww    id 5VMe42Iqw6XpwEzrRsVeqJzyO_A1BPd0N4ARwWoeQac  at 1794795263600  nonce 8579b30b0f8ecdf9f3249e1a695d02001cb0cf0b452f2fa29ba826fb91cb3d11
+link      start_line  required         id 75Xg4CqzLQRlr4dij0SQpgtfmf3SYOpBa0kzomhHHTw  at 1794795263600  nonce 792d588a7c8cfea280e5feeddc4c95bf55ae7db12287a77bb7dd16431d5f18f2
+property  end_line    i64       lww    id Az65AnmQwREGHsY0EwfGgigP-rmXiUscd1xo3AtTVsY  at 1794795263600  nonce 643708b0c376c2e1078692d071d346756e2ff9be7c35635e51cbce91450c795e
+link      end_line    required         id zienGyK83zG6m6NQhyOvm2up0_eXZiA4jJ3yc4ur91A  at 1794795263600  nonce c366b621af4837d1b61211d5bd01aedc5d456198b940e009a851ce8bc5ae64e1
+property  whole_file  bool      lww    id QlwQoIZRQW8tCQRMbgE0LGFQVmQE8e1tb3V2Q538Tvs  at 1794795263600  nonce 6a89cccaf2f880f4f229992802fe5b7444f4c5736b5550a69ee1bf838a880e84
+link      whole_file  required         id eMZS1A6xKglKHeSMinUFrNAeyoyEjJL605CBcxE3R98  at 1794795263600  nonce d3398befafa29ba860d61843a22579c0f0465926c19c4445f5116c3a47aad892

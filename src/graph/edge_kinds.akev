@@ -1,0 +1,42 @@
+minter ed25519 71e93d7b46131743283fa655871bdefaa3c67c27c1153df632010ecb06e8e090
+
+kind  serves           id be6WNRZL6R77JbeAZ4c0R1L3mAkh0pJnzSHugwV2kzY  at 1794795263698  nonce 80cb158db8db06cc00d6d72b80524e684737ac343b4de1e58854d745e999c751
+    From a task, a scope or an intention to an intention: the first is for the sake of the second. Many to many; no cycles among intentions.
+kind  interprets       id CAcmWRkSYWu1WTdlmiqwOIWjuICY65xaUI_L0ih7_mQ  at 1794795263698  nonce f5235ff56e54557d4fc973cf679edeeb71d7a83c3c0d1d915c9702c5439bea1b
+    From a decision to an intention: the decision reads the intention in a context.
+kind  supports         id mdUl6-jFLvuM875BKFKAcZbC5_yj7lld4E3dJgqhNig  at 1794795263698  nonce e15fcbe897d68ac6a1e6ae22865d1600caf0f251c65b5585cd702a77ac3539a4
+    From a claim, a quotation, a fragment or an intuition to a claim, an intention, a decision, an intuition, an expectation or an edge: a reason to accept, want or rely on the second.
+kind  disputes         id QlYZErDTJgZF3xip4LNor7ozaKG53COdwnkjYL9Otm8  at 1794795263698  nonce ef01e86884e05f2c2b6b5719ab4c831984596f9ae784a6b86eb8c92d33bfc321
+    From a claim to a claim, an expectation or an edge: a reason against the second. Never to a perspective.
+kind  cites            id 85pvi82DfCYx3xl2JOYrJHTFSxlsaLKolADYVayKtts  at 1794795263698  nonce 64953da8fb1abb306df2dd45abfe18a9e09e7461c3c11aea64d1209e7341ae25
+    From any record to any record: the first draws on the second, rests on it as a ruling, or was made in its context.
+kind  supersedes       id 6V0MA9UYoom6nElypsT_Bp1SXWoUk7Rmlhs4oC1u2PI  at 1794795263698  nonce 69e01a753836a93306a0efa943239385184febedf9f67f759851062886d21eab
+    From a record to an earlier record of its kind: the first replaces the second, which stays readable.
+kind  assigned_to      id u86DKYBuQlY8uDP7rlzAuDr_P2hPz792Ba3_itaVvKI  at 1794795263698  nonce 671e53b6657c9b36134c40e6c1b7ec476c887ee002ceafa1ace3209be5092273
+    From an intention to a principal: the principal works toward the intention; several principals may each hold one. An Acceptance on the edge records whether the principal took it up.
+kind  depends_on       id oZ_DqeTc3pv-wpA0tp84dmppCeSUB7JxpUdkTohX_yA  at 1794795263698  nonce e7cc85eecc48f6f29c1cc84e672d1652eecfa672d9ba6ac4f0ed21624d06b71b
+    From a task to a task: the first is not ready until the second is done.
+kind  subtask_of       id ZilWB7aNaNij7jWxQIsC_miglF-IMkDtDSRYHmApYKY  at 1794795263698  nonce b75c276aa429063afd83ef9c16db1be82d602fead187196a87b63e4441207605
+    From a task to a task: the first is part of the second.
+kind  worked_in        id 1OUrpYrKHqff7bJXUQ0VzKf8MkewAAtZgEdj23cSCJU  at 1794795263699  nonce d6c3108d618a569222382c5630bbbdb1a3ae4c65882b53d264befddb77717e79
+    From a task to a scope: the task's work happens in the scope.
+kind  step_of          id _gzdh3BYDtBgWby7qqC3VtvQMDG86I8iFzoQ3OxYvUQ  at 1794795263699  nonce 5b8a08003984332ebe43017d74b8eaef26549a114f83a6a80cbede23ec7262b8
+    From any record to a task: the first is a step of the task's checklist.
+kind  duplicates       id 3vfCammjViKFgVvNSbxIIu-rzmDo1dLCwvOtXeaJoGk  at 1794795263699  nonce b62191d00b0f0ca190d26ec3e601d04efe4ac9c90dab6b63fc29cedbae820873
+    From a task to a task: both are the same work.
+kind  discovered_from  id SZxsszaAoG1Zdx79LdLTyCm-TDC5uzpMHaDmTfWT1ww  at 1794795263699  nonce d1d894d123b4d9cd023af68814b197405af11d80b80519db465e0181da472c7f
+    From a record to the record it surfaced from, or whose words it was made from, such as a message.
+kind  generated_by     id ufDqG6yWiRRYtyfAaSvtWlksNVH1QrZz-fbQkMws9hk  at 1794795263699  nonce 9881c50651f83653a509f51282c256412170254796ab219ba634bd32f1ce2e45
+    From a record to the activity that made it, such as an import run.
+kind  concerns         id 0FgjJleM5ViVq-mk5FtQ7107dyEYVi_TXCaZ76yyxE0  at 1794795263699  nonce b25c7d8f9077cf61593755fb9e22c25f49b3ab53348c1c7e34e6364eea414248
+    From any record to any record: the first is about the second.
+kind  mention          id xws9ynY_NVBsql0wwqWTwE9nBEN2-IgItnhnOeKEqDY  at 1794795263699  nonce 2aa4a1e0cedc5c8fb4f31ad3532abcf2c8581383d75beed28e421864b8af3f3e
+    From a message to any record: the message's text names the record.
+kind  anchored_at      id apBrHVaFuX_YJBM9IZaW4pTDupaJYzp5w5c8pw2Rl-s  at 1794795263699  nonce da146f17adbeb229d4613ff3e39c61a62a591951eaceaa5606e2ad6e103efc97
+    From a task to a fragment: the text or code the task is about.
+kind  relates_to       id DL89K9zoHOHmn2SqF4LpNQnTg2rGNxgzCu-hIBZgTwQ  at 1794795263699  nonce e71094f87266ea97622efbe39cdbe1767761dd3c21da2d921979f395346b9cf5
+    From any record to any record: an association not yet given a kind.
+kind  governs          id 7Vk3QJ8k1evaCniwaQe7k2eRrm7zEsMkM-LYOmyEVzI  at 1794795263699  nonce 026c814c3bb6d2a225ddfff7b4ab69d51be646723bf52436d1f752c43720eb6d
+    From a decision to a scope: the decision governs the scope's work.
+kind  stakeholder_of   id X4QruA5iVKk_40DC4RBQ66gHoIpP7nB-2DeJhi2lNtQ  at 1794795263699  nonce 2c555ed5304fb2096a014dabef401decab54684f698f213d4369651caae3470c
+    From a principal to an intention: the principal's perspective on the intention is sought, and it hears of changes to it. It gives no power over the intention's words.

@@ -1,0 +1,11 @@
+minter ed25519 71e93d7b46131743283fa655871bdefaa3c67c27c1153df632010ecb06e8e090
+
+model     health.physical_activity  PhysicalActivity  id Ha6YUEPHMBCavgbjo-pJ5DYj4-n6bhd8p83sjzmZyVw  at 1794795263514  nonce 4926971119e3aa91d90a0c2cb10b476c1b6a68929ab1eecbd297daaab84cbcf6
+property  performed_by  entityid  lww                 id U1ySGIpZYTRk5BYsALa1l2FUqHZ2iwjgh8FLnXST5mY  at 1794795263514  nonce b79dc5d01943474ec040252e9c2ec64c415e1a8a7e23ab35eb41e315002d37db
+link      performed_by  required                      id GSrxiqsOkeeYwnoSew76cMt6rhaqkIkOp_4CvOipzuM  at 1794795263514  nonce cba53ead59ca1dec6af4585a9085515bea61d75fd06f28c6cd664bcf11129ce8
+property  kind          string    lww                 id F5jTAOB4RPogLTuq7dx01hTF5vazU6m5HN5m1FKV0NA  at 1794795263514  nonce 596f26a8e765f0ce4b9625c67cec384375f93271e534289a6827a0fd91f9ae2b
+link      kind          required                      id Pxv4gtV1HDm1zNVjOxqVOKn_03gPSqX1V2iCsds6xQU  at 1794795263514  nonce e5d1a7e0dce7ea8a24e322d611a0a56cb3df327d62b61135c749ab2923e37d6e
+property  started_at    i64       lww                 id z6ed3jhaWWY_CRKmOCiP9LR6cayyL2isLMrdDpot0Yc  at 1794795263514  nonce 49869b32ba262a04ff024a3049254756e9d02dae6e288bc847a10058179f200e
+link      started_at    required                      id 4pfGfP7Zv8wA_DOmFr2MYYdocs2oMc2egWrux4lgKvQ  at 1794795263514  nonce 455a23d79017ea900cc5f9f6bbd3a644ca738c939729a26e5ed03e7ae8290ff6
+property  ended_at      i64       lww                 id esoHUXcWJgSSI3-l4GEELRZBhr8mGMWAoNEXkcXwkFQ  at 1794795263514  nonce 178173368b844541bae64806f321414e758eb0d445b46a615787b38abeab10df
+link      ended_at      optional                      id IhzQpne2NLKCC6y8NW_Ifc-45Gpz8q0sBJ4j3joymLI  at 1794795263514  nonce 9d9b813b3aa2c15d9a6b14a01f5aec7245dc1fa685b9ff02556a2658c4f67951

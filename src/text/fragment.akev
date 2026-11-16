@@ -1,0 +1,9 @@
+minter ed25519 71e93d7b46131743283fa655871bdefaa3c67c27c1153df632010ecb06e8e090
+
+model     text.fragment  Fragment      id Y7cUGTY-H_w-AvJA1CCSataZK2W4a_lJ-UJ4wte6dzA  at 1794795263534  nonce b63268e59bfb4c2a8cf4a810248760800a0cce257534141684d50c57d56d59e3
+property  anchored_text   string  lww  id DUwuZNq1IiyoaFU2RsfvP1h5WEJ7L3zWGyp01_TuiH8  at 1794795263534  nonce 6a188b48d9e4a907dc4c35781f7990f92bc4d9cdae567f18fd3a89117f845204
+link      anchored_text   required     id qO8L2GLWHEauvZqMS4L53sfSMfljT0td-FRK5rdTIeU  at 1794795263534  nonce dbaab84ee074e838c93c6628eaa71914dee5d960c359f19551ff70da425c644f
+property  context_before  string  lww  id qzrG2jvS9Y0-oMw9nVJK_GgoiDEisOunksVxRbxeiQU  at 1794795263534  nonce c8b0eab62d78994a448e8529194e7c09ea216a72dda6ba182c800360c348fc1b
+link      context_before  required     id hYH8gX5J3oVUiZNzuJVHh-Gope7CJ0aUyESVcjy2bRQ  at 1794795263534  nonce f19f0bcc72e45470802cca296f5fabd39fc4c6822428f85b4cea90b913db43ca
+property  context_after   string  lww  id dmQeJKUfE3jhU-SwaD9X9XO-v3Rg26vO6cga29O9BOA  at 1794795263534  nonce 8190e5e6f3b2806a1fcb1283da25cb723fdb81ca0e733dfef5c317d9db966a1a
+link      context_after   required     id AbJP-v_2hCTGH5GFEe6F0xwBVBDht2v8KA5jEPaXrrs  at 1794795263534  nonce c99537c66ef6a4420ec84aa6f64ef62d9f01f42ec5886188b2d2178ad5edf5d0

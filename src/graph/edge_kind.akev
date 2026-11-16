@@ -1,0 +1,7 @@
+minter ed25519 71e93d7b46131743283fa655871bdefaa3c67c27c1153df632010ecb06e8e090
+
+model     graph.edge_kind  EdgeKind  id vr861tXMmNvtK0ybRlKFouiMP1YGoFaua63-8hq4YlE  at 1794795263683  nonce 04025750a045908362e897e90f88a16594f4d0193c608b8e60138d7af530f3aa
+property  name         string  lww   id IzEbSzpb-XqoZiDHqwKd35q548ek4ogFZQkp5n_C18k  at 1794795263683  nonce cd8434b6ff08a6f810b4aa4bb0a9027379b9e847696337bebafabb093e6d6faa
+link      name         required      id GDLMzF95W-5YoD5KkNrbvjx8tPm0PWRtVrmznFx16Qo  at 1794795263683  nonce b01a4432ac7d02045beb7d2d5834bae8da9df1e03fbfb72ba7f8adee9a376d81
+property  description  string  lww   id jWKEcG0PHeBSqOZPPqdYvN8yhbZcFvZ6i3D-9tY4ydg  at 1794795263683  nonce 3c3c0c1e42865598d222222c26d95e4ce18bec6b71c4c132a642f30a48077f88
+link      description  required      id 1J9uTUFNMHlJdJwYSPLW-TTH7vZd5MfoNm8mDSTF3u4  at 1794795263683  nonce 1ca88e38f91a66309ec8ecaa89bc7106f7cf2ddb521698ffdfaaed77af30b9f5

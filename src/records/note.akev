@@ -1,0 +1,5 @@
+minter ed25519 71e93d7b46131743283fa655871bdefaa3c67c27c1153df632010ecb06e8e090
+
+model     records.note  Note  id gJifYrUwMqQoWHaHFIX3vDI-6cPnBQAm6r4Xscoclmk  at 1794795263432  nonce a3fcb6e92233206ef9c1a3985575701a4c76d3291a7473220b8e0b80528f9f93
+property  note  string  lww   id jiAekQt5tuqfYFev2Ngyvpk0VSeHiL6NSQI260aap8c  at 1794795263432  nonce 67f0f4a1485f864ec0f2baf2f43d42affa9877905bc361ebec062b50532c4242
+link      note  optional      id 8JLpR4Mub-f1RK6b7_rp2My-Fi6zxsh-PtYES7f7EZA  at 1794795263432  nonce 38bf28b05475f9abd09c49708832adc92e439b63b4d83018b7892843edaf3017

@@ -1,0 +1,11 @@
+minter ed25519 71e93d7b46131743283fa655871bdefaa3c67c27c1153df632010ecb06e8e090
+
+model     records.closed  Closed  id PIVcfmgBtttv9a_SKh-Ca_bbXK5w5ezVVpxedkOTUVo  at 1794795263410  nonce 9acb692fa9d5e3575686ae94cbcfcc34825c2cf840cac1551c805154e42a9448
+property  closed   i64       lww  id tr3VUpGFcP0_16PTs32vif2Rp4-4A9QRvNiX3U0TgYc  at 1794795263410  nonce a4b8b52c6ce972de7578b5957d1061ad295ff02ecbcd08a4c00b6e8a7bc73fc1
+link      closed   optional       id mvMHw-nmayvpXGofAr-q6BgaUcZjHY329yHSjsSq9lo  at 1794795263410  nonce 0f38c6420cd3085ac938480059cbfe4690e49d9cf9baccb7bd35066320d99f31
+property  by       entityid  lww  id 2l7WibG7jV1ctmXElucjJ47eL49TS0jlT2sSfE9Boas  at 1794795263410  nonce 9240b6919bb8c13c060bcc770cb87e641b3c7df91ddea13bc283cbc0b8ad59c1
+link      by       optional       id Mh9wBmvdicqe9zYOLFF2TmINY2tcLxHjOiFayee6oEE  at 1794795263410  nonce db9367a62841ec689e7afb852d976db7a9ae24de5fdc48a3a1eba1f4b64aebd3
+property  outcome  string    lww  id cx_-NTgd5OtgjgU81XaElD5ROBmqgwsJTzWtCtit7hw  at 1794795263410  nonce 9dfcec8701b66495bec9fd1687ab58d6b8193645f7b23d5753086d8a67c8bb3a
+link      outcome  optional       id G4PxdgbWwnFstf4j-XqnMmpcYHoV9EgIgoegKjCkw48  at 1794795263410  nonce 446168895adccb2ecfeae547ca625350d9708eda7e0f7ab72f72bf9cfbc0b200
+property  reason   string    lww  id DpDqiZjWeTPVU0Jc6PQaZ2-qIYCzdyU79tEqX_NVYC4  at 1794795263410  nonce 09309ce4d4718ac7f97a209f33202a2b148d9aa0e096f6fe350fea672fff5697
+link      reason   optional       id E9PoxyDSHoy55XKlfYeUbDZHrLhUrJdRWo9ydlCF08s  at 1794795263410  nonce 781061f4cba4c9c8f4f72427b642011096a0a350ab0d677e4ca5e10210914fa9

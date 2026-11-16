@@ -1,0 +1,7 @@
+minter ed25519 71e93d7b46131743283fa655871bdefaa3c67c27c1153df632010ecb06e8e090
+
+model     cognition.claim  Claim  id arZCt75gZ1GKc5VbuzmR4FEOr4q-o0wQp2Fld04ejPc  at 1794795263761  nonce 25016215df5bd403206d43f46bf505234382cce33ee8155d4b1d39fa7d8ea317
+property  title  string  lww      id ChT1l-D0GJdrsQR4hegiUJEbxhiqHezshk7vSOeN-ic  at 1794795263761  nonce 44388a61dea7844ac63d000bcccf35e65ed2f700b5186c73d343e397eb62d0b9
+link      title  required         id bibxHFdMNv8dntXB-bQUf9td6mSgysFGToEzmwiV2do  at 1794795263761  nonce 3798d2ced193c4a3714a9f78c87c797fe99b23b92406a7d0c56dcd4f4a060bbd
+property  words  string  lww      id Em4ZRFw3hF0wO5lUay9M8qyW0pPZl6k1e6ZGDbXhr0g  at 1794795263761  nonce bc4d275999d8f276028058d0e8751afa3699ae37d7ce1071a324eac173b9f2ed
+link      words  required         id VHzScwJRl3PxwH6chEmrbzUuLvgwBZVJAduqNQZ0cm8  at 1794795263761  nonce fed0acb42a3c0b75e0c040b83bc709f58edb9c9c45fa51c843f8d6b6d3103535

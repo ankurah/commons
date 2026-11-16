@@ -1,0 +1,5 @@
+minter ed25519 71e93d7b46131743283fa655871bdefaa3c67c27c1153df632010ecb06e8e090
+
+model     records.fractional_position  FractionalPosition  id zOrP3bieSTK7wLr0AZHpXdkWUkkqf4r8qB4kD7gTaLo  at 1794795263396  nonce 520bfc2a38ae04956ea55c5a36b908f140c8102d9a55ae82edb7a055fd198f28
+property  key  string  lww                                 id ylB3SO25JSDFa-RG77RqlShtpIVLahzWitzqUnERbQk  at 1794795263396  nonce 7c458adb067959f97374fe55dea739fddb4a4156571bd41247f5cf1bca038810
+link      key  required                                    id 6IBjrRJu55Tmjgd3FTf4gDwLhgXf0dXX6zeIGuMAV4k  at 1794795263396  nonce ac80125f9674af843d1ff9801b88fc7d908f24ac53110eedeaa880f013fac572

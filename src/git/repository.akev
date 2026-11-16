@@ -1,0 +1,9 @@
+minter ed25519 71e93d7b46131743283fa655871bdefaa3c67c27c1153df632010ecb06e8e090
+
+model     git.repository  Repository   id NyaqJKpSP7SVOQPLDPUPo_BaY7AGFVhC9w3uKKeGFoY  at 1794795263632  nonce edf6a205d10ff47f8bb4af674a0016829863c5f3776d309d5a937998152a708c
+property  name            string  lww  id w3I1EkL1HFGujxOrwSH0mHRJ-6Vljk6X5MEVaq4iBlc  at 1794795263632  nonce c105a202f2d602d8f1f36a79ab42e7a7bea2022b943385f1c76d06adfe15c13e
+link      name            required     id 1a4VWTpX6_1prLLYOzgS8YfU2CWrzWl19Ad79c-Ahmc  at 1794795263632  nonce cc0d3033645fea8f48b4df87a20284aaba89bde75d3a8f0baffc61d25d68e394
+property  remote_urls     json    lww  id 9kzwY9kLARFdLeKe7iLTwOdUewU2rUTBXudAEBYASl0  at 1794795263632  nonce 92cdfddac10b200654ec695e069bdf3fcf3dc82858627a766556cfa01cdcb85b
+link      remote_urls     required     id q3D7STvsHgbAC5voklTLIT-_YG3ufLCCSJxbyq1N5uo  at 1794795263632  nonce 1b8bc674f25f1eb1e1f91f5a0edc2b5d2a6eeb75aeccf5d7005a88fc3192d898
+property  default_branch  string  lww  id z2vrhu4oyTB-gTpMoZPk6NKSjAqX0IcScso9P-JDZX0  at 1794795263632  nonce 9bd01d7e7fbfa0cdaeab8308f241f9094a7a467eb3b6e85ea8033f7288d695f3
+link      default_branch  required     id i8uI5jkc8zOxYH3iatG6MeyYZU7cZ_c19eMoVo5OwU0  at 1794795263632  nonce 37f2fdb88c0920f70b697854882777374e0e17a0e3be55b6e26412cce9259883

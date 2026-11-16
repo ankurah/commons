@@ -1,0 +1,5 @@
+minter ed25519 71e93d7b46131743283fa655871bdefaa3c67c27c1153df632010ecb06e8e090
+
+model     work.scope  Scope   id JSVA5ESg4pVv-XATXQSUkC9Y-Dyag2JfSB99SRQm37A  at 1794795263902  nonce bfe8b298343da3746ee42a1daf37ad434a36da08f9f9d1550aec5cb404e33056
+property  title  string  lww  id CTx0qT1elrfNZfhbVf9Zl4xvlsmUwiCpDA5Sy8vY64M  at 1794795263902  nonce 1289b280d9efc76676a1c5e7a2c1057d2e71ea494c23f25f4fba32d09b59c6c4
+link      title  required     id HTpM7dX4ElgODpXpTjQw65UO6L-AzKkDlDkH2TzYD1k  at 1794795263903  nonce 840e0d7636d10574f9cf20cc9daceb45ab508fa09b1073924328d5e35cc27c7f

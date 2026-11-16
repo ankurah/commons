@@ -1,0 +1,7 @@
+minter ed25519 71e93d7b46131743283fa655871bdefaa3c67c27c1153df632010ecb06e8e090
+
+model     messaging.mention  Mention  id FHI8_hHMHm2MdSOJVVBi2gHX7oiNGc389JE0aU24N_w  at 1794795264007  nonce 092eec51da6fc374ecd91b9ce62933a871fe734e982d4c2352788ee47b2acc4f
+property  ordinal        i64   lww    id IuFzEzzxLV3Ukz4fw6wdwyhn1oWiP4n_lEiuRtto-_E  at 1794795264007  nonce e07d05802854cbe3157349a916804e076fb6f1941f53e9c3aa369491a86f29f1
+link      ordinal        required     id zKuow-NylyteeChilmZPOoWldGOwTyze13pNH_y5xoA  at 1794795264007  nonce 71ded55b99454d12ae6f4691bf5dc471fdfa99aa033d28c13459878c4d03ce77
+property  added_by_edit  bool  lww    id 0A1DwAtVAGyvaXrVg_4UHG4G7jFe-tnYv1N_Sivfk5o  at 1794795264007  nonce 3204664232f308829fc540d562f74d8022b387d089f05cfe08fe21903edd76f1
+link      added_by_edit  required     id tvrRKRWjTz4ZvaNTp1cJ4tnutdmQCjLYkWPnXHbvH6g  at 1794795264007  nonce ddc3335c358c83fc8c424f55ef11ca85f5af6d0dbf4547addb17219492f5735a

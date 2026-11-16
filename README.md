@@ -3,16 +3,23 @@
 Definitions of models and their properties that Ankurah applications can share, so
 that two applications, or two nodes, mean the same thing by "a message" or "a task".
 
-**Status: draft. Nothing here is minted, and no id is final.** The draft covers
-models used by Fwd Centaur and proposed by BLE Activity Logger.
+**Status: draft, with a first mint kept, and no id final.** The draft covers models
+used by Fwd Centaur and proposed by BLE Activity Logger. The definitions of every model
+in the nine namespaces, 39 models with 107 properties and their links, and the 20 kinds
+of edge in the `graph` namespace's table are minted, unsigned, in the `.akev` files
+beside the structs. The mint was made with Ankurah's node identity branch at `a164293e`,
+which the mint tool needs (mint/README.md), so its events are in that branch's format,
+which the main revision this crate builds against does not read.
 
 The crate builds against a revision of Ankurah's main branch, named in `Cargo.toml`.
-An application that uses it pins the same revision. Until a mint is kept, a node that
-uses these models mints their definitions itself, under ids of its own.
+An application that uses it pins the same revision. Until a node can be seeded from the
+kept mint, a node that uses these models mints their definitions itself, under ids of
+its own.
 
 ## Layout
 
-One crate, `ankurah-commons`, with a module per namespace, one file per model:
+One crate, `ankurah-commons`, with a module per namespace, one file per model, and
+beside each model's file the `.akev` file of its minted definitions:
 
     src/cognition/         what parties want, assert, understand, sense and decide:
                            intentions, claims, perspectives, intuitions, decisions and
@@ -147,5 +154,5 @@ Still to come:
 - the state each minted event makes, which a seeded store needs and Ankurah offers no
   public way to derive from the event.
 
-A comment that starts with `OPEN:` marks a question to settle before anything is
-minted.
+A comment that starts with `OPEN:` marks a question still to settle. Settling one that
+changes a model changes its definitions, which then need minting again.
