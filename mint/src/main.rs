@@ -3,7 +3,6 @@
 //! says what the check establishes and what the tool does not settle.
 
 mod minting;
-mod namespaces;
 mod verifying;
 mod writing;
 
@@ -12,10 +11,11 @@ use std::{
     process::ExitCode,
 };
 
+use ankurah_commons::namespaces::NAMESPACES;
 use clap::Parser;
 use thiserror::Error;
 
-use crate::{minting::MintError, namespaces::NAMESPACES, verifying::VerifyError, writing::WriteError};
+use crate::{minting::MintError, verifying::VerifyError, writing::WriteError};
 
 #[derive(Parser)]
 #[command(about = "Mints the definitions of the Commons' models and kinds of edge into .akev files, and checks them")]

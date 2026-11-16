@@ -11,8 +11,8 @@ beside the structs, in the format of the Ankurah revision this crate builds agai
 
 The crate builds against a revision of Ankurah named in `Cargo.toml`: its branch
 `fwd-pin/portable-genesis`, which is its main with a node that imports events made
-outside it. An application that uses the crate pins the same revision. A node that has
-not imported the kept mint mints the models' definitions itself, under ids of its own.
+outside it. An application that uses the crate pins the same revision, and seeds its
+node with the kept mint (see Seeding) so that the models take the minted ids.
 
 ## Layout
 
@@ -46,6 +46,9 @@ beside each model's file the `.akev` file of its minted definitions:
                            type
     src/akev.rs            the text form of minted creation events, `.akev` files
     src/rebuilding.rs      the creation events rebuilt from `.akev` files
+    src/namespaces.rs      the namespaces a build enables, their models, and the text
+                           of their kept mint
+    src/seed.rs            seeding a node with the kept mint
     mint/                  the tool that mints the definitions and checks a mint
                            (mint/README.md)
 
@@ -77,9 +80,9 @@ nine:
 One more feature, `jiff`, converts between the Commons' `Timestamp` and
 `jiff::Timestamp`.
 
-A feature chooses what a build compiles, not what is minted: a kept mint is always
-whole, whatever features a build uses, because a seeded store cannot be given more
-definitions later.
+A feature chooses what a build compiles and seeds, not what is minted: the kept mint is
+always whole, whatever features a build uses, so that every build means the same ids. A
+store seeded by a build with fewer features can be seeded again by one with more.
 
 ## One entity, several components
 
@@ -137,8 +140,7 @@ from which its creation event is rebuilt exactly: each model's definitions besid
 struct that declares it, and the edge kinds' records in `src/graph/edge_kinds.akev`. A
 mint that is kept is committed to this repository, and that text is then the
 authority. Each creation event names no system root and no author, so it is the same
-entity on every node. A node that imports the rebuilt events before it first registers
-the models (Ankurah's `Node::import_events`) uses the minted ids from then on.
+entity on every node.
 
 The mint is unsigned: what vouches for the events is this repository. Signed statements
 can be added later without changing an id.
@@ -152,3 +154,18 @@ Still to come:
 
 A comment that starts with `OPEN:` marks a question still to settle. Settling one that
 changes a model changes its definitions, which then need minting again.
+
+## Seeding
+
+`seed` imports the kept mint of the namespaces a build enables into a durable node,
+through Ankurah's `Node::import_events`, so that the models bind to the minted
+definitions instead of minting their own:
+
+    let node = Node::new_durable(Arc::new(engine), agent);
+    node.system.create().await?; // a fresh store; on one that holds a root, wait_system_ready()
+    ankurah_commons::seed(&node).await?;
+
+Seed the node before it first binds any of the Commons' models. Registering a model
+binds it, and so do a fetch, a query, a get and a create of it; a model bound before
+the seed keeps that binding while the node runs. Seeding a store that holds the kept
+mint already changes nothing, so a node can be seeded at every start.

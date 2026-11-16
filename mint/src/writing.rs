@@ -8,8 +8,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use ankurah::Model;
-use ankurah_commons::{graph::EdgeKind, rebuilding::RebuildError};
+use ankurah_commons::rebuilding::RebuildError;
 use thiserror::Error;
 
 use crate::minting::MintedNamespace;
@@ -87,16 +86,16 @@ fn snake_case(name: &str) -> String {
 
 /// Writes the files of `minted` into `src`, the namespaces' parent directory.
 pub fn write(src: &Path, minted: &[MintedNamespace]) -> Result<(), WriteError> {
-    for namespace in minted {
-        let directory = src.join(namespace.name.replace('-', "_"));
-        for definitions in &namespace.models {
+    for MintedNamespace { namespace, models, edge_kinds } in minted {
+        let directory = src.join(namespace.name);
+        for definitions in models {
             let text = definitions.write().map_err(|source| WriteError::NotRebuilt { label: definitions.label.clone(), source })?;
             replace(&model_file(&directory, &definitions.name)?, &text)?;
         }
-        if let Some(edge_kinds) = &namespace.edge_kinds {
-            let label = EdgeKind::descriptor().label;
-            let edge_kind = namespace.models.iter().find(|definitions| definitions.label == label).ok_or(WriteError::NoEdgeKindModel)?;
-            let text = edge_kinds.write(edge_kind).map_err(|source| WriteError::NotRebuilt { label: label.to_owned(), source })?;
+        if let (Some(records), Some(listed)) = (edge_kinds, &namespace.edge_kinds) {
+            let label = (listed.model)().label;
+            let edge_kind = models.iter().find(|definitions| definitions.label == label).ok_or(WriteError::NoEdgeKindModel)?;
+            let text = records.write(edge_kind).map_err(|source| WriteError::NotRebuilt { label: label.to_owned(), source })?;
             replace(&directory.join(EDGE_KINDS_FILE), &text)?;
         }
     }

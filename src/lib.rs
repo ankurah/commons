@@ -4,10 +4,15 @@
 //! One module per namespace, one file per model. Each namespace is behind the cargo
 //! feature of the same name, which also turns on the namespaces its models refer to.
 //! `property` holds the property types the namespaces share, in every build.
+//!
+//! The models' definitions are minted once and kept beside their structs. `seed` loads
+//! them into a durable node, so that the models take the minted ids there.
 
 pub mod akev;
+pub mod namespaces;
 pub mod property;
 pub mod rebuilding;
+mod seed;
 #[cfg(any(feature = "identity", feature = "records", feature = "git", feature = "work"))]
 mod support;
 
@@ -29,3 +34,5 @@ pub mod records;
 pub mod text;
 #[cfg(feature = "work")]
 pub mod work;
+
+pub use seed::{seed, SeedError};

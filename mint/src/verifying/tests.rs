@@ -1,5 +1,6 @@
 use super::*;
-use crate::{minting, namespaces::NAMESPACES};
+use crate::minting;
+use ankurah_commons::namespaces::NAMESPACES;
 use tempfile::TempDir;
 
 fn sources() -> PathBuf {
@@ -62,7 +63,7 @@ fn minting_the_kept_mint_again_changes_no_file_and_it_verifies() {
     let models = NAMESPACES.iter().map(|namespace| namespace.models.len()).sum::<usize>();
     let definitions: usize =
         NAMESPACES.iter().flat_map(|namespace| namespace.models).map(|model| 1 + 2 * (model.descriptor)().properties.len()).sum();
-    let edge_kinds: usize = NAMESPACES.iter().map(|namespace| namespace.edge_kinds.len()).sum();
+    let edge_kinds: usize = NAMESPACES.iter().flat_map(|namespace| &namespace.edge_kinds).map(|edge_kinds| edge_kinds.kinds.len()).sum();
     assert_eq!((verified.files, verified.events), (models + 1, definitions + edge_kinds));
 }
 

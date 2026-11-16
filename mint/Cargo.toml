@@ -17,6 +17,4 @@ rand      = "0.9"
 thiserror = { workspace = true }
 
 [dev-dependencies]
-# The guard on the list of models reads the namespaces' sources.
-syn      = { version = "2", features = ["full"] }
-tempfile = "3"
+tempfile = { workspace = true }

@@ -11,18 +11,18 @@ use std::{
 };
 
 use ankurah::{core::schema::ModelStructDescriptor, EntityId};
-use ankurah_commons::akev::{Creation, EdgeKindRecord, EdgeKinds, ModelDefinitions, ParseError, PropertyDefinition};
+use ankurah_commons::{
+    akev::{Creation, EdgeKindRecord, EdgeKinds, ModelDefinitions, ParseError, PropertyDefinition},
+    namespaces::Namespace,
+};
 use thiserror::Error;
 
-use crate::{
-    namespaces::Namespace,
-    writing::{self, WriteError, EDGE_KINDS_FILE},
-};
+use crate::writing::{self, WriteError, EDGE_KINDS_FILE};
 
 /// What minting one namespace made: each model's definitions, and the records of the kinds
 /// of edge minted with it.
 pub struct MintedNamespace {
-    pub name: &'static str,
+    pub namespace: &'static Namespace,
     pub models: Vec<ModelDefinitions>,
     pub edge_kinds: Option<EdgeKinds>,
 }
@@ -40,21 +40,21 @@ pub enum MintError {
 
 /// Mints every model of `namespaces`, and their kinds of edge, keeping the times and nonces of
 /// the kept mint under `src`, the namespaces' parent directory.
-pub fn mint(src: &Path, namespaces: &[Namespace]) -> Result<Vec<MintedNamespace>, MintError> {
+pub fn mint(src: &Path, namespaces: &'static [Namespace]) -> Result<Vec<MintedNamespace>, MintError> {
     namespaces
         .iter()
         .map(|namespace| {
-            let directory = src.join(namespace.name.replace('-', "_"));
+            let directory = src.join(namespace.name);
             let mut models = Vec::with_capacity(namespace.models.len());
             for model in namespace.models {
                 let descriptor = (model.descriptor)();
                 models.push(definitions(descriptor, kept(&writing::model_file(&directory, descriptor.name)?, ModelDefinitions::parse)?));
             }
-            let edge_kinds = match namespace.edge_kinds {
-                [] => None,
-                table => Some(records(table, kept(&directory.join(EDGE_KINDS_FILE), EdgeKinds::parse)?)),
+            let edge_kinds = match &namespace.edge_kinds {
+                Some(edge_kinds) => Some(records(edge_kinds.kinds, kept(&directory.join(EDGE_KINDS_FILE), EdgeKinds::parse)?)),
+                None => None,
             };
-            Ok(MintedNamespace { name: namespace.name, models, edge_kinds })
+            Ok(MintedNamespace { namespace, models, edge_kinds })
         })
         .collect()
 }

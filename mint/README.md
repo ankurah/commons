@@ -8,8 +8,8 @@ definitions beside the struct that declares it, and the edge kinds' records in
 
 Every creation event is a genesis in the format of the Ankurah revision the workspace
 pins. It names no system root and no author, so it is the same entity, with the same id,
-on every node that holds it, and a durable node takes it as it is
-(`Node::import_events`).
+on every node that holds it. A kept mint is for seeding: `ankurah_commons::seed` imports
+it into a durable node, which then uses the very same ids.
 
 Nothing is signed. `verify` shows that the files rebuild the events their ids name; it
 does not show who made them. What vouches for a kept mint is the repository it is
@@ -87,13 +87,14 @@ It does not establish:
 
 ## The list of models
 
-`src/namespaces.rs` lists every namespace and its models: what `mint` mints. It also
-gives `graph` the table of edge kinds from that namespace's source. A test
-there keeps the list complete, so that a model added to a namespace, or a new
-namespace, cannot be forgotten: for every namespace's module, a directory in the
-library's `src/` named as the namespace with `-` written `_`, it compares the structs
-the module's sources derive `Model` for with the models listed for that namespace, and
-fails naming the first one missing on either side.
+The crate's `src/namespaces.rs` lists every namespace and its models, each with the text
+of its kept mint, and gives `graph` the table of edge kinds from that namespace's
+source. `seed` loads what the list holds for the namespaces a build enables; `mint`
+mints the whole list. A test there keeps the list complete, so that a model added to a
+namespace, or a new namespace, cannot be forgotten: for every namespace's module, a
+directory in the crate's `src/` named as the namespace, it compares the structs the
+module's sources derive `Model` for with the models listed for that namespace, and fails
+naming the first one missing on either side.
 
 It relies on one convention: a model is a struct with `#[derive(Model, ..)]` written
 directly on it, in a file under its namespace's directory in `src/`. A model declared

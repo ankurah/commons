@@ -17,18 +17,15 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use ankurah::{core::schema::ModelStructDescriptor, Model};
+use ankurah::core::schema::ModelStructDescriptor;
 use ankurah_commons::{
     akev::{EdgeKinds, ModelDefinitions, ParseError},
-    graph::EdgeKind,
+    namespaces::Namespace,
     rebuilding::RebuildError,
 };
 use thiserror::Error;
 
-use crate::{
-    namespaces::Namespace,
-    writing::{self, WriteError, EDGE_KINDS_FILE},
-};
+use crate::writing::{self, WriteError, EDGE_KINDS_FILE};
 
 #[cfg(test)]
 mod tests;
@@ -76,7 +73,8 @@ pub fn verify(src: &Path, namespaces: &[Namespace]) -> Result<Verified, VerifyEr
     let mut checked = BTreeSet::new();
     let mut events = 0;
     for namespace in namespaces {
-        let directory = src.join(namespace.name.replace('-', "_"));
+        let directory = src.join(namespace.name);
+        let edge_kind_label = namespace.edge_kinds.as_ref().map(|edge_kinds| (edge_kinds.model)().label);
         let mut edge_kind = None;
         for model in namespace.models {
             let descriptor = (model.descriptor)();
@@ -86,17 +84,17 @@ pub fn verify(src: &Path, namespaces: &[Namespace]) -> Result<Verified, VerifyEr
             let (definitions, ids) = ModelDefinitions::parse(&read(&path)?).map_err(|error| failed(Failure::Unparsable(error)))?;
             as_declared(&definitions, descriptor).map_err(failed)?;
             events += definitions.events_as_stated(&ids).map_err(|error| failed(Failure::NotRebuilt(error)))?.len();
-            if descriptor.label == EdgeKind::descriptor().label {
+            if Some(descriptor.label) == edge_kind_label {
                 edge_kind = Some(definitions);
             }
             checked.insert(path);
         }
-        if !namespace.edge_kinds.is_empty() {
+        if let Some(edge_kinds) = &namespace.edge_kinds {
             let path = directory.join(EDGE_KINDS_FILE);
             let failed = |failure| VerifyError { path: path.clone(), failure };
             let (kinds, ids) = EdgeKinds::parse(&read(&path)?).map_err(|error| failed(Failure::Unparsable(error)))?;
             let stated = kinds.kinds.iter().map(|kind| (kind.name.as_str(), kind.description.as_str()));
-            if !stated.eq(namespace.edge_kinds.iter().copied()) {
+            if !stated.eq(edge_kinds.kinds.iter().copied()) {
                 return Err(failed(Failure::NotAsListed));
             }
             let edge_kind = edge_kind.as_ref().ok_or(failed(Failure::NoEdgeKindModel))?;
