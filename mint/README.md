@@ -31,10 +31,11 @@ check below passes.
 
 No node takes part. For each model of each namespace in the list below, `mint`:
 
-1. takes from the struct's declaration what registering it writes: a definition of the
-   model, its label and the name of its struct; a definition of each property, its
-   name, value type and backend; and a model-property link for each property, which
-   gives the model the property and says whether it is optional;
+1. takes from the struct's declaration what registering it writes
+   (`ModelDefinitions::declared`): a definition of the model, its label and the name of
+   its struct; a definition of each property, its name, value type and backend; and a
+   model-property link for each property, which gives the model the property and says
+   whether it is optional;
 2. gives each of those entities the time and nonce of its line in the kept mint, when
    the kept mint has one, and otherwise the current time and a fresh nonce;
 3. rebuilds each entity's creation event, which gives its id, and writes the
@@ -57,9 +58,15 @@ lines state are not read, so a mint made in an earlier format keeps its times an
 too. Nor are the ids the structs declare: a struct that declares none yet, or an old one,
 is minted all the same.
 
-A test in the crate (`rebuilding`) checks that the events rebuilt from those values are
-exactly what a durable node writes when it registers a model or creates a record, but for
-the system root the node names.
+Tests in the crate (`rebuilding`) compare the mint with Ankurah itself. Each of the
+Commons' models is registered, without the id it declares, on a fresh durable node. The
+mint makes its definitions from the declaration with the times and nonces that node drew,
+writes them as text and reads them back, and the events rebuilt from that text, under the
+node's root, must be the node's own, byte for byte. Between them the models declare every
+value type a definition holds today (`bool`, `entityid`, `f64`, `i64`, `json`, `string`)
+and both backends (`lww`, `yrs`). The same holds for a model with a property renamed from
+a former name, and for the records of the kinds of edge, created on a node seeded with
+the kept mint.
 
 An `.akev` file takes one line for each entity: what it is, its id, and what its creation
 event holds that its values do not, the time it was minted and its nonce. An edge kind's

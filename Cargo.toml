@@ -30,6 +30,8 @@ strum     = { workspace = true }
 thiserror = { workspace = true }
 
 [dev-dependencies]
+# Registration by a node that a declaration is sent to, to compare the mint with.
+ankurah-connector-local-process = { workspace = true }
 ankurah-storage-sled   = { workspace = true }
 ankurah-storage-sqlite = { workspace = true }
 serde_json             = "1"
@@ -51,6 +53,7 @@ license = "MIT OR Apache-2.0"
 # events made outside it. An application that uses this crate pins the same revision: crates
 # from two revisions would not share Ankurah's types.
 ankurah = { git = "https://github.com/ankurah/ankurah", rev = "6ffaa3367698639e261b37a3c010dc0162f36443", features = ["derive"] }
+ankurah-connector-local-process = { git = "https://github.com/ankurah/ankurah", rev = "6ffaa3367698639e261b37a3c010dc0162f36443" }
 ankurah-storage-sled = { git = "https://github.com/ankurah/ankurah", rev = "6ffaa3367698639e261b37a3c010dc0162f36443" }
 ankurah-storage-sqlite = { git = "https://github.com/ankurah/ankurah", rev = "6ffaa3367698639e261b37a3c010dc0162f36443" }
 jiff      = { version = "0.2", default-features = false, features = ["std"] }

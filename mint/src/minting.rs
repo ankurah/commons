@@ -12,8 +12,9 @@ use std::{
 
 use ankurah::{core::schema::ModelStructDescriptor, EntityId};
 use ankurah_commons::{
-    akev::{Creation, EdgeKindRecord, EdgeKinds, ModelDefinitions, ParseError, PropertyDefinition},
+    akev::{Creation, EdgeKindRecord, EdgeKinds, ModelDefinitions, ParseError},
     namespaces::Namespace,
+    rebuilding::Definition,
 };
 use thiserror::Error;
 
@@ -63,23 +64,14 @@ pub fn mint(src: &Path, namespaces: &'static [Namespace]) -> Result<Vec<MintedNa
 /// and nonce of its line in `kept`.
 fn definitions(descriptor: &ModelStructDescriptor, kept: Option<ModelDefinitions>) -> ModelDefinitions {
     let kept_property = |name: &str| kept.as_ref().and_then(|kept| kept.properties.iter().find(|property| property.name == name));
-    let properties = descriptor
-        .properties
-        .iter()
-        .map(|declared| {
-            let kept = kept_property(declared.name);
-            PropertyDefinition {
-                name: declared.name.to_owned(),
-                value_type: declared.value_type.to_owned(),
-                backend: declared.backend.to_owned(),
-                optional: declared.optional,
-                property: kept.map_or_else(drawn, |kept| kept.property),
-                link: kept.map_or_else(drawn, |kept| kept.link),
-            }
-        })
-        .collect();
-    let model = kept.as_ref().map_or_else(drawn, |kept| kept.model);
-    ModelDefinitions { label: descriptor.label.to_owned(), name: descriptor.name.to_owned(), model, properties }
+    ModelDefinitions::declared(descriptor, |definition| {
+        let kept = match definition {
+            Definition::Model => kept.as_ref().map(|kept| kept.model),
+            Definition::Property(name) => kept_property(name).map(|kept| kept.property),
+            Definition::Link(name) => kept_property(name).map(|kept| kept.link),
+        };
+        kept.unwrap_or_else(drawn)
+    })
 }
 
 /// A record of each kind in `table`, its name and description, keeping the time and nonce of
