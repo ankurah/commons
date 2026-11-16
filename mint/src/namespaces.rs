@@ -8,7 +8,7 @@ use ankurah::{
     core::schema::{registration::RegistrationError, ModelStructDescriptor},
     Context, Model, ModelId,
 };
-use ankurah_commons::{git, graph, health, identity, intention_graph, messaging, records, text};
+use ankurah_commons::{cognition, git, graph, health, identity, messaging, records, text, work};
 
 /// A namespace of the Commons: the module named `name`, with `-` written `_`, and the
 /// models it declares.
@@ -40,20 +40,22 @@ fn register<M: Model + 'static>(context: &Context) -> Registration<'_> {
 /// Every namespace that declares models, in the order the workspace lists them, and
 /// each one's models in the order its crate declares their modules.
 pub const NAMESPACES: &[Namespace] = &[
-    Namespace { name: "identity", models: &[declared::<identity::Credential>(), declared::<identity::Principal>()] },
+    Namespace { name: "identity", models: &[declared::<identity::IdentityBinding>(), declared::<identity::Principal>()] },
     Namespace {
         name: "records",
         models: &[
-            declared::<records::Assignment>(),
-            declared::<records::Attribution>(),
+            declared::<records::Deferred>(),
+            declared::<records::FractionalPosition>(),
+            declared::<records::Acceptance>(),
             declared::<records::Checked>(),
             declared::<records::Closed>(),
             declared::<records::Created>(),
             declared::<records::Edited>(),
             declared::<records::Note>(),
-            declared::<records::Ownership>(),
-            declared::<records::RelativePosition>(),
+            declared::<records::Attribution>(),
             declared::<records::Via>(),
+            declared::<records::Assignment>(),
+            declared::<records::Ownership>(),
         ],
     },
     Namespace {
@@ -68,20 +70,28 @@ pub const NAMESPACES: &[Namespace] = &[
         ],
     },
     Namespace { name: "text", models: &[declared::<text::Fragment>(), declared::<text::Quotation>()] },
-    Namespace { name: "git", models: &[declared::<git::FileAnchor>(), declared::<git::Repository>(), declared::<git::WorkLocation>()] },
-    Namespace { name: "graph", models: &[declared::<graph::DynEdge>(), declared::<graph::EdgeKind>()] },
     Namespace {
-        name: "intention-graph",
+        name: "git",
         models: &[
-            declared::<intention_graph::Claim>(),
-            declared::<intention_graph::Decision>(),
-            declared::<intention_graph::Intention>(),
-            declared::<intention_graph::Perspective>(),
-            declared::<intention_graph::Scope>(),
-            declared::<intention_graph::Submission>(),
-            declared::<intention_graph::Task>(),
+            declared::<git::CheckoutState>(),
+            declared::<git::FileAnchor>(),
+            declared::<git::Repository>(),
+            declared::<git::WorkLocation>(),
         ],
     },
+    Namespace { name: "graph", models: &[declared::<graph::DynEdge>(), declared::<graph::EdgeKind>()] },
+    Namespace {
+        name: "cognition",
+        models: &[
+            declared::<cognition::Claim>(),
+            declared::<cognition::Decision>(),
+            declared::<cognition::Expectation>(),
+            declared::<cognition::Intention>(),
+            declared::<cognition::Intuition>(),
+            declared::<cognition::Perspective>(),
+        ],
+    },
+    Namespace { name: "work", models: &[declared::<work::Scope>(), declared::<work::Submission>(), declared::<work::Task>()] },
     Namespace { name: "messaging", models: &[declared::<messaging::Mention>(), declared::<messaging::Message>()] },
 ];
 

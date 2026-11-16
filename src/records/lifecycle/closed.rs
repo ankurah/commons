@@ -1,12 +1,11 @@
 use crate::identity::Principal;
-use crate::property::{DynRef, Timestamp};
+use crate::property::Timestamp;
 use ankurah::{property::Ref, Model};
 use serde::{Deserialize, Serialize};
 
-/// That a record is finished with, who finished it, and why: a task closed, a
-/// question resolved, a decision repealed, an edge retracted, a scope ended,
-/// a principal retired. Attached when the record closes. How it ended is the
-/// record's own status where it has one; an edge or a principal has none.
+/// That a record is finished with, who finished it, how and why: a task
+/// closed, a question resolved, a decision repealed, an edge retracted, a
+/// scope ended, a principal retired. Attached when the record closes.
 ///
 /// The record is closed while `closed` holds a time. Reopening it sets every
 /// field to none.
@@ -20,10 +19,12 @@ pub struct Closed {
     pub closed: Option<Timestamp>,
     #[active_type(LWW)]
     pub by: Option<Ref<Principal>>,
+    /// How it ended, as one word in snake case: an intention `fulfilled` or
+    /// `withdrawn`; a decision `superseded` or `repealed`; a message
+    /// `resolved` or `deleted`; an expectation `held`, `failed` or
+    /// `inconclusive`; a scope `done` or `abandoned`.
+    #[active_type(LWW)]
+    pub outcome: Option<String>,
     #[active_type(LWW)]
     pub reason: Option<String>,
-    /// The message that gives the reason at more length. Not a `Ref<Message>`,
-    /// so that this namespace does not depend on messaging.
-    #[active_type(LWW)]
-    pub reason_message: Option<DynRef>,
 }

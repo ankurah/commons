@@ -5,10 +5,11 @@ use serde::{Deserialize, Serialize};
 
 /// A connection from one record to another, of the kind an `EdgeKind` record
 /// names: a task that depends on another, a decision that cites one, an
-/// intention assigned to a session.
+/// intention assigned to a principal.
 ///
-/// Who stated it is `Created`, and what caused it `Via`; a remark on it is
-/// `Note`, and its place among sibling steps `RelativePosition`. Its
+/// Who stated it is `Created`, and what it was made from `Via`; whether it was
+/// accepted, when it was put forward, is `Acceptance`; a remark on it is
+/// `Note`, and its place among sibling steps `FractionalPosition`. Its
 /// retraction is `Closed`. All are on the same entity.
 // TODO: removable, so that retracting an edge takes it off, once Ankurah can
 // remove a component from an entity.

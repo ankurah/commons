@@ -8,18 +8,19 @@ license.workspace = true
 publish = false
 
 [features]
-default         = ["identity"]
-full            = ["identity", "records", "health", "text", "git", "graph", "intention-graph", "messaging"]
-identity        = []
-records         = ["identity"]
-health          = ["identity"]
-text            = []
-git             = []
-graph           = []
-intention-graph = ["identity"]
-messaging       = ["text", "graph", "intention-graph"]
+default   = ["identity"]
+full      = ["identity", "records", "health", "text", "git", "graph", "cognition", "work", "messaging"]
+identity  = []
+records   = ["identity"]
+health    = ["identity"]
+text      = []
+git       = []
+graph     = []
+cognition = []
+work      = []
+messaging = []
 # Conversions between `property::Timestamp` and `jiff::Timestamp`.
-jiff            = ["dep:jiff"]
+jiff      = ["dep:jiff"]
 
 [dependencies]
 ankurah = { workspace = true }
@@ -28,7 +29,9 @@ serde   = { workspace = true }
 strum   = { workspace = true }
 
 [dev-dependencies]
-serde_json = "1"
+ankurah-storage-sled = { workspace = true }
+serde_json           = "1"
+tokio                = { version = "1", features = ["macros", "rt"] }
 
 [workspace]
 resolver = "2"

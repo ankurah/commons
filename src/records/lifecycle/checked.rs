@@ -4,8 +4,7 @@ use ankurah::{property::Ref, Model};
 use serde::{Deserialize, Serialize};
 
 /// That a step of a checklist is done, who checked it, and when. Attached when
-/// the step is checked, on the entity that carries the step's
-/// `RelativePosition`.
+/// the step is checked.
 ///
 /// The step is checked while `checked` holds a time. Unchecking it sets both
 /// fields to none.

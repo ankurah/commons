@@ -11,11 +11,11 @@ pub enum PrincipalKind {
 string_enum!(PrincipalKind);
 
 /// A person or an agent: who acts, not how they are recognised when they sign
-/// in.
+/// in, which is an `IdentityBinding`. A principal spans projects, so it
+/// carries no project's tag.
 ///
-/// What signs in as it is `Credential`, on the same entity. Its retirement is
-/// `Closed`; a retired principal stays, so that what it did is still
-/// attributed to it.
+/// Its retirement is `Closed`; a retired principal stays, so that what it did
+/// is still attributed to it.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "identity.principal")]
 #[model(no_ffi)]

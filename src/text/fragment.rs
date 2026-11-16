@@ -20,11 +20,4 @@ pub struct Fragment {
     pub context_before: String,
     #[active_type(LWW)]
     pub context_after: String,
-    /// A hash of the marked text with runs of whitespace collapsed, for
-    /// recognising two highlights on the same text. Absent when the whole
-    /// document is marked.
-    // OPEN: computed from `anchored_text`. Should a computed value be a
-    // published property?
-    #[active_type(LWW)]
-    pub span_key: Option<String>,
 }

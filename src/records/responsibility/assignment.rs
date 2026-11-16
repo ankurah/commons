@@ -2,9 +2,7 @@ use crate::identity::Principal;
 use ankurah::{property::Ref, Model};
 use serde::{Deserialize, Serialize};
 
-/// Whom a record waits on: the one who is to do a task, or to answer a
-/// question. A message that carries it is a question; a message without it
-/// asks nothing.
+/// Whom a record waits on.
 #[derive(Model, Debug, Clone, Serialize, Deserialize)]
 #[model(label = "records.assignment")]
 #[model(no_ffi)]

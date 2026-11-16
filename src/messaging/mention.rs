@@ -3,8 +3,9 @@ use serde::{Deserialize, Serialize};
 
 /// What an edge has only when it records that a message's text names a record.
 /// Added to the entity of a `mention` edge, which runs from the message to the
-/// record named; a message may name many, so each mention is an entity of its
-/// own and not a component of the message.
+/// record named. Each occurrence of a name is an edge of its own, so a message
+/// that names a record twice has two. How a name is written in the text is
+/// the application's.
 ///
 /// Who caused it is the edge's `Created`; a name later edited out of the text
 /// is the edge's `Closed`.

@@ -12,6 +12,8 @@ use serde::{Deserialize, Serialize};
 pub struct Edited {
     #[active_type(LWW)]
     pub edited: Timestamp,
+    /// Optional so that an importer can say a record was edited without
+    /// naming who; an application may require it.
     #[active_type(LWW)]
-    pub by: Ref<Principal>,
+    pub by: Option<Ref<Principal>>,
 }

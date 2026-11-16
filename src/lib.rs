@@ -6,9 +6,11 @@
 //! `property` holds the property types the namespaces share, in every build.
 
 pub mod property;
-#[cfg(any(feature = "identity", feature = "git", feature = "intention-graph", feature = "messaging"))]
+#[cfg(any(feature = "identity", feature = "records", feature = "git", feature = "work"))]
 mod support;
 
+#[cfg(feature = "cognition")]
+pub mod cognition;
 #[cfg(feature = "git")]
 pub mod git;
 #[cfg(feature = "graph")]
@@ -17,11 +19,11 @@ pub mod graph;
 pub mod health;
 #[cfg(feature = "identity")]
 pub mod identity;
-#[cfg(feature = "intention-graph")]
-pub mod intention_graph;
 #[cfg(feature = "messaging")]
 pub mod messaging;
 #[cfg(feature = "records")]
 pub mod records;
 #[cfg(feature = "text")]
 pub mod text;
+#[cfg(feature = "work")]
+pub mod work;
