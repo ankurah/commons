@@ -10,11 +10,14 @@ use ankurah::{
 };
 use ankurah_commons::{cognition, git, graph, health, identity, messaging, records, text, work};
 
-/// A namespace of the Commons: the module named `name`, with `-` written `_`, and the
-/// models it declares.
+/// A namespace of the Commons: the module named `name`, with `-` written `_`, the models
+/// it declares, and the kinds of edge minted with it.
 pub struct Namespace {
     pub name: &'static str,
     pub models: &'static [DeclaredModel],
+    /// Each kind's name and description, minted as a `graph.edge_kind` record; only
+    /// `graph` has any.
+    pub edge_kinds: &'static [(&'static str, &'static str)],
 }
 
 /// A model to mint: its declaration, and the call that registers it.
@@ -40,7 +43,7 @@ fn register<M: Model + 'static>(context: &Context) -> Registration<'_> {
 /// Every namespace that declares models, in the order the workspace lists them, and
 /// each one's models in the order its crate declares their modules.
 pub const NAMESPACES: &[Namespace] = &[
-    Namespace { name: "identity", models: &[declared::<identity::IdentityBinding>(), declared::<identity::Principal>()] },
+    Namespace { name: "identity", models: &[declared::<identity::IdentityBinding>(), declared::<identity::Principal>()], edge_kinds: &[] },
     Namespace {
         name: "records",
         models: &[
@@ -57,6 +60,7 @@ pub const NAMESPACES: &[Namespace] = &[
             declared::<records::Assignment>(),
             declared::<records::Ownership>(),
         ],
+        edge_kinds: &[],
     },
     Namespace {
         name: "health",
@@ -68,8 +72,9 @@ pub const NAMESPACES: &[Namespace] = &[
             declared::<health::PhysicalActivity>(),
             declared::<health::Workout>(),
         ],
+        edge_kinds: &[],
     },
-    Namespace { name: "text", models: &[declared::<text::Fragment>(), declared::<text::Quotation>()] },
+    Namespace { name: "text", models: &[declared::<text::Fragment>(), declared::<text::Quotation>()], edge_kinds: &[] },
     Namespace {
         name: "git",
         models: &[
@@ -78,8 +83,9 @@ pub const NAMESPACES: &[Namespace] = &[
             declared::<git::Repository>(),
             declared::<git::WorkLocation>(),
         ],
+        edge_kinds: &[],
     },
-    Namespace { name: "graph", models: &[declared::<graph::DynEdge>(), declared::<graph::EdgeKind>()] },
+    Namespace { name: "graph", models: &[declared::<graph::DynEdge>(), declared::<graph::EdgeKind>()], edge_kinds: graph::EDGE_KINDS },
     Namespace {
         name: "cognition",
         models: &[
@@ -90,9 +96,14 @@ pub const NAMESPACES: &[Namespace] = &[
             declared::<cognition::Intuition>(),
             declared::<cognition::Perspective>(),
         ],
+        edge_kinds: &[],
     },
-    Namespace { name: "work", models: &[declared::<work::Scope>(), declared::<work::Submission>(), declared::<work::Task>()] },
-    Namespace { name: "messaging", models: &[declared::<messaging::Mention>(), declared::<messaging::Message>()] },
+    Namespace {
+        name: "work",
+        models: &[declared::<work::Scope>(), declared::<work::Submission>(), declared::<work::Task>()],
+        edge_kinds: &[],
+    },
+    Namespace { name: "messaging", models: &[declared::<messaging::Mention>(), declared::<messaging::Message>()], edge_kinds: &[] },
 ];
 
 /// The guard that keeps `NAMESPACES` complete, so that a model added to a namespace

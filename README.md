@@ -19,7 +19,8 @@ One crate, `ankurah-commons`, with a module per namespace, one file per model:
                            expectations
     src/work/              tasks, the scopes they are worked in, and submissions of
                            finished work
-    src/graph/             edges between records, and the kinds of edge
+    src/graph/             edges between records, the kinds of edge, and the table of
+                           the kinds the Commons mints
     src/messaging/         messages and mentions
     src/identity/          the people and agents who act, and the accounts and
                            sessions that act as them
@@ -38,7 +39,9 @@ One crate, `ankurah-commons`, with a module per namespace, one file per model:
                            SnapshotRef and RefMap
     src/support.rs         what the namespaces share that is not a model or a property
                            type
-    mint/                  the tool that mints the definitions and checks a mint; it
+    src/akev.rs            the text form of minted creation events, `.akev` files
+    mint/                  the tool that mints the definitions and checks a mint, and the
+                           library that rebuilds minted events from `.akev` files; it
                            builds against Ankurah's node identity branch (mint/README.md)
 
 The Rust declarations are the source: each `#[derive(Model)]` struct states a
@@ -123,12 +126,13 @@ A definition's id is the hash of its creation event, so two nodes mean the same
 model only if they hold the same event. Publishing a model therefore means minting
 that event once and keeping what was minted.
 
-`mint/` does this: it mints every definition, writes each one's creation event and
-its state to files named by its id, with a page per namespace that lists the ids
-for readers who do not use Rust, and checks that such a directory is intact. A
-mint that is kept is committed to this repository, and those bytes are then the
-authority. A node that uses the models writes those files into its store before
-it first starts, and from then on it uses the minted ids.
+`mint/` does this: it mints every definition, and a record of each kind of edge in the
+`graph` namespace's table, and writes each entity as a line of an `.akev` file, text
+from which its creation event is rebuilt exactly: each model's definitions beside the
+struct that declares it, and the edge kinds' records in `src/graph/edge_kinds.akev`. A
+mint that is kept is committed to this repository, and that text is then the
+authority. A node that uses the models writes the rebuilt events, with their states,
+into its store before it first starts, and from then on it uses the minted ids.
 
 The first mint is unsigned, and the key it is minted under is discarded: what
 vouches for the events is this repository. Signed statements can be added later
@@ -139,7 +143,9 @@ Still to come:
 - the minted ids written into the declarations, so that a node refuses to start
   on a store that lacks the definitions, where today it would mint its own;
 - changes to a definition after it is minted, as further events beside its
-  creation.
+  creation;
+- the state each minted event makes, which a seeded store needs and Ankurah offers no
+  public way to derive from the event.
 
 A comment that starts with `OPEN:` marks a question to settle before anything is
 minted.

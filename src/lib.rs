@@ -5,6 +5,7 @@
 //! feature of the same name, which also turns on the namespaces its models refer to.
 //! `property` holds the property types the namespaces share, in every build.
 
+pub mod akev;
 pub mod property;
 #[cfg(any(feature = "identity", feature = "records", feature = "git", feature = "work"))]
 mod support;

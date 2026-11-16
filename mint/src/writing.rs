@@ -1,117 +1,174 @@
-//! Writes what `mint` minted into a directory of its own:
-//!
-//! ```text
-//! <out>/<namespace>.md           the namespace's page
-//! <out>/<namespace>/<id>.event   a definition's creation event, as Ankurah encodes an
-//!                                event with its attestations
-//! <out>/<namespace>/<id>.state   the definition's state, in `state_encoding`
-//! ```
+//! Writes what `mint` minted into the crate's sources, as `.akev` files: each model's
+//! definitions beside the struct that declares it, `<model>.akev` beside `<model>.rs`, and
+//! the records of the kinds of edge in `graph/edge_kinds.akev`. Each file is checked, before
+//! it is written, to rebuild exactly the events the minting node made.
 
 use std::{
+    collections::BTreeMap,
     fs::{self, OpenOptions},
     io::{self, Write},
     path::{Path, PathBuf},
 };
 
-use ankurah::proto::EntityId;
+use ankurah::{
+    proto::{EntityId, Event, Identity},
+    Model,
+};
+use ankurah_commons::{
+    akev::{Creation, EdgeKindRecord, EdgeKinds, ModelDefinitions, PropertyDefinition},
+    graph::EdgeKind,
+};
+use ankurah_commons_mint::rebuilding::{self, RebuildError};
 use thiserror::Error;
 
-use crate::{
-    page,
-    registering::{MintedDefinition, MintedNamespace},
-    state_encoding,
-};
+use crate::registering::MintedNamespace;
 
-/// The name of `namespace`'s page.
-pub fn page_file(namespace: &str) -> String {
-    format!("{namespace}.md")
-}
+/// What ends the name of a minted file.
+pub const EXTENSION: &str = "akev";
 
-/// What ends the name of a definition's event file. The name before it is the entity's id,
-/// which is also its creation event's id; a later event of the same entity would need a
-/// name of its own.
-pub const EVENT_EXTENSION: &str = "event";
+/// The file, in the `graph` namespace's directory, that holds the edge kinds' records.
+pub const EDGE_KINDS_FILE: &str = "edge_kinds.akev";
 
-/// What ends the name of a definition's state file, after its entity's id.
-pub const STATE_EXTENSION: &str = "state";
-
-fn definition_file(id: EntityId, extension: &str) -> String {
-    format!("{}.{extension}", id.to_base64())
-}
-
-/// Why the output directory could not be written.
+/// Why the minted files could not be written.
 #[derive(Debug, Error)]
 pub enum WriteError {
-    #[error("{} already exists; remove it, or name another directory with --out", .0.display())]
+    #[error("{} is already a minted file; remove every .akev file to mint again", .0.display())]
     Exists(PathBuf),
+    #[error("no file in {} is named {file}, where {model} is declared", .directory.display())]
+    NoSource { model: String, directory: PathBuf, file: String },
+    #[error("{count} files in {} are named {file}", .directory.display())]
+    SeveralSources { count: usize, directory: PathBuf, file: String },
+    #[error("the minting node holds no creation event of {0}")]
+    NoCreation(EntityId),
+    #[error("{label}'s definitions: {source}")]
+    NotRebuilt { label: String, source: RebuildError },
+    #[error("the edge kinds are minted with no definitions of their model beside them")]
+    NoEdgeKindModel,
     #[error("{}: {source}", path.display())]
     Io { path: PathBuf, source: io::Error },
 }
 
-/// Refuses `out` if anything is there, so that `mint` stops before minting what it could
-/// not write. `write` refuses it again, in case something appears there meanwhile.
-pub fn refuse_existing(out: &Path) -> Result<(), WriteError> {
-    match fs::symlink_metadata(out) {
-        Ok(_) => Err(WriteError::Exists(out.to_owned())),
-        Err(source) if source.kind() == io::ErrorKind::NotFound => Ok(()),
-        Err(source) => Err(io_error(out, source)),
+/// Refuses `src` if it holds a minted file already, so that `mint` stops before minting what
+/// it could not write and never replaces a kept mint.
+pub fn refuse_kept(src: &Path) -> Result<(), WriteError> {
+    match minted_files(src)?.into_iter().next() {
+        Some(path) => Err(WriteError::Exists(path)),
+        None => Ok(()),
     }
 }
 
-/// Creates the directory `out`, which must not exist yet, and writes into it the creation
-/// events, states and pages of `minted`.
-pub fn write(out: &Path, minted: &[MintedNamespace]) -> Result<(), WriteError> {
-    if let Some(parent) = out.parent() {
-        fs::create_dir_all(parent).map_err(|source| io_error(parent, source))?;
-    }
-    fs::create_dir(out).map_err(|source| match source.kind() {
-        io::ErrorKind::AlreadyExists => WriteError::Exists(out.to_owned()),
-        _ => io_error(out, source),
-    })?;
-    for namespace in minted {
-        let directory = out.join(namespace.name);
-        fs::create_dir(&directory).map_err(|source| io_error(&directory, source))?;
-        for definition in &namespace.definitions {
-            write_definition(&directory, definition)?;
+/// Every `.akev` file under `dir`, in no particular order.
+pub fn minted_files(dir: &Path) -> Result<Vec<PathBuf>, WriteError> {
+    let mut files = Vec::new();
+    for entry in fs::read_dir(dir).map_err(|source| io_error(dir, source))? {
+        let path = entry.map_err(|source| io_error(dir, source))?.path();
+        if path.is_dir() {
+            files.extend(minted_files(&path)?);
+        } else if path.extension().is_some_and(|extension| extension == EXTENSION) {
+            files.push(path);
         }
-        let page = page::render(namespace.name, &namespace.models);
-        create(&out.join(page_file(namespace.name)), page.as_bytes())?;
+    }
+    Ok(files)
+}
+
+/// The path of the file that holds the definitions of the model `name`, declared by
+/// convention in `<name in snake case>.rs` somewhere under its namespace's directory.
+pub fn model_file(namespace: &Path, name: &str) -> Result<PathBuf, WriteError> {
+    let file = format!("{}.rs", snake_case(name));
+    let mut found = Vec::new();
+    find(namespace, &file, &mut found)?;
+    match found.len() {
+        1 => Ok(found.remove(0).with_extension(EXTENSION)),
+        0 => Err(WriteError::NoSource { model: name.to_owned(), directory: namespace.to_owned(), file }),
+        count => Err(WriteError::SeveralSources { count, directory: namespace.to_owned(), file }),
+    }
+}
+
+fn find(dir: &Path, file: &str, found: &mut Vec<PathBuf>) -> Result<(), WriteError> {
+    for entry in fs::read_dir(dir).map_err(|source| io_error(dir, source))? {
+        let path = entry.map_err(|source| io_error(dir, source))?.path();
+        if path.is_dir() {
+            find(&path, file, found)?;
+        } else if path.file_name().is_some_and(|name| name == file) {
+            found.push(path);
+        }
     }
     Ok(())
 }
 
-fn write_definition(directory: &Path, definition: &MintedDefinition) -> Result<(), WriteError> {
-    create(&directory.join(definition_file(definition.id, EVENT_EXTENSION)), &definition.creation.encode())?;
-    create(&directory.join(definition_file(definition.id, STATE_EXTENSION)), &state_encoding::encode(&definition.state))
+fn snake_case(name: &str) -> String {
+    let mut snake = String::with_capacity(name.len() + 4);
+    for (index, character) in name.char_indices() {
+        if character.is_uppercase() && index > 0 {
+            snake.push('_');
+        }
+        snake.extend(character.to_lowercase());
+    }
+    snake
 }
 
-/// Writes `bytes` into a new file at `path`, refusing one that exists.
-fn create(path: &Path, bytes: &[u8]) -> Result<(), WriteError> {
+/// Writes the files of `minted` into `src`, the namespaces' parent directory.
+pub fn write(src: &Path, minted: &[MintedNamespace]) -> Result<(), WriteError> {
+    for namespace in minted {
+        let directory = src.join(namespace.name.replace('-', "_"));
+        let creations: BTreeMap<EntityId, &Event> = namespace.entities.iter().map(|entity| (entity.id, &entity.creation)).collect();
+        let creation = |id: EntityId| {
+            let event = creations.get(&id).ok_or(WriteError::NoCreation(id))?;
+            let Some(Identity::Ed25519(minter)) = event.minter() else { return Err(WriteError::NoCreation(id)) };
+            Ok((minter, Creation { id, at: event.timestamp(), nonce: *event.nonce() }))
+        };
+        let mut edge_kind = None;
+        for model in &namespace.models {
+            let (minter, model_creation) = creation(model.id)?;
+            let mut properties = Vec::with_capacity(model.properties.len());
+            for property in &model.properties {
+                properties.push(PropertyDefinition {
+                    name: property.name.clone(),
+                    value_type: property.value_type.clone(),
+                    backend: property.backend.clone(),
+                    optional: property.optional,
+                    property: creation(property.id)?.1,
+                    link: creation(property.link_id)?.1,
+                });
+            }
+            let definitions =
+                ModelDefinitions { minter, label: model.label.clone(), name: model.name.clone(), model: model_creation, properties };
+            rebuilding::model_events(&definitions).map_err(|source| WriteError::NotRebuilt { label: model.label.clone(), source })?;
+            create(&model_file(&directory, &model.name)?, &definitions.write())?;
+            if model.label == EdgeKind::descriptor().label {
+                edge_kind = Some(definitions);
+            }
+        }
+        if let Some(first) = namespace.edge_kinds.first() {
+            let edge_kind = edge_kind.as_ref().ok_or(WriteError::NoEdgeKindModel)?;
+            let minter = creation(first.id)?.0;
+            let kinds = namespace
+                .edge_kinds
+                .iter()
+                .map(|kind| {
+                    let record = creation(kind.id)?.1;
+                    Ok(EdgeKindRecord { name: kind.name.to_owned(), description: kind.description.to_owned(), record })
+                })
+                .collect::<Result<_, WriteError>>()?;
+            let kinds = EdgeKinds { minter, kinds };
+            let label = edge_kind.label.clone();
+            rebuilding::edge_kind_events(&kinds, edge_kind).map_err(|source| WriteError::NotRebuilt { label, source })?;
+            create(&directory.join(EDGE_KINDS_FILE), &kinds.write())?;
+        }
+    }
+    Ok(())
+}
+
+/// Writes `text` into a new file at `path`, refusing one that exists.
+fn create(path: &Path, text: &str) -> Result<(), WriteError> {
     OpenOptions::new()
         .write(true)
         .create_new(true)
         .open(path)
-        .and_then(|mut file| file.write_all(bytes))
+        .and_then(|mut file| file.write_all(text.as_bytes()))
         .map_err(|source| io_error(path, source))
 }
 
 fn io_error(path: &Path, source: io::Error) -> WriteError {
     WriteError::Io { path: path.to_owned(), source }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn a_directory_that_exists_is_refused_before_minting_and_when_writing() {
-        let parent = tempfile::tempdir().unwrap();
-        let absent = parent.path().join("minted");
-        refuse_existing(&absent).unwrap();
-
-        let existing = parent.path();
-        assert!(matches!(refuse_existing(existing), Err(WriteError::Exists(path)) if path == existing));
-        let error = write(existing, &[]).unwrap_err();
-        assert!(matches!(error, WriteError::Exists(path) if path == existing));
-    }
 }

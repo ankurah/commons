@@ -1,11 +1,9 @@
-//! Mints the definitions of the Commons' models, and checks a minted directory. Whether a
-//! mint is kept is the runner's choice; the crate's README says what `verify` establishes
-//! and what the tool does not settle.
+//! Mints the definitions of the Commons' models and the Commons' kinds of edge into
+//! `.akev` files beside the models' structs, and checks those files. The crate's README
+//! says what the check establishes and what the tool does not settle.
 
 mod namespaces;
-mod page;
 mod registering;
-mod state_encoding;
 mod verifying;
 mod writing;
 
@@ -20,20 +18,21 @@ use thiserror::Error;
 use crate::{namespaces::NAMESPACES, registering::MintError, verifying::VerifyError, writing::WriteError};
 
 #[derive(Parser)]
-#[command(about = "Mints the definitions of the Commons' models, and checks a minted directory")]
+#[command(about = "Mints the definitions of the Commons' models and kinds of edge into .akev files, and checks them")]
 enum Command {
-    /// Register every model of every namespace on a throwaway node, and write each
-    /// definition's creation event and each namespace's page.
+    /// Register every model of every namespace on a throwaway node and create the kinds of
+    /// edge, and write each model's definitions beside its struct and the edge kinds'
+    /// records in the `graph` namespace, as `.akev` files.
     Mint {
-        /// The directory to write into, which must not exist yet.
-        #[arg(long, default_value_os_t = default_out())]
-        out: PathBuf,
+        /// The namespaces' parent directory, which must hold no `.akev` file yet.
+        #[arg(long, default_value_os_t = sources())]
+        src: PathBuf,
     },
-    /// Check a directory `mint` wrote.
+    /// Check the `.akev` files a mint keeps.
     Verify {
-        /// The directory `mint` wrote.
-        #[arg(long)]
-        dir: PathBuf,
+        /// The namespaces' parent directory.
+        #[arg(long, default_value_os_t = sources())]
+        src: PathBuf,
     },
 }
 
@@ -51,8 +50,8 @@ enum CommandError {
 #[tokio::main]
 async fn main() -> ExitCode {
     let result = match Command::parse() {
-        Command::Mint { out } => mint(&out).await,
-        Command::Verify { dir } => verify(&dir),
+        Command::Mint { src } => mint(&src).await,
+        Command::Verify { src } => verify(&src),
     };
     match result {
         Ok(()) => ExitCode::SUCCESS,
@@ -63,27 +62,30 @@ async fn main() -> ExitCode {
     }
 }
 
-/// A trial run should leave nothing in the repository, so by default the output goes
-/// under the workspace's `target/`, which git ignores; a mint that is to be kept is
-/// written into the repository with `--out` and committed.
-fn default_out() -> PathBuf {
+/// The crate's own sources, where a kept mint lives.
+fn sources() -> PathBuf {
     let mint = Path::new(env!("CARGO_MANIFEST_DIR"));
-    mint.parent().expect("the mint crate sits in the workspace").join("target").join("mint")
+    mint.parent().expect("the mint crate sits in the workspace").join("src")
 }
 
-async fn mint(out: &Path) -> Result<(), CommandError> {
-    writing::refuse_existing(out)?;
+async fn mint(src: &Path) -> Result<(), CommandError> {
+    writing::refuse_kept(src)?;
     let minted = registering::mint(NAMESPACES).await?;
-    writing::write(out, &minted)?;
+    writing::write(src, &minted)?;
 
     let models: usize = minted.iter().map(|namespace| namespace.models.len()).sum();
     let properties: usize = minted.iter().flat_map(|namespace| &namespace.models).map(|model| model.properties.len()).sum();
-    println!("Minted {models} models in {} namespaces, with {properties} properties and their links, into {}", minted.len(), out.display());
+    let edge_kinds: usize = minted.iter().map(|namespace| namespace.edge_kinds.len()).sum();
+    println!(
+        "Minted {models} models in {} namespaces, with {properties} properties and their links, and {edge_kinds} edge kinds, into {}",
+        minted.len(),
+        src.display()
+    );
     Ok(())
 }
 
-fn verify(dir: &Path) -> Result<(), CommandError> {
-    let verified = verifying::verify(dir)?;
-    println!("Verified {} definitions in {} directories", verified.definitions, verified.directories);
+fn verify(src: &Path) -> Result<(), CommandError> {
+    let verified = verifying::verify(src, NAMESPACES)?;
+    println!("Verified {} files, rebuilding {} creation events", verified.files, verified.events);
     Ok(())
 }
