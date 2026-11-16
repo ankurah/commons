@@ -46,9 +46,8 @@ beside each model's file the `.akev` file of its minted definitions:
                            type
     src/akev.rs            the text form of minted creation events, `.akev` files
     src/rebuilding.rs      the creation events rebuilt from `.akev` files
-    src/namespaces.rs      the namespaces a build enables, their models, and the text
-                           of their kept mint
-    src/seed.rs            seeding a node with the kept mint
+    src/namespaces.rs      the namespaces a build enables and their models
+    src/seed.rs            seeding a node with the kept mint, which it compiles in
     mint/                  the tool that mints the definitions and checks a mint
                            (mint/README.md)
 

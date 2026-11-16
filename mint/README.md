@@ -97,14 +97,18 @@ It does not establish:
 
 ## The list of models
 
-The crate's `src/namespaces.rs` lists every namespace and its models, each with the text
-of its kept mint, and gives `graph` the table of edge kinds from that namespace's
-source. `seed` loads what the list holds for the namespaces a build enables; `mint`
-mints the whole list. A test there keeps the list complete, so that a model added to a
-namespace, or a new namespace, cannot be forgotten: for every namespace's module, a
-directory in the crate's `src/` named as the namespace, it compares the structs the
-module's sources derive `Model` for with the models listed for that namespace, and fails
-naming the first one missing on either side.
+The crate's `src/namespaces.rs` lists every namespace and the declarations of its models,
+and gives `graph` the table of edge kinds from that namespace's source. `mint` mints the
+whole list. A test there keeps the list complete, so that a model added to a namespace,
+or a new namespace, cannot be forgotten: for every namespace's module, a directory in the
+crate's `src/` named as the namespace, it compares the structs the module's sources
+derive `Model` for with the models listed for that namespace, and fails naming the first
+one missing on either side.
+
+The text of the kept mint is not in that list: `src/seed.rs` compiles it in, in a list of
+its own, so that the tool builds from the declarations alone. A model declared anew is
+listed with no id, and `mint` writes its file and gives its struct the id; its file is
+then added to the seed's list, which the crate's seed test checks.
 
 It relies on one convention: a model is a struct with `#[derive(Model, ..)]` written
 directly on it, in a file under its namespace's directory in `src/`. A model declared

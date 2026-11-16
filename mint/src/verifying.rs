@@ -77,7 +77,7 @@ pub fn verify(src: &Path, namespaces: &[Namespace]) -> Result<Verified, VerifyEr
         let edge_kind_label = namespace.edge_kinds.as_ref().map(|edge_kinds| (edge_kinds.model)().label);
         let mut edge_kind = None;
         for model in namespace.models {
-            let descriptor = (model.descriptor)();
+            let descriptor = model();
             let path = writing::model_file(&directory, descriptor.name)
                 .map_err(|failure| VerifyError { path: directory.clone(), failure: Failure::Unplaced(failure) })?;
             let failed = |failure| VerifyError { path: path.clone(), failure };

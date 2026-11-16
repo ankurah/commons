@@ -13,7 +13,7 @@ use thiserror::Error;
 
 use crate::{
     akev::{EdgeKinds, ModelDefinitions, ParseError},
-    namespaces::NAMESPACES,
+    namespaces::Declaration,
     rebuilding::RebuildError,
 };
 
@@ -21,10 +21,10 @@ use crate::{
 /// rebuild all of it, so in a build whose tests pass only the import can fail.
 #[derive(Debug, Error)]
 pub enum SeedError {
-    #[error("the kept mint of {of} does not parse: {source}")]
-    Unparsable { of: &'static str, source: ParseError },
-    #[error("the kept mint of {of} does not rebuild: {source}")]
-    NotRebuilt { of: &'static str, source: RebuildError },
+    #[error("the kept mint of the {namespace} namespace does not parse: {source}")]
+    Unparsable { namespace: &'static str, source: ParseError },
+    #[error("the kept mint of the {namespace} namespace does not rebuild: {source}")]
+    NotRebuilt { namespace: &'static str, source: RebuildError },
     #[error("the node did not import the kept mint: {0}")]
     Import(Box<MutationError>),
 }
@@ -46,22 +46,126 @@ where
     node.import_events(&kept_mint()?).await.map_err(|error| SeedError::Import(Box::new(error)))
 }
 
+/// The kept mint of one namespace, as compiled into the crate: the text of each of its
+/// models' `.akev` files, and of the records of the kinds of edge it mints.
+struct Kept {
+    namespace: &'static str,
+    models: &'static [&'static str],
+    edge_kinds: Option<KeptEdgeKinds>,
+}
+
+struct KeptEdgeKinds {
+    /// The model whose records they are.
+    model: Declaration,
+    akev: &'static str,
+}
+
+/// The kept mint of every namespace this build enables, as compiled into the crate.
+const KEPT_MINT: &[Kept] = &[
+    #[cfg(feature = "identity")]
+    Kept {
+        namespace: "identity",
+        models: &[include_str!("identity/identity_binding.akev"), include_str!("identity/principal.akev")],
+        edge_kinds: None,
+    },
+    #[cfg(feature = "records")]
+    Kept {
+        namespace: "records",
+        models: &[
+            include_str!("records/deferred.akev"),
+            include_str!("records/fractional_position.akev"),
+            include_str!("records/lifecycle/acceptance.akev"),
+            include_str!("records/lifecycle/checked.akev"),
+            include_str!("records/lifecycle/closed.akev"),
+            include_str!("records/lifecycle/created.akev"),
+            include_str!("records/lifecycle/edited.akev"),
+            include_str!("records/note.akev"),
+            include_str!("records/provenance/attribution.akev"),
+            include_str!("records/provenance/via.akev"),
+            include_str!("records/responsibility/assignment.akev"),
+            include_str!("records/responsibility/ownership.akev"),
+        ],
+        edge_kinds: None,
+    },
+    #[cfg(feature = "health")]
+    Kept {
+        namespace: "health",
+        models: &[
+            include_str!("health/activity_interval.akev"),
+            include_str!("health/distance.akev"),
+            include_str!("health/heart_rate.akev"),
+            include_str!("health/heart_rate_summary.akev"),
+            include_str!("health/physical_activity.akev"),
+            include_str!("health/workout.akev"),
+        ],
+        edge_kinds: None,
+    },
+    #[cfg(feature = "text")]
+    Kept { namespace: "text", models: &[include_str!("text/fragment.akev"), include_str!("text/quotation.akev")], edge_kinds: None },
+    #[cfg(feature = "git")]
+    Kept {
+        namespace: "git",
+        models: &[
+            include_str!("git/checkout_state.akev"),
+            include_str!("git/file_anchor.akev"),
+            include_str!("git/repository.akev"),
+            include_str!("git/work_location.akev"),
+        ],
+        edge_kinds: None,
+    },
+    #[cfg(feature = "graph")]
+    Kept {
+        namespace: "graph",
+        models: &[include_str!("graph/dyn_edge.akev"), include_str!("graph/edge_kind.akev")],
+        edge_kinds: Some(KeptEdgeKinds {
+            model: crate::namespaces::declared::<crate::graph::EdgeKind>(),
+            akev: include_str!("graph/edge_kinds.akev"),
+        }),
+    },
+    #[cfg(feature = "cognition")]
+    Kept {
+        namespace: "cognition",
+        models: &[
+            include_str!("cognition/claim.akev"),
+            include_str!("cognition/decision.akev"),
+            include_str!("cognition/expectation.akev"),
+            include_str!("cognition/intention.akev"),
+            include_str!("cognition/intuition.akev"),
+            include_str!("cognition/perspective.akev"),
+        ],
+        edge_kinds: None,
+    },
+    #[cfg(feature = "work")]
+    Kept {
+        namespace: "work",
+        models: &[include_str!("work/scope.akev"), include_str!("work/submission.akev"), include_str!("work/task.akev")],
+        edge_kinds: None,
+    },
+    #[cfg(feature = "messaging")]
+    Kept {
+        namespace: "messaging",
+        models: &[include_str!("messaging/mention.akev"), include_str!("messaging/message.akev")],
+        edge_kinds: None,
+    },
+];
+
 /// The creation events of the kept mint of every namespace this build enables.
 fn kept_mint() -> Result<Vec<Attested<Event>>, SeedError> {
     let mut events = Vec::new();
-    for namespace in NAMESPACES {
-        let mut models = Vec::with_capacity(namespace.models.len());
-        for model in namespace.models {
-            let of = (model.descriptor)().label;
-            let (definitions, ids) = ModelDefinitions::parse(model.akev).map_err(|source| SeedError::Unparsable { of, source })?;
-            events.extend(definitions.events_as_stated(&ids).map_err(|source| SeedError::NotRebuilt { of, source })?);
+    for kept in KEPT_MINT {
+        let namespace = kept.namespace;
+        let mut models = Vec::with_capacity(kept.models.len());
+        for text in kept.models {
+            let (definitions, ids) = ModelDefinitions::parse(text).map_err(|source| SeedError::Unparsable { namespace, source })?;
+            events.extend(definitions.events_as_stated(&ids).map_err(|source| SeedError::NotRebuilt { namespace, source })?);
             models.push(definitions);
         }
-        if let Some(edge_kinds) = &namespace.edge_kinds {
-            let of = (edge_kinds.model)().label;
-            let edge_kind = models.iter().find(|definitions| definitions.label == of).expect("a namespace mints records of its own models");
-            let (records, ids) = EdgeKinds::parse(edge_kinds.akev).map_err(|source| SeedError::Unparsable { of, source })?;
-            events.extend(records.events_as_stated(edge_kind, &ids).map_err(|source| SeedError::NotRebuilt { of, source })?);
+        if let Some(edge_kinds) = &kept.edge_kinds {
+            let label = (edge_kinds.model)().label;
+            let edge_kind =
+                models.iter().find(|definitions| definitions.label == label).expect("a namespace mints records of its own models");
+            let (records, ids) = EdgeKinds::parse(edge_kinds.akev).map_err(|source| SeedError::Unparsable { namespace, source })?;
+            events.extend(records.events_as_stated(edge_kind, &ids).map_err(|source| SeedError::NotRebuilt { namespace, source })?);
         }
     }
     Ok(events.into_iter().map(Attested::from).collect())
@@ -70,6 +174,7 @@ fn kept_mint() -> Result<Vec<Attested<Event>>, SeedError> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::namespaces::NAMESPACES;
     use ankurah::{core::schema::ModelStructDescriptor, proto::EntityState, EntityId, ModelId, PermissiveAgent};
     use ankurah_storage_sled::SledStorageEngine;
     use ankurah_storage_sqlite::SqliteStorageEngine;
@@ -83,11 +188,11 @@ mod tests {
         node
     }
 
-    /// Each model's declaration, with the id its kept mint gives the model.
-    fn minted_models() -> impl Iterator<Item = (&'static ModelStructDescriptor, EntityId)> {
+    /// Each model this build lists, with the id it declares.
+    fn declared_models() -> impl Iterator<Item = (&'static ModelStructDescriptor, EntityId)> {
         NAMESPACES.iter().flat_map(|namespace| namespace.models).map(|model| {
-            let (_, ids) = ModelDefinitions::parse(model.akev).unwrap();
-            ((model.descriptor)(), ids[0])
+            let descriptor = model();
+            (descriptor, EntityId::from_base64(descriptor.explicit_id.expect("every model declares its minted id")).unwrap())
         })
     }
 
@@ -97,7 +202,7 @@ mod tests {
     async fn every_model_binds_to_its_minted_definition<SE: StorageEngine + Send + Sync + 'static>(engine: SE) {
         let node = seeded(engine).await;
         let epoch = node.system.system_epoch().unwrap();
-        for (descriptor, id) in minted_models() {
+        for (descriptor, id) in declared_models() {
             assert_eq!(descriptor.bind_local(&node.catalog, epoch).unwrap(), ModelId::EntityId(id), "{}", descriptor.label);
         }
         #[cfg(feature = "graph")]

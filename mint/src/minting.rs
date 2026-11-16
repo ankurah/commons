@@ -47,7 +47,7 @@ pub fn mint(src: &Path, namespaces: &'static [Namespace]) -> Result<Vec<MintedNa
             let directory = src.join(namespace.name);
             let mut models = Vec::with_capacity(namespace.models.len());
             for model in namespace.models {
-                let descriptor = (model.descriptor)();
+                let descriptor = model();
                 models.push(definitions(descriptor, kept(&writing::model_file(&directory, descriptor.name)?, ModelDefinitions::parse)?));
             }
             let edge_kinds = match &namespace.edge_kinds {

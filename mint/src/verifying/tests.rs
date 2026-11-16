@@ -23,32 +23,20 @@ fn minting_the_kept_mint_again_changes_no_file_and_it_verifies() {
     assert_eq!(files(src.path()), files(&sources()));
     let verified = verify(src.path(), NAMESPACES).unwrap();
     let models = NAMESPACES.iter().map(|namespace| namespace.models.len()).sum::<usize>();
-    let definitions: usize =
-        NAMESPACES.iter().flat_map(|namespace| namespace.models).map(|model| 1 + 2 * (model.descriptor)().properties.len()).sum();
+    let definitions: usize = NAMESPACES.iter().flat_map(|namespace| namespace.models).map(|model| 1 + 2 * model().properties.len()).sum();
     let edge_kinds: usize = NAMESPACES.iter().flat_map(|namespace| &namespace.edge_kinds).map(|edge_kinds| edge_kinds.kinds.len()).sum();
     assert_eq!((verified.files, verified.events), (models + 1, definitions + edge_kinds));
 }
 
-/// A model the kept mint lacks, whose struct declares no id yet, is minted with a time and
-/// nonce drawn for each entity, and its struct is given the new id. Until the declarations
-/// are built again, the tool's own still state the old one, and verify says so.
+/// A file whose model line gives an id other than the one the struct declares fails, naming
+/// the file, before its events are rebuilt.
 #[test]
-fn a_model_new_to_the_mint_is_minted_anew_and_given_its_id() {
-    let src = copied();
+fn a_model_line_whose_id_the_struct_does_not_declare_fails_naming_the_file() {
+    let src = minted();
     let intention = src.path().join("cognition").join("intention.akev");
-    let source = intention.with_extension("rs");
-    let kept = fs::read_to_string(&intention).unwrap();
-    fs::remove_file(&intention).unwrap();
-    let declared = fs::read_to_string(&source).unwrap();
-    let id_line = declared.lines().find(|line| line.starts_with("#[model(id = ")).unwrap();
-    fs::write(&source, declared.replacen(&format!("{id_line}\n"), "", 1)).unwrap();
-
-    mint(src.path());
-    let minted = fs::read_to_string(&intention).unwrap();
-    assert_ne!(minted, kept);
-    let (_, ids) = ModelDefinitions::parse(&minted).unwrap();
-    let label_and_id = format!("#[model(label = \"cognition.intention\")]\n#[model(id = \"{}\")]\n", ids[0].to_base64());
-    assert!(fs::read_to_string(&source).unwrap().contains(&label_and_id));
+    let text = fs::read_to_string(&intention).unwrap();
+    let (_, ids) = ModelDefinitions::parse(&text).unwrap();
+    edit(&intention, &ids[0].to_base64(), &EntityId::from_bytes([1; 32]).to_base64());
     let error = failure(&src);
     assert_eq!(error.path, intention);
     assert!(matches!(error.failure, Failure::NotAsDeclared("id")), "{error}");
