@@ -27,6 +27,9 @@ jiff    = { workspace = true, optional = true }
 serde   = { workspace = true }
 strum   = { workspace = true }
 
+[dev-dependencies]
+serde_json = "1"
+
 [workspace]
 resolver = "2"
 # mint/ needs Ankurah's node identity branch, which is not on Ankurah's main yet: see mint/README.md.

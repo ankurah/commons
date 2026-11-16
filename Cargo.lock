@@ -52,6 +52,7 @@ dependencies = [
  "ankurah",
  "jiff",
  "serde",
+ "serde_json",
  "strum 0.26.3",
 ]
 
