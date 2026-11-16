@@ -93,7 +93,7 @@ fn records(table: &[(&str, &str)], kept: Option<EdgeKinds>) -> EdgeKinds {
 type Parse<T> = fn(&str) -> Result<(T, Vec<EntityId>), ParseError>;
 
 /// What the kept mint's file at `path` states, if there is one. The ids its lines state are
-/// not read, so that a mint made in an earlier format of Ankurah's events keeps its times and
+/// ignored, so that a mint whose events Ankurah now encodes otherwise keeps its times and
 /// nonces.
 fn kept<T>(path: &Path, parse: Parse<T>) -> Result<Option<T>, MintError> {
     match fs::read_to_string(path) {

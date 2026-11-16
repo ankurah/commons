@@ -52,11 +52,19 @@ It does the same for a record of each kind of edge in the table in the `graph`
 namespace's source (`EDGE_KINDS`), its name and description, into
 `src/graph/edge_kinds.akev`.
 
-Minting a kept mint again therefore changes nothing unless a declaration, or the format
-of Ankurah's events, changed; a new format changes only the ids. The ids the kept mint's
-lines state are not read, so a mint made in an earlier format keeps its times and nonces
-too. Nor are the ids the structs declare: a struct that declares none yet, or an old one,
-is minted all the same.
+Minting a kept mint again therefore changes nothing unless a declaration, or the way
+Ankurah encodes its events, changed; a new encoding changes only the ids. `mint` parses
+the ids the kept mint's lines state and ignores them, so a kept mint whose events Ankurah
+now encodes otherwise keeps its times and nonces, as long as its files are in the
+current text form. It ignores the ids the structs declare too: a struct that declares
+none yet, or an old one, is minted all the same.
+
+The text form itself changed once. The mint kept at `a9ea175` opened each file with a
+minter line, `minter ed25519 <key>`, and a blank line; the current form drops them and the
+parser refuses them. That mint was carried over by deleting those two lines from every
+file and running `mint`, which kept every time and nonce and gave each entity the id of
+the current encoding. `mint` reads no other form, so a later change to the text form
+needs a one-time conversion of the same kind.
 
 Tests in the crate (`rebuilding`) compare the mint with Ankurah itself. Each of the
 Commons' models is registered, without the id it declares, on a fresh durable node. The
