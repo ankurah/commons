@@ -80,7 +80,6 @@ dependencies = [
  "strum 0.26.3",
  "syn 2.0.119",
  "tempfile",
- "thiserror 2.0.21",
  "tokio",
 ]
 

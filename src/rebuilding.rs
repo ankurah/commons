@@ -4,7 +4,7 @@
 //! those, the entity's time and its nonce. A genesis that names no system root and no author
 //! is the same entity, with the same id, on every node.
 
-use std::collections::BTreeMap;
+use std::{collections::BTreeMap, error::Error, fmt};
 
 use ankurah::{
     core::{
@@ -17,23 +17,43 @@ use ankurah::{
     value::Value,
     EntityId, Property,
 };
-use thiserror::Error;
 
 use crate::akev::{Creation, EdgeKinds, ModelDefinitions, PropertyDefinition};
 
 /// Why minted events could not be rebuilt, or are not the events a file states.
-#[derive(Debug, Error)]
+#[derive(Debug)]
 pub enum RebuildError {
-    #[error("the line of {stated} rebuilds the event of {rebuilt}: some value or creation field on it is not what was minted")]
     NotTheMintedEvent { stated: EntityId, rebuilt: EntityId },
-    #[error("{stated} ids are stated for {rebuilt} rebuilt events")]
     IdCount { stated: usize, rebuilt: usize },
-    #[error("the edge kind model's definitions state no property `{0}`")]
     NoSuchProperty(&'static str),
-    #[error("a value does not encode: {0}")]
     Value(Box<PropertyError>),
-    #[error("the operations do not encode: {0}")]
     Operations(Box<MutationError>),
+}
+
+impl fmt::Display for RebuildError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            RebuildError::NotTheMintedEvent { stated, rebuilt } => {
+                write!(f, "the line of {stated} rebuilds the event of {rebuilt}: some value or creation field on it is not what was minted")
+            }
+            RebuildError::IdCount { stated, rebuilt } => write!(f, "{stated} ids are stated for {rebuilt} rebuilt events"),
+            RebuildError::NoSuchProperty(name) => write!(f, "the edge kind model's definitions state no property `{name}`"),
+            RebuildError::Value(source) => write!(f, "a value does not encode: {source}"),
+            RebuildError::Operations(source) => write!(f, "the operations do not encode: {source}"),
+        }
+    }
+}
+
+// Written out rather than derived, so that the source of a boxed error is the error, not its
+// box, and a caller can downcast it.
+impl Error for RebuildError {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        match self {
+            RebuildError::Value(source) => Some(source.as_ref()),
+            RebuildError::Operations(source) => Some(source.as_ref()),
+            RebuildError::NotTheMintedEvent { .. } | RebuildError::IdCount { .. } | RebuildError::NoSuchProperty(_) => None,
+        }
+    }
 }
 
 /// One of a model's definitions: the model's own, a property's, or the link that gives the
@@ -286,6 +306,15 @@ mod tests {
         let backends: BTreeSet<&str> = declared.iter().map(|(_, backend)| *backend).collect();
         assert_eq!(value_types, BTreeSet::from(["bool", "entityid", "f64", "i64", "json", "string"]));
         assert_eq!(backends, BTreeSet::from(["lww", "yrs"]));
+    }
+
+    /// An error that does not encode is the source of the error that wraps it.
+    #[test]
+    fn an_encoding_error_is_the_source_of_the_rebuild_error() {
+        let error = RebuildError::Operations(Box::new(MutationError::NotDurable));
+        assert!(matches!(error.source().and_then(|source| source.downcast_ref::<MutationError>()), Some(MutationError::NotDurable)));
+        let error = RebuildError::Value(Box::new(PropertyError::Missing));
+        assert!(matches!(error.source().and_then(|source| source.downcast_ref::<PropertyError>()), Some(PropertyError::Missing)));
     }
 
     /// A model with a property renamed from a former name.

@@ -2,6 +2,8 @@
 //! into this crate, imported into a durable node's store, so that the Commons' models bind
 //! to the minted definitions there rather than minting their own.
 
+use std::{error::Error, fmt};
+
 use ankurah::{
     error::MutationError,
     policy::PolicyAgent,
@@ -9,7 +11,6 @@ use ankurah::{
     storage::StorageEngine,
     Node,
 };
-use thiserror::Error;
 
 use crate::{
     akev::{EdgeKinds, ModelDefinitions, ParseError},
@@ -19,14 +20,35 @@ use crate::{
 
 /// Why a node was not seeded. The kept mint is compiled into the crate and its tests
 /// rebuild all of it, so in a build whose tests pass only the import can fail.
-#[derive(Debug, Error)]
+#[derive(Debug)]
 pub enum SeedError {
-    #[error("the kept mint of the {namespace} namespace does not parse: {source}")]
     Unparsable { namespace: &'static str, source: ParseError },
-    #[error("the kept mint of the {namespace} namespace does not rebuild: {source}")]
     NotRebuilt { namespace: &'static str, source: RebuildError },
-    #[error("the node did not import the kept mint: {0}")]
     Import(Box<MutationError>),
+}
+
+impl fmt::Display for SeedError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            SeedError::Unparsable { namespace, source } => write!(f, "the kept mint of the {namespace} namespace does not parse: {source}"),
+            SeedError::NotRebuilt { namespace, source } => {
+                write!(f, "the kept mint of the {namespace} namespace does not rebuild: {source}")
+            }
+            SeedError::Import(source) => write!(f, "the node did not import the kept mint: {source}"),
+        }
+    }
+}
+
+// Written out rather than derived, so that the source of a boxed error is the error, not its
+// box, and a caller can downcast it.
+impl Error for SeedError {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        match self {
+            SeedError::Unparsable { source, .. } => Some(source),
+            SeedError::NotRebuilt { source, .. } => Some(source),
+            SeedError::Import(source) => Some(source.as_ref()),
+        }
+    }
 }
 
 /// Imports into `node` the kept mint of every namespace this build enables: the definitions
@@ -242,6 +264,16 @@ mod tests {
         let before = stored(&node).await;
         seed(&node).await.unwrap();
         assert_eq!(stored(&node).await, before);
+    }
+
+    /// An ephemeral node keeps no store to import into; the import's error is the seed's
+    /// source.
+    #[tokio::test]
+    async fn seeding_an_ephemeral_node_fails_with_the_imports_error_as_its_source() {
+        let node = Node::new(Arc::new(SledStorageEngine::new_test().unwrap()), PermissiveAgent::new());
+        let error = seed(&node).await.unwrap_err();
+        let source = error.source().and_then(|source| source.downcast_ref::<MutationError>());
+        assert!(matches!(source, Some(MutationError::NotDurable)), "{error}");
     }
 
     #[tokio::test]

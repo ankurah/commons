@@ -27,7 +27,6 @@ ankurah   = { workspace = true }
 jiff      = { workspace = true, optional = true }
 serde     = { workspace = true }
 strum     = { workspace = true }
-thiserror = { workspace = true }
 
 [dev-dependencies]
 # Registration by a node that a declaration is sent to, to compare the mint with.
