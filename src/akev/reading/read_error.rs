@@ -4,7 +4,7 @@ use std::{error::Error, fmt, path::PathBuf};
 
 use ankurah::{proto::DecodeError, EntityId};
 
-use super::{genesis::BuildError, timestamp::TimestampError};
+use crate::akev::{genesis::BuildError, timestamp::TimestampError};
 
 /// Why the files of a read do not read: the file and the line, counted from one, where they
 /// first fail, and what is wrong there.

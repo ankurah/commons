@@ -13,16 +13,22 @@ use ankurah::{
     EntityId, PropertyId,
 };
 
+use self::{
+    parsing::{Block, Name, Reference, StatedOperations},
+    read_error::At,
+};
 use super::{
     genesis::{BackendOperations, Genesis, Operations},
-    lexing,
     naming::{label_and_name, Names, Unanswered},
-    parsing::{self, Block, Name, Reference, StatedOperations},
-    read_error::{At, Problem, ReadError},
 };
 
+mod lexing;
+mod parsing;
+mod read_error;
 #[cfg(test)]
 mod tests;
+
+pub use read_error::{Problem, ReadError};
 
 /// The events of `files`, each given by its path and its text, in the order of the files
 /// and of the blocks in each. A name `name@file` refers to one of these files, by its path

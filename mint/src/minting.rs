@@ -24,11 +24,13 @@ use ankurah_commons::{
 };
 use thiserror::Error;
 
-use crate::{
-    edge_kinds::{self, EdgeKindModel},
-    kept::{Kept, KeptError},
-    placement::{self, PlaceError, EXTENSION},
-};
+use self::{edge_kinds::EdgeKindModel, kept::Kept};
+use crate::placement::{self, PlaceError, EXTENSION};
+
+mod edge_kinds;
+mod kept;
+
+pub use kept::KeptError;
 
 /// What minting made of one model: the file of its definitions, beside the struct that
 /// declares it, and, for the model whose records the kinds of edge are, those records after

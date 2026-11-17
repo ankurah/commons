@@ -11,10 +11,9 @@ use base64::{engine::general_purpose::URL_SAFE_NO_PAD, Engine};
 
 use super::{
     lexing::{Lexed, Token},
-    naming::is_name,
     read_error::{At, Problem},
-    timestamp,
 };
+use crate::akev::{naming::is_name, timestamp};
 
 /// One event as a file states it.
 #[derive(Debug)]
@@ -352,7 +351,7 @@ struct Fields<'t> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::akev::lexing::tokens;
+    use crate::akev::reading::lexing::tokens;
 
     const ID: &str = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 

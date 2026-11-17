@@ -23,10 +23,7 @@
 //! Ankurah prints them by, and the two built-in properties that name an entity.
 
 mod genesis;
-mod lexing;
 mod naming;
-mod parsing;
-mod read_error;
 mod reading;
 #[cfg(test)]
 mod sample;
@@ -34,7 +31,6 @@ mod timestamp;
 mod writing;
 
 pub use genesis::{BackendOperations, BuildError, Genesis, Operations};
-pub use read_error::{Problem, ReadError};
-pub use reading::read;
+pub use reading::{read, Problem, ReadError};
 pub use timestamp::TimestampError;
 pub use writing::{write, WriteError};

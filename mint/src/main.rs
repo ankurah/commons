@@ -5,8 +5,6 @@
 #[cfg(test)]
 mod copies;
 mod declaring;
-mod edge_kinds;
-mod kept;
 mod minting;
 mod placement;
 mod verifying;

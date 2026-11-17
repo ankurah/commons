@@ -17,8 +17,7 @@ use ankurah_commons::{akev::ReadError, namespaces::Namespace};
 use thiserror::Error;
 
 use crate::{
-    kept::KeptError,
-    minting::{self, MintError, Minted},
+    minting::{self, KeptError, MintError, Minted},
     placement::{self, PlaceError, EXTENSION},
 };
 
