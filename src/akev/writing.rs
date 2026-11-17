@@ -23,6 +23,8 @@ const WIDTH: usize = 100;
 #[derive(Debug)]
 pub enum WriteError {
     Build(BuildError),
+    /// A second genesis of an entity, which a reader refuses.
+    SecondGenesis(EntityId),
     /// A timestamp after `timestamp::LAST`, which the one form of a timestamp does not write.
     Timestamp(u64),
     /// A backend's operations that are not one operation of at least one byte, which is
@@ -36,6 +38,7 @@ impl fmt::Display for WriteError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             WriteError::Build(source) => write!(f, "the operations do not build: {source}"),
+            WriteError::SecondGenesis(entity) => write!(f, "a second genesis of {entity}"),
             WriteError::Timestamp(ms) => write!(f, "the timestamp {ms} falls after the year 9999"),
             WriteError::NotOneToken { backend } => write!(f, "the `{backend}` backend's operations are not one operation of some bytes"),
         }
@@ -46,30 +49,34 @@ impl Error for WriteError {
     fn source(&self) -> Option<&(dyn Error + 'static)> {
         match self {
             WriteError::Build(source) => Some(source),
-            WriteError::Timestamp(_) | WriteError::NotOneToken { .. } => None,
+            WriteError::SecondGenesis(_) | WriteError::Timestamp(_) | WriteError::NotOneToken { .. } => None,
         }
     }
 }
 
 /// The file that states `geneses`, in their order. Each block writes the backends' values
 /// as text where every value has a literal, and the operation's bytes otherwise; and it
-/// writes `$name` for an id of an entity in `geneses` that answers to that one name.
+/// writes `$name` for an id of an entity in `geneses` that answers to that name alone.
 pub fn write(geneses: &[Genesis]) -> Result<String, WriteError> {
     let events = geneses.iter().map(Genesis::event).collect::<Result<Vec<_>, _>>().map_err(WriteError::Build)?;
-    let places: HashMap<EntityId, usize> = events.iter().enumerate().map(|(place, event)| (event.entity_id, place)).collect();
+    let mut places = HashMap::with_capacity(events.len());
+    for (place, event) in events.iter().enumerate() {
+        if places.insert(event.entity_id, place).is_some() {
+            return Err(WriteError::SecondGenesis(event.entity_id));
+        }
+    }
     let lww = <LWWBackend as PropertyBackend>::property_backend_name();
     let mut names = Names::default();
     let mut named = Vec::with_capacity(geneses.len());
     for (place, genesis) in geneses.iter().enumerate() {
-        let name = match genesis.operations.backends.get(lww) {
+        let (label, name) = match genesis.operations.backends.get(lww) {
             Some(BackendOperations::Values(values)) if values.iter().all(|(_, value)| has_literal(value)) => {
-                let (label, name) = label_and_name(values.iter().map(|(property, value)| (property, value)));
-                names.add(place, label, name);
-                label.or(name)
+                label_and_name(values.iter().map(|(property, value)| (property, value)))
             }
-            _ => None,
+            _ => (None, None),
         };
-        named.push(name);
+        names.add(place, label, name);
+        named.push([label, name]);
     }
     let writer = Writer { places, names, named };
     let mut text = String::new();
@@ -86,8 +93,8 @@ pub fn write(geneses: &[Genesis]) -> Result<String, WriteError> {
 struct Writer<'g> {
     places: HashMap<EntityId, usize>,
     names: Names<'g>,
-    /// The name each entity is written by, if it answers to one: its label, or else its name.
-    named: Vec<Option<&'g str>>,
+    /// The label and the name each entity's `lww` text holds, the names it may be written by.
+    named: Vec<[Option<&'g str>; 2]>,
 }
 
 /// One field of a block after its nonce and timestamp.
@@ -171,12 +178,11 @@ impl Writer<'_> {
         Field { line: format!("{backend}: {{ {} }}", entries.join(", ")), lines: Some(lines.collect()), refers }
     }
 
-    /// `$name` when `id` is an entity of the file that answers to the name it is written by,
-    /// and the id otherwise.
+    /// `$name` when `id` is an entity of the file and `name`, its label or else its name, is a
+    /// name that resolves to that entity alone; the id otherwise.
     fn reference(&self, id: EntityId) -> String {
         let name = self.places.get(&id).and_then(|&place| {
-            let name = self.named[place]?;
-            (is_name(name) && self.names.resolve(name) == Ok(place)).then_some(name)
+            self.named[place].into_iter().flatten().find(|&name| is_name(name) && self.names.resolve(name) == Ok(place))
         });
         match name {
             Some(name) => format!("${name}"),
@@ -265,6 +271,37 @@ mod tests {
         assert!(!text.contains('$'), "{text}");
         assert!(ids.iter().all(|id| text.contains(&format!("    {id}: true"))), "{text}");
         assert_eq!(read_back(&text), events(&geneses));
+    }
+
+    fn labelled(text: &str) -> (PropertyId, Option<Value>) {
+        (PropertyId::System(SystemProperty::Label), Some(Value::String(text.to_owned())))
+    }
+
+    /// The text of `geneses` and one more that refers to each of them, which reads back as
+    /// the same events.
+    fn referred(mut geneses: Vec<Genesis>) -> String {
+        let refers = events(&geneses).iter().map(|event| (PropertyId::EntityId(event.entity_id), Some(Value::Bool(true)))).collect();
+        geneses.push(genesis(9, refers));
+        let text = write(&geneses).unwrap();
+        assert_eq!(read_back(&text), events(&geneses));
+        text
+    }
+
+    /// An entity whose label can stand as no name, or is shared, is written by its name.
+    #[test]
+    fn an_entity_is_written_by_its_name_where_its_label_cannot_stand_for_it() {
+        let text = referred(vec![genesis(1, vec![labelled("no name"), named("first")])]);
+        assert!(text.contains("    $first: true"), "{text}");
+        let text =
+            referred(vec![genesis(1, vec![labelled("shared"), named("first")]), genesis(2, vec![labelled("shared"), named("second")])]);
+        assert!(text.contains("    $first: true\n    $second: true"), "{text}");
+    }
+
+    #[test]
+    fn a_second_genesis_of_an_entity_is_refused() {
+        let once = genesis(1, vec![named("thing")]);
+        let entity = once.event().unwrap().entity_id;
+        assert!(matches!(write(&[once.clone(), once]), Err(WriteError::SecondGenesis(id)) if id == entity));
     }
 
     #[test]
