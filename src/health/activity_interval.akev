@@ -1,9 +1,83 @@
-model     health.activity_interval  ActivityInterval  id 2Dw86UNp_L9Ad2m2A0DQkq0iL8iMmkpc5FBTBll3Yy8  at 1794795263455  nonce 2f9fd65c8cbccfd9639159ac36cb5001ca7fef70ea20c33707f6eb3b7cea6037
-property  activity    entityid  lww                   id _sy6U2csjTQuZPlJA0FPOlS0jhixLYUD7rxvf2Y9LgI  at 1794795263455  nonce acc96aebaa6dc9a98f46987d4c9d5b74afe70f7ca8543190d279dd7a477c3ae6
-link      activity    required                        id ajcVmAsiZJrEyYX6PeocBOKQSC4ESTDcYtV4ZmvJh7U  at 1794795263455  nonce 7ca9f438c8b7ab0a4a5eab9658b013fe1a67bc05cd74db5921bdbc3966d2a8da
-property  kind        string    lww                   id S_BqUaPLwNn-x6_XeMP8GvEHYS7nG6LAp0bIaxwVpSE  at 1794795263456  nonce ffc7889285c7bc005407e02afc5da5df4f24c982d76d7ecf52d338fcbc37deb7
-link      kind        required                        id FWAPb0xKClGEBqqz_9AMOq1bHHJpbf-mXI-mrbdF4Es  at 1794795263456  nonce 3f7668276650509a9adcf3eddc97c4eeed3bd9d2cd50927fc370de733a8a0c24
-property  started_at  i64       lww                   id rUGrovUAF7qVuGuU1Vgev_fowa9qKIxYHf3XW4Lj68k  at 1794795263456  nonce a5567ea70e970e1ba4a01ce69e498eb2490432a0abcff18671727f0f5b54b361
-link      started_at  required                        id 2Rwlws2CWRkaFNDGyfQ7i4MrRd4VzA-hTIVORUOJ_Ck  at 1794795263456  nonce a7ea8d75fcbe4cc0fbea878e1f8613cd50fa8c663799af795178b6aa7336f869
-property  ended_at    i64       lww                   id 8r9hmQ1kkKu8Q6kIZvNP7RTeufbAj8wSXwlY_8n7hSE  at 1794795263456  nonce 35d683f5443bca7ef18c9b2a30a08e4a9dd38085c952d3d6df36763243cac78a
-link      ended_at    optional                        id 5a6A9MGNxYzoC7-bZFvVJjG14TuELPVk4_Yg4ZN5Tbw  at 1794795263456  nonce fe07d0b5fb086b377aafaf568a87c79bf8b42bab3ebbd6445fb645ecd2b89ee5
+[2Dw86UNp_L9Ad2m2A0DQkq0iL8iMmkpc5FBTBll3Yy8]
+nonce: L5_WXIy8z9ljkVmsNstQAcp_73DqIMM3B_brO3zqYDc, timestamp: 2026-11-16T02:14:23.455Z
+lww: { label: "health.activity_interval", name: "ActivityInterval" }, member: system:model
+
+[_sy6U2csjTQuZPlJA0FPOlS0jhixLYUD7rxvf2Y9LgI]
+nonce: rMlq66ptyamPRph9TJ1bdK_nD3yoVDGQ0nndekd8OuY, timestamp: 2026-11-16T02:14:23.455Z
+lww: {
+    name: "activity"
+    backend: "lww"
+    value_type: "entityid"
+    minted_for: $health.activity_interval
+    target_model: none
+}
+member: system:property
+
+[ajcVmAsiZJrEyYX6PeocBOKQSC4ESTDcYtV4ZmvJh7U]
+nonce: fKn0OMi3qwpKXquWWLAT_hpnvAXNdNtZIb28OWbSqNo, timestamp: 2026-11-16T02:14:23.455Z
+lww: {
+    model: $health.activity_interval
+    property: $activity
+    optional: false
+}
+member: system:model-property
+
+[S_BqUaPLwNn-x6_XeMP8GvEHYS7nG6LAp0bIaxwVpSE]
+nonce: _8eIkoXHvABUB-Aq_F2l308kyYLXbX7PUtM4_Lw33rc, timestamp: 2026-11-16T02:14:23.456Z
+lww: {
+    name: "kind"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $health.activity_interval
+    target_model: none
+}
+member: system:property
+
+[FWAPb0xKClGEBqqz_9AMOq1bHHJpbf-mXI-mrbdF4Es]
+nonce: P3ZoJ2ZQUJqa3PPt3JfE7u072dLNUJJ_w3DeczqKDCQ, timestamp: 2026-11-16T02:14:23.456Z
+lww: {
+    model: $health.activity_interval
+    property: $kind
+    optional: false
+}
+member: system:model-property
+
+[rUGrovUAF7qVuGuU1Vgev_fowa9qKIxYHf3XW4Lj68k]
+nonce: pVZ-pw6XDhukoBzmnkmOskkEMqCrz_GGcXJ_D1tUs2E, timestamp: 2026-11-16T02:14:23.456Z
+lww: {
+    name: "started_at"
+    backend: "lww"
+    value_type: "i64"
+    minted_for: $health.activity_interval
+    target_model: none
+}
+member: system:property
+
+[2Rwlws2CWRkaFNDGyfQ7i4MrRd4VzA-hTIVORUOJ_Ck]
+nonce: p-qNdfy-TMD76oeOH4YTzVD6jGY3ma95UXi2qnM2-Gk, timestamp: 2026-11-16T02:14:23.456Z
+lww: {
+    model: $health.activity_interval
+    property: $started_at
+    optional: false
+}
+member: system:model-property
+
+[8r9hmQ1kkKu8Q6kIZvNP7RTeufbAj8wSXwlY_8n7hSE]
+nonce: NdaD9UQ7yn7xjJsqMKCOSp3TgIXJUtPW3zZ2MkPKx4o, timestamp: 2026-11-16T02:14:23.456Z
+lww: {
+    name: "ended_at"
+    backend: "lww"
+    value_type: "i64"
+    minted_for: $health.activity_interval
+    target_model: none
+}
+member: system:property
+
+[5a6A9MGNxYzoC7-bZFvVJjG14TuELPVk4_Yg4ZN5Tbw]
+nonce: _gfQtfsIazd6r69WiofHm_i0K6s-u9ZEX7ZF7NK4nuU, timestamp: 2026-11-16T02:14:23.456Z
+lww: {
+    model: $health.activity_interval
+    property: $ended_at
+    optional: true
+}
+member: system:model-property

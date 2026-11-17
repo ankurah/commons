@@ -1,5 +1,43 @@
-model     cognition.intuition  Intuition  id jVjAHgOeKeN18NTHLAYfxbHwgblM4mXAvWsOef4dLmc  at 1794795263865  nonce 082cda21f026b02d1b2a6ca4efa7210c512b84b126ac7adc73b5b7235209a47a
-property  title  string  lww              id exdQ4Hy1nFix7AalV-uWG6KEDbV8KKxT49Tf75mRO_g  at 1794795263865  nonce 9bfd7063bdbcee9ddb6b1fdc2940c4c18eb82cbf4045e56ebc150d54ca9a460b
-link      title  required                 id HW8NtvGa2fNYfQN9_aPwRNtCjUZ13jeJx2FENMJ-37A  at 1794795263865  nonce 57adce8180e5a3c13242b8969c300bbe0a5466008d0c5ccb43d634e25d140f5c
-property  words  string  lww              id yvmPI59mrZ-Z7S3YywCHXIvBpFCgoo3po5yRIJhRrUg  at 1794795263865  nonce 01bb8f8495b6a2b802cf10b2a54ccabc76f2c3fac2c32468c95dbc1ab5bfe535
-link      words  required                 id GZ2yWhk1rjf8yoZiw8n0lUDOj2ce4BOwIHlUNRo2szo  at 1794795263865  nonce 13768444bf1faf07fde9ec79153a96a9d34171b264e74bb891666f7ee44d4d15
+[jVjAHgOeKeN18NTHLAYfxbHwgblM4mXAvWsOef4dLmc]
+nonce: CCzaIfAmsC0bKmyk76chDFErhLEmrHrcc7W3I1IJpHo, timestamp: 2026-11-16T02:14:23.865Z
+lww: { label: "cognition.intuition", name: "Intuition" }, member: system:model
+
+[exdQ4Hy1nFix7AalV-uWG6KEDbV8KKxT49Tf75mRO_g]
+nonce: m_1wY7287p3bax_cKUDEwY64LL9AReVuvBUNVMqaRgs, timestamp: 2026-11-16T02:14:23.865Z
+lww: {
+    name: "title"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $cognition.intuition
+    target_model: none
+}
+member: system:property
+
+[HW8NtvGa2fNYfQN9_aPwRNtCjUZ13jeJx2FENMJ-37A]
+nonce: V63OgYDlo8EyQriWnDALvgpUZgCNDFzLQ9Y04l0UD1w, timestamp: 2026-11-16T02:14:23.865Z
+lww: {
+    model: $cognition.intuition
+    property: $title
+    optional: false
+}
+member: system:model-property
+
+[yvmPI59mrZ-Z7S3YywCHXIvBpFCgoo3po5yRIJhRrUg]
+nonce: AbuPhJW2orgCzxCypUzKvHbyw_rCwyRoyV28GrW_5TU, timestamp: 2026-11-16T02:14:23.865Z
+lww: {
+    name: "words"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $cognition.intuition
+    target_model: none
+}
+member: system:property
+
+[GZ2yWhk1rjf8yoZiw8n0lUDOj2ce4BOwIHlUNRo2szo]
+nonce: E3aERL8frwf96ex5FTqWqdNBcbJk50u4kWZvfuRNTRU, timestamp: 2026-11-16T02:14:23.865Z
+lww: {
+    model: $cognition.intuition
+    property: $words
+    optional: false
+}
+member: system:model-property

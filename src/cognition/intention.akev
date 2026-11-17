@@ -1,5 +1,43 @@
-model     cognition.intention  Intention  id W_PUyePLDVZm5ly-2sTyWjIHyu4zihZ5QWcCUGG-mHY  at 1794795263846  nonce 23e427c0ca690f3f9395d506b6e8ad155db705818494ca0877a03fd9776ab36b
-property  title        string  lww        id BPKD7qvFa6kENqdAWQc62bzM_3lnAnaLbpEUYIxJDVA  at 1794795263846  nonce f40e0fa76a13d0eead6be0b687761699f9d7d0a3f96574d4f45f27797752e5f1
-link      title        required           id B5u43ChznTfjWsFKshOel3IjvettoK35Zu_qwcE4Bck  at 1794795263846  nonce 80e611be4580e46605cfac47be127c870f646446e40f43860c25975e0524375b
-property  description  string  lww        id iDl_GO55nXHHAgtTXOPJFECE_Luscg5XcT5LYRTyiv0  at 1794795263846  nonce e7f924905b2769fe8940984585d9a06121b239609c6bdcf1aaafe068644abeff
-link      description  required           id fI1URj72M10CHH68_1WOcRGVRSjbxR93NEjwGT0I4I0  at 1794795263847  nonce 2444174645f08099622775ecc7fbd503739d78b921b618a437b693f5bbcc1885
+[W_PUyePLDVZm5ly-2sTyWjIHyu4zihZ5QWcCUGG-mHY]
+nonce: I-QnwMppDz-TldUGtuitFV23BYGElMoId6A_2Xdqs2s, timestamp: 2026-11-16T02:14:23.846Z
+lww: { label: "cognition.intention", name: "Intention" }, member: system:model
+
+[BPKD7qvFa6kENqdAWQc62bzM_3lnAnaLbpEUYIxJDVA]
+nonce: 9A4Pp2oT0O6ta-C2h3YWmfnX0KP5ZXTU9F8neXdS5fE, timestamp: 2026-11-16T02:14:23.846Z
+lww: {
+    name: "title"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $cognition.intention
+    target_model: none
+}
+member: system:property
+
+[B5u43ChznTfjWsFKshOel3IjvettoK35Zu_qwcE4Bck]
+nonce: gOYRvkWA5GYFz6xHvhJ8hw9kZEbkD0OGDCWXXgUkN1s, timestamp: 2026-11-16T02:14:23.846Z
+lww: {
+    model: $cognition.intention
+    property: $title
+    optional: false
+}
+member: system:model-property
+
+[iDl_GO55nXHHAgtTXOPJFECE_Luscg5XcT5LYRTyiv0]
+nonce: 5_kkkFsnaf6JQJhFhdmgYSGyOWCca9zxqq_gaGRKvv8, timestamp: 2026-11-16T02:14:23.846Z
+lww: {
+    name: "description"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $cognition.intention
+    target_model: none
+}
+member: system:property
+
+[fI1URj72M10CHH68_1WOcRGVRSjbxR93NEjwGT0I4I0]
+nonce: JEQXRkXwgJliJ3Xsx_vVA3OdeLkhthikN7aT9bvMGIU, timestamp: 2026-11-16T02:14:23.847Z
+lww: {
+    model: $cognition.intention
+    property: $description
+    optional: false
+}
+member: system:model-property

@@ -1,9 +1,83 @@
-model     cognition.decision  Decision  id mJYaRYRX0_9kv5a5VEAN8VQQ-BY0bav3bSxqxZUYt7s  at 1794795263778  nonce d49d4979d5dd28a6123b309f3e63eb753de2cb3b02127b09ce1efabf1d764d9b
-property  title         string  lww     id MlBySwOiMNUUic5TRD1yMTQCvzaoWWRLmGCAK-A4bsY  at 1794795263778  nonce b2264c7e8cefe3c015c1896a91ffcc87d51e98ac562be2bf008023b4f71cf6c3
-link      title         required        id UC16TwuClIEYaIoVvRCfkKksPwuHePrtItWubXTWX-Q  at 1794795263778  nonce 1a5df47ecc5c5ef28e22ce5fbc1fd428a80e8216ad328b03f51f5a4120119544
-property  decision      string  lww     id f4BAhrdmvd6NquujwcGmyFiJ8IUvs90OwZvEGn6FDrk  at 1794795263778  nonce 3ae073cec050bb89e8728045ccddc3f011dfa0c088f8cdf5077ee3fc1f8b5de1
-link      decision      required        id fjZQCrfdsE-omsMq1EjW8HqLTXbGUp24zBxMNLoDP4M  at 1794795263778  nonce 120a1c71b4ad7fc552a0da711095eb43e450a7c5b6216239c5ef4b1cbda55fb7
-property  context       string  lww     id zpa2AmqBRSy0nN1NkNg4uaYGaXtvYpjfAPuyg-RVo64  at 1794795263778  nonce 9bc21823718cec51ce2c9de13b46e919dfbe051042892400b536cf919f4cd1d2
-link      context       optional        id EraxawQzmlGPvTwBelmc_5q0bOkJI3JfYQF2nUHYdiI  at 1794795263778  nonce 3d0135a1399db5c1d30e989ec012bd989a91c5387dddbc66077f52f3eae66e0c
-property  consequences  string  lww     id mJKAzxaKJqrIIT1vpLxwEa-lETHbrl1uNTPppxOPnJs  at 1794795263778  nonce f318763f3ffc52b37af30918ab7c97c001db1cd442951b3c76bab5e86a638caa
-link      consequences  optional        id PzqmYWF0wQdHcoQMhvJJpDZ3eE3iRJ3nGQh6G9BY2WE  at 1794795263778  nonce 360679fcab61cbdf89612ef1c5fb6ffcd9b783435c8d6e0f1fd7a5c5407f1aa4
+[mJYaRYRX0_9kv5a5VEAN8VQQ-BY0bav3bSxqxZUYt7s]
+nonce: 1J1JedXdKKYSOzCfPmPrdT3iyzsCEnsJzh76vx12TZs, timestamp: 2026-11-16T02:14:23.778Z
+lww: { label: "cognition.decision", name: "Decision" }, member: system:model
+
+[MlBySwOiMNUUic5TRD1yMTQCvzaoWWRLmGCAK-A4bsY]
+nonce: siZMfozv48AVwYlqkf_Mh9UemKxWK-K_AIAjtPcc9sM, timestamp: 2026-11-16T02:14:23.778Z
+lww: {
+    name: "title"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $cognition.decision
+    target_model: none
+}
+member: system:property
+
+[UC16TwuClIEYaIoVvRCfkKksPwuHePrtItWubXTWX-Q]
+nonce: Gl30fsxcXvKOIs5fvB_UKKgOghatMosD9R9aQSARlUQ, timestamp: 2026-11-16T02:14:23.778Z
+lww: {
+    model: $cognition.decision
+    property: $title
+    optional: false
+}
+member: system:model-property
+
+[f4BAhrdmvd6NquujwcGmyFiJ8IUvs90OwZvEGn6FDrk]
+nonce: OuBzzsBQu4nocoBFzN3D8BHfoMCI-M31B37j_B-LXeE, timestamp: 2026-11-16T02:14:23.778Z
+lww: {
+    name: "decision"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $cognition.decision
+    target_model: none
+}
+member: system:property
+
+[fjZQCrfdsE-omsMq1EjW8HqLTXbGUp24zBxMNLoDP4M]
+nonce: EgoccbStf8VSoNpxEJXrQ-RQp8W2IWI5xe9LHL2lX7c, timestamp: 2026-11-16T02:14:23.778Z
+lww: {
+    model: $cognition.decision
+    property: $decision
+    optional: false
+}
+member: system:model-property
+
+[zpa2AmqBRSy0nN1NkNg4uaYGaXtvYpjfAPuyg-RVo64]
+nonce: m8IYI3GM7FHOLJ3hO0bpGd--BRBCiSQAtTbPkZ9M0dI, timestamp: 2026-11-16T02:14:23.778Z
+lww: {
+    name: "context"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $cognition.decision
+    target_model: none
+}
+member: system:property
+
+[EraxawQzmlGPvTwBelmc_5q0bOkJI3JfYQF2nUHYdiI]
+nonce: PQE1oTmdtcHTDpiewBK9mJqRxTh93bxmB39S8-rmbgw, timestamp: 2026-11-16T02:14:23.778Z
+lww: {
+    model: $cognition.decision
+    property: $context
+    optional: true
+}
+member: system:model-property
+
+[mJKAzxaKJqrIIT1vpLxwEa-lETHbrl1uNTPppxOPnJs]
+nonce: 8xh2Pz_8UrN68wkYq3yXwAHbHNRClRs8drq16GpjjKo, timestamp: 2026-11-16T02:14:23.778Z
+lww: {
+    name: "consequences"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $cognition.decision
+    target_model: none
+}
+member: system:property
+
+[PzqmYWF0wQdHcoQMhvJJpDZ3eE3iRJ3nGQh6G9BY2WE]
+nonce: NgZ5_Kthy9-JYS7xxftv_Nm3g0NcjW4PH9elxUB_GqQ, timestamp: 2026-11-16T02:14:23.778Z
+lww: {
+    model: $cognition.decision
+    property: $consequences
+    optional: true
+}
+member: system:model-property

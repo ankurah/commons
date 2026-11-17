@@ -1,5 +1,43 @@
-model     records.checked  Checked  id sh6695XIEJUgLvmIg7g5ihdRDxAu7WGcKMYhawLMnsg  at 1794795263405  nonce 896a199cc9a1ab69b04212f77477001c11b928e3644586d7a8c84a6e270249d7
-property  checked  i64       lww    id H7fSKvRKOrZmG_2z3voFMLQ4eeO06OM15IDZ4wuPkyE  at 1794795263405  nonce 52171ebee97b781fd22ba85b589a29b41a3a5d5ca58518baa428cb917c552b8d
-link      checked  optional         id 38irPAVMdrZNszG4jhlVbZUusngDInFY0jndu4OCZh8  at 1794795263405  nonce 4bea535fb74e117f3fc84a0664046530af3638a55b81a1cf776ae9764656e583
-property  by       entityid  lww    id 2oBVJ-u-dW072-V7p5wt6a9foW_7WwUNUqMxiVRU89Q  at 1794795263405  nonce 56b8a41e57d7c701a96962abbc95ca275fc6b6334d76e5a690c8c65342f3e72c
-link      by       optional         id xuonbQgs5y7o60Dxwieb0S-zrtHxXtwwEILsj7REhT8  at 1794795263405  nonce 534ca66adefd8106962f5baa3d6b7a1d29889c2e0defe3e301e00111250a85ac
+[sh6695XIEJUgLvmIg7g5ihdRDxAu7WGcKMYhawLMnsg]
+nonce: iWoZnMmhq2mwQhL3dHcAHBG5KONkRYbXqMhKbicCSdc, timestamp: 2026-11-16T02:14:23.405Z
+lww: { label: "records.checked", name: "Checked" }, member: system:model
+
+[H7fSKvRKOrZmG_2z3voFMLQ4eeO06OM15IDZ4wuPkyE]
+nonce: Uhcevul7eB_SK6hbWJoptBo6XVylhRi6pCjLkXxVK40, timestamp: 2026-11-16T02:14:23.405Z
+lww: {
+    name: "checked"
+    backend: "lww"
+    value_type: "i64"
+    minted_for: $records.checked
+    target_model: none
+}
+member: system:property
+
+[38irPAVMdrZNszG4jhlVbZUusngDInFY0jndu4OCZh8]
+nonce: S-pTX7dOEX8_yEoGZARlMK82OKVbgaHPd2rpdkZW5YM, timestamp: 2026-11-16T02:14:23.405Z
+lww: {
+    model: $records.checked
+    property: $checked
+    optional: true
+}
+member: system:model-property
+
+[2oBVJ-u-dW072-V7p5wt6a9foW_7WwUNUqMxiVRU89Q]
+nonce: VrikHlfXxwGpaWKrvJXKJ1_GtjNNduWmkMjGU0Lz5yw, timestamp: 2026-11-16T02:14:23.405Z
+lww: {
+    name: "by"
+    backend: "lww"
+    value_type: "entityid"
+    minted_for: $records.checked
+    target_model: none
+}
+member: system:property
+
+[xuonbQgs5y7o60Dxwieb0S-zrtHxXtwwEILsj7REhT8]
+nonce: U0ymat79gQaWL1uqPWt6HSmInC4N7-PjAeABESUKhaw, timestamp: 2026-11-16T02:14:23.405Z
+lww: {
+    model: $records.checked
+    property: $by
+    optional: true
+}
+member: system:model-property

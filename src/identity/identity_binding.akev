@@ -1,5 +1,43 @@
-model     identity.identity_binding  IdentityBinding  id vWU3HdKaBasO5kRllSoq1yZmNGvORMT24tH1lv5Fd0k  at 1794795263384  nonce 4d010c949022a0e1c32deb6cfd0453df4f2cbd6bf08487d2f3907c87b99b43e7
-property  principal  entityid  lww                    id 6tZXfKjev23XhjBRqKMipFu3ITlb0dGfd6GA_ZxvkYY  at 1794795263384  nonce 93bf4c3890d65803759827c7389d0e290e00e5e2175eb0e7d2f89143859c2525
-link      principal  required                         id 9RwBBLVxYBNtqeKeIo8pi2J-sUgyBNsn36Kyu1apkZQ  at 1794795263384  nonce 4f24e6cce56616346e5885653f59b7949bbd414e218beeebdaa57b2f3f8321be
-property  subject    string    lww                    id TCCXz_n-W51q-SN5hHb2Hr_1GkvdzN1EzCK1z0KOkrU  at 1794795263384  nonce 3b449c11af485025f3aafc3d5995de04f38c605b9f4340f9aa4d72d7a2095b4b
-link      subject    required                         id H6kpW5ymbwVnaI7v4GS5N5oZvj9cg4qWABt0sWPa0s8  at 1794795263384  nonce 2223647c72a590c9ee28e1dc5f1de675fe517cfee7c1696cf74ca099d62d1a3a
+[vWU3HdKaBasO5kRllSoq1yZmNGvORMT24tH1lv5Fd0k]
+nonce: TQEMlJAioOHDLets_QRT308svWvwhIfS85B8h7mbQ-c, timestamp: 2026-11-16T02:14:23.384Z
+lww: { label: "identity.identity_binding", name: "IdentityBinding" }, member: system:model
+
+[6tZXfKjev23XhjBRqKMipFu3ITlb0dGfd6GA_ZxvkYY]
+nonce: k79MOJDWWAN1mCfHOJ0OKQ4A5eIXXrDn0viRQ4WcJSU, timestamp: 2026-11-16T02:14:23.384Z
+lww: {
+    name: "principal"
+    backend: "lww"
+    value_type: "entityid"
+    minted_for: $identity.identity_binding
+    target_model: none
+}
+member: system:property
+
+[9RwBBLVxYBNtqeKeIo8pi2J-sUgyBNsn36Kyu1apkZQ]
+nonce: TyTmzOVmFjRuWIVlP1m3lJu9QU4hi-7r2qV7Lz-DIb4, timestamp: 2026-11-16T02:14:23.384Z
+lww: {
+    model: $identity.identity_binding
+    property: $principal
+    optional: false
+}
+member: system:model-property
+
+[TCCXz_n-W51q-SN5hHb2Hr_1GkvdzN1EzCK1z0KOkrU]
+nonce: O0ScEa9IUCXzqvw9WZXeBPOMYFufQ0D5qk1y16IJW0s, timestamp: 2026-11-16T02:14:23.384Z
+lww: {
+    name: "subject"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $identity.identity_binding
+    target_model: none
+}
+member: system:property
+
+[H6kpW5ymbwVnaI7v4GS5N5oZvj9cg4qWABt0sWPa0s8]
+nonce: IiNkfHKlkMnuKOHcXx3mdf5RfP7nwWls90ygmdYtGjo, timestamp: 2026-11-16T02:14:23.384Z
+lww: {
+    model: $identity.identity_binding
+    property: $subject
+    optional: false
+}
+member: system:model-property

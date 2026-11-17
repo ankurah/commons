@@ -1,3 +1,23 @@
-model     records.fractional_position  FractionalPosition  id dj9ZT3_8j6ryDe-JoSnrhkGdgOGoevly5WJIzkQ5rAw  at 1794795263396  nonce 520bfc2a38ae04956ea55c5a36b908f140c8102d9a55ae82edb7a055fd198f28
-property  key  string  lww                                 id LpXXe33UW5ZuhLTzFdRGS0tsB2_nO8CswNNo77jy82U  at 1794795263396  nonce 7c458adb067959f97374fe55dea739fddb4a4156571bd41247f5cf1bca038810
-link      key  required                                    id eSD-0p94Ud1S5QLNU_QdOFmnDKq95tCXU356JZQtnlI  at 1794795263396  nonce ac80125f9674af843d1ff9801b88fc7d908f24ac53110eedeaa880f013fac572
+[dj9ZT3_8j6ryDe-JoSnrhkGdgOGoevly5WJIzkQ5rAw]
+nonce: Ugv8KjiuBJVupVxaNrkI8UDIEC2aVa6C7begVf0Zjyg, timestamp: 2026-11-16T02:14:23.396Z
+lww: { label: "records.fractional_position", name: "FractionalPosition" }, member: system:model
+
+[LpXXe33UW5ZuhLTzFdRGS0tsB2_nO8CswNNo77jy82U]
+nonce: fEWK2wZ5WflzdP5V3qc5_dtKQVZXG9QSR_XPG8oDiBA, timestamp: 2026-11-16T02:14:23.396Z
+lww: {
+    name: "key"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $records.fractional_position
+    target_model: none
+}
+member: system:property
+
+[eSD-0p94Ud1S5QLNU_QdOFmnDKq95tCXU356JZQtnlI]
+nonce: rIASX5Z0r4Q9H_mAG4j8fZCPJKxTEQ7t6qiA8BP6xXI, timestamp: 2026-11-16T02:14:23.396Z
+lww: {
+    model: $records.fractional_position
+    property: $key
+    optional: false
+}
+member: system:model-property

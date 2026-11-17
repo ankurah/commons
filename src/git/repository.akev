@@ -1,7 +1,63 @@
-model     git.repository  Repository   id fxNrHi50qgqHknTgutk7hcW4XEH1B-czuTZ1TLoTaNg  at 1794795263632  nonce edf6a205d10ff47f8bb4af674a0016829863c5f3776d309d5a937998152a708c
-property  name            string  lww  id kqNic0jOHCe3TTK9fQ8XJ9dqqGyRI-Bw3xiA-CyBrqU  at 1794795263632  nonce c105a202f2d602d8f1f36a79ab42e7a7bea2022b943385f1c76d06adfe15c13e
-link      name            required     id vgHXnliEZa0wTklTiSlcE8nm2XmOFT67QXTEJzSjCGY  at 1794795263632  nonce cc0d3033645fea8f48b4df87a20284aaba89bde75d3a8f0baffc61d25d68e394
-property  remote_urls     json    lww  id D5rR5YhBAW8Ih0Ky3yPZM_-DCeGdGi61ThNWh5F7nDE  at 1794795263632  nonce 92cdfddac10b200654ec695e069bdf3fcf3dc82858627a766556cfa01cdcb85b
-link      remote_urls     required     id dBb6bROZcgsClCigv7IBgoMlzU5jGwfNcWkw0nUXjNc  at 1794795263632  nonce 1b8bc674f25f1eb1e1f91f5a0edc2b5d2a6eeb75aeccf5d7005a88fc3192d898
-property  default_branch  string  lww  id OCYYRQ-gzPS2FsSmzOuxd5BuGl-dxYDYBBa-9c-3A2Q  at 1794795263632  nonce 9bd01d7e7fbfa0cdaeab8308f241f9094a7a467eb3b6e85ea8033f7288d695f3
-link      default_branch  required     id 6glLqv9pd6Ffq1XDo8YVuBa5byYd2oVJzxoADEyd9Kc  at 1794795263632  nonce 37f2fdb88c0920f70b697854882777374e0e17a0e3be55b6e26412cce9259883
+[fxNrHi50qgqHknTgutk7hcW4XEH1B-czuTZ1TLoTaNg]
+nonce: 7faiBdEP9H-LtK9nSgAWgphjxfN3bTCdWpN5mBUqcIw, timestamp: 2026-11-16T02:14:23.632Z
+lww: { label: "git.repository", name: "Repository" }, member: system:model
+
+[kqNic0jOHCe3TTK9fQ8XJ9dqqGyRI-Bw3xiA-CyBrqU]
+nonce: wQWiAvLWAtjx82p5q0Lnp76iAiuUM4Xxx20Grf4VwT4, timestamp: 2026-11-16T02:14:23.632Z
+lww: {
+    name: "name"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $git.repository
+    target_model: none
+}
+member: system:property
+
+[vgHXnliEZa0wTklTiSlcE8nm2XmOFT67QXTEJzSjCGY]
+nonce: zA0wM2Rf6o9ItN-HogKEqrqJveddOo8Lr_xh0l1o45Q, timestamp: 2026-11-16T02:14:23.632Z
+lww: {
+    model: $git.repository
+    property: $name
+    optional: false
+}
+member: system:model-property
+
+[D5rR5YhBAW8Ih0Ky3yPZM_-DCeGdGi61ThNWh5F7nDE]
+nonce: ks392sELIAZU7GleBpvfP889yChYYnp2ZVbPoBzcuFs, timestamp: 2026-11-16T02:14:23.632Z
+lww: {
+    name: "remote_urls"
+    backend: "lww"
+    value_type: "json"
+    minted_for: $git.repository
+    target_model: none
+}
+member: system:property
+
+[dBb6bROZcgsClCigv7IBgoMlzU5jGwfNcWkw0nUXjNc]
+nonce: G4vGdPJfHrHh-R9aDtwrXSpu63WuzPXXAFqI_DGS2Jg, timestamp: 2026-11-16T02:14:23.632Z
+lww: {
+    model: $git.repository
+    property: $remote_urls
+    optional: false
+}
+member: system:model-property
+
+[OCYYRQ-gzPS2FsSmzOuxd5BuGl-dxYDYBBa-9c-3A2Q]
+nonce: m9Adfn-_oM2uq4MI8kH5CUp6Rn6ztuheqAM_cojWlfM, timestamp: 2026-11-16T02:14:23.632Z
+lww: {
+    name: "default_branch"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $git.repository
+    target_model: none
+}
+member: system:property
+
+[6glLqv9pd6Ffq1XDo8YVuBa5byYd2oVJzxoADEyd9Kc]
+nonce: N_L9uIwJIPcLaXhUiCd3N04OF6DjvlW24mQSzOklmIM, timestamp: 2026-11-16T02:14:23.632Z
+lww: {
+    model: $git.repository
+    property: $default_branch
+    optional: false
+}
+member: system:model-property

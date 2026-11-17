@@ -1,3 +1,23 @@
-model     health.distance  Distance  id WBfBouIRGwozhLge5M5YCwLarOaPLr4ngTYr6IFafDo  at 1794795263469  nonce c319119ed72b0e6d354152ebec6380309cdc31f4e4954844322e654c7fe4bd4c
-property  meters  f64  lww           id -_XFMjEA3xhBpOIqiv0OUIn9vmMqK2UK6BguEcnF36E  at 1794795263469  nonce cc35de341af2b6d912f7a407b3c8d660241045f46abeb32a54b9d25871572c46
-link      meters  required           id ldItTh_qmW9lnh5cRHkBXBVcKjae8o16lAa3u_yzCwo  at 1794795263469  nonce 4d507b1f2252fb49e2cfa8ba6dfa52d3b53dcecda8bab6bc97a2b4375724ebd6
+[WBfBouIRGwozhLge5M5YCwLarOaPLr4ngTYr6IFafDo]
+nonce: wxkRntcrDm01QVLr7GOAMJzcMfTklUhEMi5lTH_kvUw, timestamp: 2026-11-16T02:14:23.469Z
+lww: { label: "health.distance", name: "Distance" }, member: system:model
+
+[-_XFMjEA3xhBpOIqiv0OUIn9vmMqK2UK6BguEcnF36E]
+nonce: zDXeNBryttkS96QHs8jWYCQQRfRqvrMqVLnSWHFXLEY, timestamp: 2026-11-16T02:14:23.469Z
+lww: {
+    name: "meters"
+    backend: "lww"
+    value_type: "f64"
+    minted_for: $health.distance
+    target_model: none
+}
+member: system:property
+
+[ldItTh_qmW9lnh5cRHkBXBVcKjae8o16lAa3u_yzCwo]
+nonce: TVB7HyJS-0niz6i6bfpS07U9zs2oura8l6K0N1ck69Y, timestamp: 2026-11-16T02:14:23.469Z
+lww: {
+    model: $health.distance
+    property: $meters
+    optional: false
+}
+member: system:model-property

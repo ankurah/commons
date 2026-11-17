@@ -1,5 +1,203 @@
-model     graph.edge_kind  EdgeKind  id yDVJXmGUhzHmue289YFApbB2-pPt8SiCG2NhiHy_zco  at 1794795263683  nonce 04025750a045908362e897e90f88a16594f4d0193c608b8e60138d7af530f3aa
-property  name         string  lww   id so_9VblgkIP3qLuG-Bo4doL6exXukhP0SGHyDqgKeZ8  at 1794795263683  nonce cd8434b6ff08a6f810b4aa4bb0a9027379b9e847696337bebafabb093e6d6faa
-link      name         required      id mV12FwV1TheGK0ciHSS_tOkcmHqxRiNFONsSR0pfjwM  at 1794795263683  nonce b01a4432ac7d02045beb7d2d5834bae8da9df1e03fbfb72ba7f8adee9a376d81
-property  description  string  lww   id sN0v89SyyA4FGQBZBU4uwV_p1BqPGCFEfMH-LNIt_kI  at 1794795263683  nonce 3c3c0c1e42865598d222222c26d95e4ce18bec6b71c4c132a642f30a48077f88
-link      description  required      id NPibT1KhoaaNxlLTJYn0LUaS-zJl0omReS-Ic4m78HE  at 1794795263683  nonce 1ca88e38f91a66309ec8ecaa89bc7106f7cf2ddb521698ffdfaaed77af30b9f5
+[yDVJXmGUhzHmue289YFApbB2-pPt8SiCG2NhiHy_zco]
+nonce: BAJXUKBFkINi6JfpD4ihZZT00Bk8YIuOYBONevUw86o, timestamp: 2026-11-16T02:14:23.683Z
+lww: { label: "graph.edge_kind", name: "EdgeKind" }, member: system:model
+
+[so_9VblgkIP3qLuG-Bo4doL6exXukhP0SGHyDqgKeZ8]
+nonce: zYQ0tv8IpvgQtKpLsKkCc3m56EdpYze-uvq7CT5tb6o, timestamp: 2026-11-16T02:14:23.683Z
+lww: {
+    name: "name"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $graph.edge_kind
+    target_model: none
+}
+member: system:property
+
+[mV12FwV1TheGK0ciHSS_tOkcmHqxRiNFONsSR0pfjwM]
+nonce: sBpEMqx9AgRb630tWDS66Nqd8eA_v7crp_it7po3bYE, timestamp: 2026-11-16T02:14:23.683Z
+lww: {
+    model: $graph.edge_kind
+    property: $name
+    optional: false
+}
+member: system:model-property
+
+[sN0v89SyyA4FGQBZBU4uwV_p1BqPGCFEfMH-LNIt_kI]
+nonce: PDwMHkKGVZjSIiIsJtleTOGL7GtxxMEypkLzCkgHf4g, timestamp: 2026-11-16T02:14:23.683Z
+lww: {
+    name: "description"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $graph.edge_kind
+    target_model: none
+}
+member: system:property
+
+[NPibT1KhoaaNxlLTJYn0LUaS-zJl0omReS-Ic4m78HE]
+nonce: HKiOOPkaZjCeyOyqibxxBvfPLdtSFpj_36rtd68wufU, timestamp: 2026-11-16T02:14:23.683Z
+lww: {
+    model: $graph.edge_kind
+    property: $description
+    optional: false
+}
+member: system:model-property
+
+[ut0532mUhzKiz6bNwfx0L3lSFJ021TC6ehSE68LVrbE]
+nonce: gMsVjbjbBswA1tcrgFJOaEc3rDQ7TeHliFTXRemZx1E, timestamp: 2026-11-16T02:14:23.698Z
+lww: {
+    $name: "serves"
+    $description: "From a task, a scope or an intention to an intention: the first is for the sake of the second. Many to many; no cycles among intentions."
+}
+member: $graph.edge_kind
+
+[QF3x0fez-ej8w8mRd0DcY8BWFO_5E0J3tlgC6YYMr5k]
+nonce: 9SNf9W5UVX1PyXPPZ57e63HXqDw8DR2RXJcCxUOb6hs, timestamp: 2026-11-16T02:14:23.698Z
+lww: {
+    $name: "interprets"
+    $description: "From a decision to an intention: the decision reads the intention in a context."
+}
+member: $graph.edge_kind
+
+[6RBqfYIYDsU_Tr-7i7McCEbZCIyI06ADGN5Pn4DCua0]
+nonce: 4V_L6JfWisah5q4ihl0WAMrw8lHGW1WFzXAqd6w1OaQ, timestamp: 2026-11-16T02:14:23.698Z
+lww: {
+    $name: "supports"
+    $description: "From a claim, a quotation, a fragment or an intuition to a claim, an intention, a decision, an intuition, an expectation or an edge: a reason to accept, want or rely on the second."
+}
+member: $graph.edge_kind
+
+[lQtiFXSxIXdp_lvN9hhsORfCwVMBOD3cuQNxkLvLmdU]
+nonce: 7wHoaITgXywra1cZq0yDGYRZb5rnhKa4brjJLTO_wyE, timestamp: 2026-11-16T02:14:23.698Z
+lww: {
+    $name: "disputes"
+    $description: "From a claim to a claim, an expectation or an edge: a reason against the second. Never to a perspective."
+}
+member: $graph.edge_kind
+
+[dl64nCiSj1AjPWFLgHMH6uDHtf8WYqrlDCFUsLJnOWw]
+nonce: ZJU9qPsauzBt8t1Fq_4YqeCedGHDwRrqZNEgnnNBriU, timestamp: 2026-11-16T02:14:23.698Z
+lww: {
+    $name: "cites"
+    $description: "From any record to any record: the first draws on the second, rests on it as a ruling, or was made in its context."
+}
+member: $graph.edge_kind
+
+[htF5z9cM-MQvvSr5nCWRnEZphnBJQHWAW7zB3cN46e0]
+nonce: aeAadTg2qTMGoO-pQyOThRhP6-359n91mFEGKIbSHqs, timestamp: 2026-11-16T02:14:23.698Z
+lww: {
+    $name: "supersedes"
+    $description: "From a record to an earlier record of its kind: the first replaces the second, which stays readable."
+}
+member: $graph.edge_kind
+
+[t9ADjEj7Ry3aYfv-JlBD0k0RPyw_Cn7gPJQotxEGGPU]
+nonce: Zx5TtmV8mzYTTEDmwbfsR2yIfuACzq-hrOMgm-UJInM, timestamp: 2026-11-16T02:14:23.698Z
+lww: {
+    $name: "assigned_to"
+    $description: "From an intention to a principal: the principal works toward the intention; several principals may each hold one. An Acceptance on the edge records whether the principal took it up."
+}
+member: $graph.edge_kind
+
+[ojLY_tMxG-XheeqJcGK1uLJWXF8xFSj5yB0QAsQOKrE]
+nonce: 58yF7sxI9vKcHMhOZy0WUu7PpnLZumrE8O0hYk0Gtxs, timestamp: 2026-11-16T02:14:23.698Z
+lww: {
+    $name: "depends_on"
+    $description: "From a task to a task: the first is not ready until the second is done."
+}
+member: $graph.edge_kind
+
+[9Cg3XfJI5BoUGhITE-p9lUmsQzZENchWxvyDdryWHK4]
+nonce: t1wnaqQpBjr9g--cFtsb6C1gL-rRhxlqh7Y-REEgdgU, timestamp: 2026-11-16T02:14:23.698Z
+lww: {
+    $name: "subtask_of"
+    $description: "From a task to a task: the first is part of the second."
+}
+member: $graph.edge_kind
+
+[Y6v74d6BVSnFWPZNSXedeeA47ES_a6h8rosrJ-ZvJ5Q]
+nonce: 1sMQjWGKVpIiOCxWMLu9saOuTGWIK1PSZL7923dxfnk, timestamp: 2026-11-16T02:14:23.699Z
+lww: {
+    $name: "worked_in"
+    $description: "From a task to a scope: the task's work happens in the scope."
+}
+member: $graph.edge_kind
+
+[pfK-1IsFqYxYI_ZKDDAmCpewRWevY-0Amrh7hrkX9mQ]
+nonce: W4oIADmEMy6-QwF9dLjq7yZUmhFPg6aoDL7eI-xyYrg, timestamp: 2026-11-16T02:14:23.699Z
+lww: {
+    $name: "step_of"
+    $description: "From any record to a task: the first is a step of the task's checklist."
+}
+member: $graph.edge_kind
+
+[vf0JMZ9adSehvrGs4IPacjSrGjS9_sNHHLsjjUIMiiA]
+nonce: tiGR0AsPDKGQ0m7D5gHQTv5KyckNq2tj_CnO266CCHM, timestamp: 2026-11-16T02:14:23.699Z
+lww: {
+    $name: "duplicates"
+    $description: "From a task to a task: both are the same work."
+}
+member: $graph.edge_kind
+
+[2g2bJsqzY0dAakt7PjVJIJV8-SHCGQU2UAqZlDJsSpU]
+nonce: 0diU0SO02c0COvaIFLGXQFrxHYC4BRnbRl4BgdpHLH8, timestamp: 2026-11-16T02:14:23.699Z
+lww: {
+    $name: "discovered_from"
+    $description: "From a record to the record it surfaced from, or whose words it was made from, such as a message."
+}
+member: $graph.edge_kind
+
+[5w3o3aL32342YFAjAl1iT6j2GViUsi-kACVjugTxxPw]
+nonce: mIHFBlH4NlOlCfUSgsJWQSFwJUeWqyGbpjS9MvHOLkU, timestamp: 2026-11-16T02:14:23.699Z
+lww: {
+    $name: "generated_by"
+    $description: "From a record to the activity that made it, such as an import run."
+}
+member: $graph.edge_kind
+
+[6E9NIZjDMxGCRVJV7F09BV01cR5O7ynQ9a39Seop5_w]
+nonce: slx9j5B3z2FZN1X7niLCX0mzq1M0jBx-NOY2TupBQkg, timestamp: 2026-11-16T02:14:23.699Z
+lww: {
+    $name: "concerns"
+    $description: "From any record to any record: the first is about the second."
+}
+member: $graph.edge_kind
+
+[TfjrIGux_mWdDDvFYVPDq-lqzg-7Lw65wT6AoYqa_h0]
+nonce: KqSh4M7cXI-08xrTUyq88shYE4PXW-7SjkIYZLivPz4, timestamp: 2026-11-16T02:14:23.699Z
+lww: {
+    $name: "mention"
+    $description: "From a message to any record: the message's text names the record."
+}
+member: $graph.edge_kind
+
+[MsvhH49dAXxkNpUlyzW7YTck5xLpwO57ZBcgIS07TAY]
+nonce: 2hRvF62-sinUYT_z45xhpipZGVHqzqpWBuKtbhA-_Jc, timestamp: 2026-11-16T02:14:23.699Z
+lww: {
+    $name: "anchored_at"
+    $description: "From a task to a fragment: the text or code the task is about."
+}
+member: $graph.edge_kind
+
+[AAM6muCKBpgKoEvHX9ZKSaorAy1tsCXwRcwYmPJXLMk]
+nonce: 5xCU-HJm6pdiLvvjnNvhdndh3Twh2i2SGXnzlTRrnPU, timestamp: 2026-11-16T02:14:23.699Z
+lww: {
+    $name: "relates_to"
+    $description: "From any record to any record: an association not yet given a kind."
+}
+member: $graph.edge_kind
+
+[4MIlalrujmfYGLmSoJM-TSgxBtTKp_wmYO3MnBt8eDQ]
+nonce: AmyBTDu20qIl3f_3tKtp1RvmRnI79SQ20fdSxDcg620, timestamp: 2026-11-16T02:14:23.699Z
+lww: {
+    $name: "governs"
+    $description: "From a decision to a scope: the decision governs the scope's work."
+}
+member: $graph.edge_kind
+
+[aQpW5DLrIqml0lUWTgMulvBxW8unpxChLMYckk-Q6gs]
+nonce: LFVe1TBPsglqAU2r70Ad7KtUaE9pjyE9Q2llHKrjRww, timestamp: 2026-11-16T02:14:23.699Z
+lww: {
+    $name: "stakeholder_of"
+    $description: "From a principal to an intention: the principal's perspective on the intention is sought, and it hears of changes to it. It gives no power over the intention's words."
+}
+member: $graph.edge_kind

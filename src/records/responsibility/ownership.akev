@@ -1,3 +1,23 @@
-model     records.ownership  Ownership  id QDbyx81eSYyg0U4Q6zFygOV8USLByHAYRnOPo5BcIkA  at 1794795263451  nonce 373478a1ff50a7c00aa90232008d7738baae4a43fc2d732084e1ebac4a2ea5f8
-property  owner  entityid  lww          id HZGDHguUBj2jRPaUFU-stkebCMx7zMxQP2GSb6MpjAI  at 1794795263451  nonce bc8604204c17c800064e062dcdb4048b6db58efd3b1ff7fbc151e38154f5bff2
-link      owner  required               id jN58GoDBlqcc07wyzlLKSggPLKH2w6rCQhb8ZW5RCx8  at 1794795263451  nonce 367ee1a6b38bed70c1dad46363ab9de39cc3fddda7f0941d2e3443dc393db145
+[QDbyx81eSYyg0U4Q6zFygOV8USLByHAYRnOPo5BcIkA]
+nonce: NzR4of9Qp8AKqQIyAI13OLquSkP8LXMghOHrrEoupfg, timestamp: 2026-11-16T02:14:23.451Z
+lww: { label: "records.ownership", name: "Ownership" }, member: system:model
+
+[HZGDHguUBj2jRPaUFU-stkebCMx7zMxQP2GSb6MpjAI]
+nonce: vIYEIEwXyAAGTgYtzbQEi221jv07H_f7wVHjgVT1v_I, timestamp: 2026-11-16T02:14:23.451Z
+lww: {
+    name: "owner"
+    backend: "lww"
+    value_type: "entityid"
+    minted_for: $records.ownership
+    target_model: none
+}
+member: system:property
+
+[jN58GoDBlqcc07wyzlLKSggPLKH2w6rCQhb8ZW5RCx8]
+nonce: Nn7hprOL7XDB2tRjY6ud45zD_d2n8JQdLjRD3Dk9sUU, timestamp: 2026-11-16T02:14:23.451Z
+lww: {
+    model: $records.ownership
+    property: $owner
+    optional: false
+}
+member: system:model-property

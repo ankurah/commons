@@ -1,9 +1,83 @@
-model     records.closed  Closed  id 9J52GuMASQzfCUgKJ3PhFO7trfK9CjxVmTYUT65X-YY  at 1794795263410  nonce 9acb692fa9d5e3575686ae94cbcfcc34825c2cf840cac1551c805154e42a9448
-property  closed   i64       lww  id PF26Ux3-82XoWD_gSrdZH5rIlraucNAJTdghBRGuLlE  at 1794795263410  nonce a4b8b52c6ce972de7578b5957d1061ad295ff02ecbcd08a4c00b6e8a7bc73fc1
-link      closed   optional       id SWfScn-3cPOeibz0kqc2gfAzPgKBAuRZ36L48mcCAaI  at 1794795263410  nonce 0f38c6420cd3085ac938480059cbfe4690e49d9cf9baccb7bd35066320d99f31
-property  by       entityid  lww  id jSXliJhbzAxIhPBoS0qqsqqUnuj6I7rmq9wBg1XEl-U  at 1794795263410  nonce 9240b6919bb8c13c060bcc770cb87e641b3c7df91ddea13bc283cbc0b8ad59c1
-link      by       optional       id 3CWv5g5IA-eVMmvcqmWh9oGBzaKW40iBt6UfgctPM_4  at 1794795263410  nonce db9367a62841ec689e7afb852d976db7a9ae24de5fdc48a3a1eba1f4b64aebd3
-property  outcome  string    lww  id Pz8uI2UII5DiKMoa1MXLGUKharPn1dtMmen3ZK7C0bY  at 1794795263410  nonce 9dfcec8701b66495bec9fd1687ab58d6b8193645f7b23d5753086d8a67c8bb3a
-link      outcome  optional       id QRff3g6s1bzRiSLVWWkmQTp24jr3C7S2kEyEBfFQTKY  at 1794795263410  nonce 446168895adccb2ecfeae547ca625350d9708eda7e0f7ab72f72bf9cfbc0b200
-property  reason   string    lww  id pvDpaO5E8DWlt4Ik9_xOzXknPydsdnT-8n2iYnBuLBc  at 1794795263410  nonce 09309ce4d4718ac7f97a209f33202a2b148d9aa0e096f6fe350fea672fff5697
-link      reason   optional       id 2sTIxvr4IWz_xavXfC3ZdKDHAq2vLA_tY0cmR5LVL6U  at 1794795263410  nonce 781061f4cba4c9c8f4f72427b642011096a0a350ab0d677e4ca5e10210914fa9
+[9J52GuMASQzfCUgKJ3PhFO7trfK9CjxVmTYUT65X-YY]
+nonce: mstpL6nV41dWhq6Uy8_MNIJcLPhAysFVHIBRVOQqlEg, timestamp: 2026-11-16T02:14:23.410Z
+lww: { label: "records.closed", name: "Closed" }, member: system:model
+
+[PF26Ux3-82XoWD_gSrdZH5rIlraucNAJTdghBRGuLlE]
+nonce: pLi1LGzpct51eLWVfRBhrSlf8C7LzQikwAtuinvHP8E, timestamp: 2026-11-16T02:14:23.410Z
+lww: {
+    name: "closed"
+    backend: "lww"
+    value_type: "i64"
+    minted_for: $records.closed
+    target_model: none
+}
+member: system:property
+
+[SWfScn-3cPOeibz0kqc2gfAzPgKBAuRZ36L48mcCAaI]
+nonce: DzjGQgzTCFrJOEgAWcv-RpDknZz5usy3vTUGYyDZnzE, timestamp: 2026-11-16T02:14:23.410Z
+lww: {
+    model: $records.closed
+    property: $closed
+    optional: true
+}
+member: system:model-property
+
+[jSXliJhbzAxIhPBoS0qqsqqUnuj6I7rmq9wBg1XEl-U]
+nonce: kkC2kZu4wTwGC8x3DLh-ZBs8ffkd3qE7woPLwLitWcE, timestamp: 2026-11-16T02:14:23.410Z
+lww: {
+    name: "by"
+    backend: "lww"
+    value_type: "entityid"
+    minted_for: $records.closed
+    target_model: none
+}
+member: system:property
+
+[3CWv5g5IA-eVMmvcqmWh9oGBzaKW40iBt6UfgctPM_4]
+nonce: 25NnpihB7GieevuFLZdtt6muJN5f3Eijoeuh9LZK69M, timestamp: 2026-11-16T02:14:23.410Z
+lww: {
+    model: $records.closed
+    property: $by
+    optional: true
+}
+member: system:model-property
+
+[Pz8uI2UII5DiKMoa1MXLGUKharPn1dtMmen3ZK7C0bY]
+nonce: nfzshwG2ZJW-yf0Wh6tY1rgZNkX3sj1XUwhtimfIuzo, timestamp: 2026-11-16T02:14:23.410Z
+lww: {
+    name: "outcome"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $records.closed
+    target_model: none
+}
+member: system:property
+
+[QRff3g6s1bzRiSLVWWkmQTp24jr3C7S2kEyEBfFQTKY]
+nonce: RGFoiVrcyy7P6uVHymJTUNlwjtp-D3q3L3K_nPvAsgA, timestamp: 2026-11-16T02:14:23.410Z
+lww: {
+    model: $records.closed
+    property: $outcome
+    optional: true
+}
+member: system:model-property
+
+[pvDpaO5E8DWlt4Ik9_xOzXknPydsdnT-8n2iYnBuLBc]
+nonce: CTCc5NRxisf5eiCfMyAqKxSNmqDglvb-NQ_qZy__Vpc, timestamp: 2026-11-16T02:14:23.410Z
+lww: {
+    name: "reason"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $records.closed
+    target_model: none
+}
+member: system:property
+
+[2sTIxvr4IWz_xavXfC3ZdKDHAq2vLA_tY0cmR5LVL6U]
+nonce: eBBh9Mukycj09yQntkIBEJago1CrDWd-TKXhAhCRT6k, timestamp: 2026-11-16T02:14:23.410Z
+lww: {
+    model: $records.closed
+    property: $reason
+    optional: true
+}
+member: system:model-property

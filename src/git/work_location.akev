@@ -1,5 +1,43 @@
-model     git.work_location  WorkLocation  id R8za6z12K9IMC6UQcO-7xxzfAEO19W1nOd-5-bTOpB4  at 1794795263650  nonce 351e72912a80dd50b580411a2bc11bd8d12c92c83f43517ab35b788a7f6b2bd2
-property  repository  entityid  lww        id 5hoQtGk3aJ01Rh3waEbIQmewNsmi05j7vgH_rG9jRuA  at 1794795263650  nonce 7d26c5687720fec0ea5788aaa0e531be42904c5568d29b1164f10d5f21f72c11
-link      repository  optional             id SzdUX6OP6y-Nq4BkKoO3IWXEJKuFT8mWptCBqkAp8Hs  at 1794795263650  nonce 88ef3219de5c9e67ec737671a9901c9c0adb6c31640b3bbda3ffec4968cedcd9
-property  branches    json      lww        id -Ba421-NnCBV4M5pjXZvbjzM9x7-TxPHhAoetaHjPpQ  at 1794795263650  nonce c486239cdd1794c9fe3d0105c1a278170342ae56060d1659cb46120f5c345cf7
-link      branches    required             id LHvprYJP6yiEmjqXdKrzLmzA1fXSlJUQ_fWaNI-PlIA  at 1794795263650  nonce 816b29a4820060cc40c88a488f98afcd87fa55b11d5bb809e3e95e00402e07d8
+[R8za6z12K9IMC6UQcO-7xxzfAEO19W1nOd-5-bTOpB4]
+nonce: NR5ykSqA3VC1gEEaK8Eb2NEsksg_Q1F6s1t4in9rK9I, timestamp: 2026-11-16T02:14:23.650Z
+lww: { label: "git.work_location", name: "WorkLocation" }, member: system:model
+
+[5hoQtGk3aJ01Rh3waEbIQmewNsmi05j7vgH_rG9jRuA]
+nonce: fSbFaHcg_sDqV4iqoOUxvkKQTFVo0psRZPENXyH3LBE, timestamp: 2026-11-16T02:14:23.650Z
+lww: {
+    name: "repository"
+    backend: "lww"
+    value_type: "entityid"
+    minted_for: $git.work_location
+    target_model: none
+}
+member: system:property
+
+[SzdUX6OP6y-Nq4BkKoO3IWXEJKuFT8mWptCBqkAp8Hs]
+nonce: iO8yGd5cnmfsc3ZxqZAcnArbbDFkCzu9o__sSWjO3Nk, timestamp: 2026-11-16T02:14:23.650Z
+lww: {
+    model: $git.work_location
+    property: $repository
+    optional: true
+}
+member: system:model-property
+
+[-Ba421-NnCBV4M5pjXZvbjzM9x7-TxPHhAoetaHjPpQ]
+nonce: xIYjnN0XlMn-PQEFwaJ4FwNCrlYGDRZZy0YSD1w0XPc, timestamp: 2026-11-16T02:14:23.650Z
+lww: {
+    name: "branches"
+    backend: "lww"
+    value_type: "json"
+    minted_for: $git.work_location
+    target_model: none
+}
+member: system:property
+
+[LHvprYJP6yiEmjqXdKrzLmzA1fXSlJUQ_fWaNI-PlIA]
+nonce: gWsppIIAYMxAyIpIj5ivzYf6VbEdW7gJ4-leAEAuB9g, timestamp: 2026-11-16T02:14:23.650Z
+lww: {
+    model: $git.work_location
+    property: $branches
+    optional: false
+}
+member: system:model-property

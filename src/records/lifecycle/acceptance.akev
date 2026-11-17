@@ -1,7 +1,63 @@
-model     records.acceptance  Acceptance  id Vjh2-m9dh74s9aJirrdXsBGhicRlsFqHQhcCUh5pGJk  at 1794795263399  nonce 3cd43593c1daaf6961c5d3e1d0fd3ac303fb1383448c884b2982d39ed877578e
-property  status    string    lww         id Pg3gkQMidFKKcnyiifxC6lu_IjptqHI2WKHJ5ahMQQ4  at 1794795263399  nonce 1ddb335c0d7798c60f29a207d9355de3b89c8759f498d33cc64bcdbfaa3773a2
-link      status    required              id -HvWtf9177CLxw0WFN6cZ8n79FFHh3WS0LBU-mwWUfQ  at 1794795263399  nonce fd3078b208d93af58a59ed22b9141d411f38119c51a8f88f642d21061593dd77
-property  by        entityid  lww         id ocYOENr4MIrzykeI50bIyBnZYgbgKEVQScPMTdPaYLM  at 1794795263399  nonce e8f3f10a87000ed44b01b324f7dd9ba8763435b0924033e6ea3960f8c4ff8dc6
-link      by        optional              id 2-tsxJpnJfZqRZ0SdxvylcpoCYoP_bzph-sLECWSYKU  at 1794795263399  nonce 4c7c9cfc1ed90c88d5434e8c71b19722cbdb5c128c0a613dbb3b7dba626226bd
-property  answered  i64       lww         id Mwc6ua0n6wjoNYPAup2fX7ElTgcbsfLRayVPKJXgrfU  at 1794795263399  nonce ace7d6ae33c0370ae2af17b078f76dc53c92ae32fa19e4b23436ca72051cd9c7
-link      answered  optional              id DPU244hv-n9kZLp6WlxAFumNRAJ2XyV62sXQn9wAP0Q  at 1794795263399  nonce 9c9b6011db6508331577413a17b64759865af30d79b1ffd466bc2461fb4a4b58
+[Vjh2-m9dh74s9aJirrdXsBGhicRlsFqHQhcCUh5pGJk]
+nonce: PNQ1k8Har2lhxdPh0P06wwP7E4NEjIhLKYLTnth3V44, timestamp: 2026-11-16T02:14:23.399Z
+lww: { label: "records.acceptance", name: "Acceptance" }, member: system:model
+
+[Pg3gkQMidFKKcnyiifxC6lu_IjptqHI2WKHJ5ahMQQ4]
+nonce: HdszXA13mMYPKaIH2TVd47ich1n0mNM8xkvNv6o3c6I, timestamp: 2026-11-16T02:14:23.399Z
+lww: {
+    name: "status"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $records.acceptance
+    target_model: none
+}
+member: system:property
+
+[-HvWtf9177CLxw0WFN6cZ8n79FFHh3WS0LBU-mwWUfQ]
+nonce: _TB4sgjZOvWKWe0iuRQdQR84EZxRqPiPZC0hBhWT3Xc, timestamp: 2026-11-16T02:14:23.399Z
+lww: {
+    model: $records.acceptance
+    property: $status
+    optional: false
+}
+member: system:model-property
+
+[ocYOENr4MIrzykeI50bIyBnZYgbgKEVQScPMTdPaYLM]
+nonce: 6PPxCocADtRLAbMk992bqHY0NbCSQDPm6jlg-MT_jcY, timestamp: 2026-11-16T02:14:23.399Z
+lww: {
+    name: "by"
+    backend: "lww"
+    value_type: "entityid"
+    minted_for: $records.acceptance
+    target_model: none
+}
+member: system:property
+
+[2-tsxJpnJfZqRZ0SdxvylcpoCYoP_bzph-sLECWSYKU]
+nonce: THyc_B7ZDIjVQ06McbGXIsvbXBKMCmE9uzt9umJiJr0, timestamp: 2026-11-16T02:14:23.399Z
+lww: {
+    model: $records.acceptance
+    property: $by
+    optional: true
+}
+member: system:model-property
+
+[Mwc6ua0n6wjoNYPAup2fX7ElTgcbsfLRayVPKJXgrfU]
+nonce: rOfWrjPANwrirxewePdtxTySrjL6GeSyNDbKcgUc2cc, timestamp: 2026-11-16T02:14:23.399Z
+lww: {
+    name: "answered"
+    backend: "lww"
+    value_type: "i64"
+    minted_for: $records.acceptance
+    target_model: none
+}
+member: system:property
+
+[DPU244hv-n9kZLp6WlxAFumNRAJ2XyV62sXQn9wAP0Q]
+nonce: nJtgEdtlCDMVd0E6F7ZHWYZa8w15sf_UZrwkYftKS1g, timestamp: 2026-11-16T02:14:23.399Z
+lww: {
+    model: $records.acceptance
+    property: $answered
+    optional: true
+}
+member: system:model-property

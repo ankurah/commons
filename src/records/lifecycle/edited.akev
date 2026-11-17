@@ -1,5 +1,43 @@
-model     records.edited  Edited  id 7cLoWNlfuRHc9Tv2jSytcS7OmQkAo11WknxRDMacEjM  at 1794795263426  nonce f19bd7dd9204fe56cbe6a6ac290c720f30e88441ed5bdb0587e198e8caa69dea
-property  edited  i64       lww   id LrgsFF2Cuew4YHBy6DkioTxKgxW2M5uM97PDgTLhY4c  at 1794795263426  nonce bab3b6d80b0c701b9237f2c07acf70d2f6d82adcdd386dcfd62b9895330c7fbe
-link      edited  required        id DKbmcd8ato9Qej42WWAFmdJdRPj8ZqvdDtcxWlmmn2g  at 1794795263426  nonce ffaabfd98fb54325d568e40a55056c1092ad8677a6c9376151ccb28f79113346
-property  by      entityid  lww   id bU9rfGhXCIhhq3gGRTkkSP_pGENGUpwUspLpg-wlu_w  at 1794795263426  nonce b304f5cf919503f8ba9c00a05f9074a70f659819b990887713cb7f309510df93
-link      by      optional        id BaljywKVVOIlQrRSNbWyEV9XhHOAqw8QAX-2fFdJjC4  at 1794795263426  nonce 61983d8b0885c3a925480c761b4ad6497e96f383adc8c8206e2f518adda0e164
+[7cLoWNlfuRHc9Tv2jSytcS7OmQkAo11WknxRDMacEjM]
+nonce: 8ZvX3ZIE_lbL5qasKQxyDzDohEHtW9sFh-GY6Mqmneo, timestamp: 2026-11-16T02:14:23.426Z
+lww: { label: "records.edited", name: "Edited" }, member: system:model
+
+[LrgsFF2Cuew4YHBy6DkioTxKgxW2M5uM97PDgTLhY4c]
+nonce: urO22AsMcBuSN_LAes9w0vbYKtzdOG3P1iuYlTMMf74, timestamp: 2026-11-16T02:14:23.426Z
+lww: {
+    name: "edited"
+    backend: "lww"
+    value_type: "i64"
+    minted_for: $records.edited
+    target_model: none
+}
+member: system:property
+
+[DKbmcd8ato9Qej42WWAFmdJdRPj8ZqvdDtcxWlmmn2g]
+nonce: _6q_2Y-1QyXVaOQKVQVsEJKthnemyTdhUcyyj3kRM0Y, timestamp: 2026-11-16T02:14:23.426Z
+lww: {
+    model: $records.edited
+    property: $edited
+    optional: false
+}
+member: system:model-property
+
+[bU9rfGhXCIhhq3gGRTkkSP_pGENGUpwUspLpg-wlu_w]
+nonce: swT1z5GVA_i6nACgX5B0pw9lmBm5kIh3E8t_MJUQ35M, timestamp: 2026-11-16T02:14:23.426Z
+lww: {
+    name: "by"
+    backend: "lww"
+    value_type: "entityid"
+    minted_for: $records.edited
+    target_model: none
+}
+member: system:property
+
+[BaljywKVVOIlQrRSNbWyEV9XhHOAqw8QAX-2fFdJjC4]
+nonce: YZg9iwiFw6klSAx2G0rWSX6W84OtyMggbi9Rit2g4WQ, timestamp: 2026-11-16T02:14:23.426Z
+lww: {
+    model: $records.edited
+    property: $by
+    optional: true
+}
+member: system:model-property

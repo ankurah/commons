@@ -1,7 +1,63 @@
-model     text.fragment  Fragment      id T1jwWExgRbdiPf5B0tVDoKdrrLzioT9W8LoghZ8iOlY  at 1794795263534  nonce b63268e59bfb4c2a8cf4a810248760800a0cce257534141684d50c57d56d59e3
-property  anchored_text   string  lww  id ZC2MrGZX9etkwv9O3KDJ6uM07LCAyPR5yKiUmwIp18Y  at 1794795263534  nonce 6a188b48d9e4a907dc4c35781f7990f92bc4d9cdae567f18fd3a89117f845204
-link      anchored_text   required     id LskB-njYJLybdFrYdr5wgAMhUdP5EroHIFieXCA16J0  at 1794795263534  nonce dbaab84ee074e838c93c6628eaa71914dee5d960c359f19551ff70da425c644f
-property  context_before  string  lww  id sYYFPsIqtrvYO0_LX6VwZ_BPVFibpoItFUMuVDz89Co  at 1794795263534  nonce c8b0eab62d78994a448e8529194e7c09ea216a72dda6ba182c800360c348fc1b
-link      context_before  required     id Mk22F4IFWzc0NtEo9PsEfq3mc_oSXZIzaSAH4fWcBb8  at 1794795263534  nonce f19f0bcc72e45470802cca296f5fabd39fc4c6822428f85b4cea90b913db43ca
-property  context_after   string  lww  id 3j341mhVVNM7K-TG7Zq15gkbgPtTEvLfVJAj3eRAw5s  at 1794795263534  nonce 8190e5e6f3b2806a1fcb1283da25cb723fdb81ca0e733dfef5c317d9db966a1a
-link      context_after   required     id I1UlNpw6B6TXKadjquIcr_f53kaaLmm8G_lIvcUMVZM  at 1794795263534  nonce c99537c66ef6a4420ec84aa6f64ef62d9f01f42ec5886188b2d2178ad5edf5d0
+[T1jwWExgRbdiPf5B0tVDoKdrrLzioT9W8LoghZ8iOlY]
+nonce: tjJo5Zv7TCqM9KgQJIdggAoMziV1NBQWhNUMV9VtWeM, timestamp: 2026-11-16T02:14:23.534Z
+lww: { label: "text.fragment", name: "Fragment" }, member: system:model
+
+[ZC2MrGZX9etkwv9O3KDJ6uM07LCAyPR5yKiUmwIp18Y]
+nonce: ahiLSNnkqQfcTDV4H3mQ-SvE2c2uVn8Y_TqJEX-EUgQ, timestamp: 2026-11-16T02:14:23.534Z
+lww: {
+    name: "anchored_text"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $text.fragment
+    target_model: none
+}
+member: system:property
+
+[LskB-njYJLybdFrYdr5wgAMhUdP5EroHIFieXCA16J0]
+nonce: 26q4TuB06DjJPGYo6qcZFN7l2WDDWfGVUf9w2kJcZE8, timestamp: 2026-11-16T02:14:23.534Z
+lww: {
+    model: $text.fragment
+    property: $anchored_text
+    optional: false
+}
+member: system:model-property
+
+[sYYFPsIqtrvYO0_LX6VwZ_BPVFibpoItFUMuVDz89Co]
+nonce: yLDqti14mUpEjoUpGU58CeohanLdproYLIADYMNI_Bs, timestamp: 2026-11-16T02:14:23.534Z
+lww: {
+    name: "context_before"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $text.fragment
+    target_model: none
+}
+member: system:property
+
+[Mk22F4IFWzc0NtEo9PsEfq3mc_oSXZIzaSAH4fWcBb8]
+nonce: 8Z8LzHLkVHCALMopb1-r05_ExoIkKPhbTOqQuRPbQ8o, timestamp: 2026-11-16T02:14:23.534Z
+lww: {
+    model: $text.fragment
+    property: $context_before
+    optional: false
+}
+member: system:model-property
+
+[3j341mhVVNM7K-TG7Zq15gkbgPtTEvLfVJAj3eRAw5s]
+nonce: gZDl5vOygGofyxKD2iXLcj_bgcoOcz3-9cMX2duWaho, timestamp: 2026-11-16T02:14:23.534Z
+lww: {
+    name: "context_after"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $text.fragment
+    target_model: none
+}
+member: system:property
+
+[I1UlNpw6B6TXKadjquIcr_f53kaaLmm8G_lIvcUMVZM]
+nonce: yZU3xm72pEIOyEqm9k72LZ8B9C7FiGGIstIXitXt9dA, timestamp: 2026-11-16T02:14:23.534Z
+lww: {
+    model: $text.fragment
+    property: $context_after
+    optional: false
+}
+member: system:model-property

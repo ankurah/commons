@@ -1,11 +1,103 @@
-model     cognition.expectation  Expectation  id G08Dtf2xjJUfP8tCTnvtbJmox5B8tAhkxPqf58Ghxvs  at 1794795263808  nonce ce037e4c02ded188bc84d95ac1003e55a11a83c9b6e6b932c0e0f1d64738f4b7
-property  expects         string  lww         id BBSukrDlZjPWavb3jgl5J721A8N7r8ThxiWzGLyNQY8  at 1794795263808  nonce d59ca839bacfedc6c9de516a6334d4317d5e41298275580d056317f03e9a1048
-link      expects         required            id GCn-JP2KMxdQzxXrvqbjs3Fe45c7dQByvQXasTqkVGU  at 1794795263808  nonce 7464dd5993209fd9be589adbc1d2556da22eecb0c37b057b891e722e6f51da37
-property  check           string  lww         id AFMq1YTqUmhUXRc2ohS_rshi-e7d2TCgkCOt96nBC9k  at 1794795263808  nonce 3d9c46941eeae293181ca41fcd0f93fea22d7941bad469f301c497a5d0fa1718
-link      check           required            id oxUfOlVYm4M_9ABiky5iq8U0LfLp1aE6lfcrykWxfik  at 1794795263808  nonce d8f64ced829f28a93d8eabb797b73973a60c496ab4baa671accb8bca7abdb6ed
-property  due             i64     lww         id iTfycmFDU5QzwGYy4OIPnVQMgaeDsUQYA-JwVAtCWi8  at 1794795263808  nonce ecd07ad59abb4d047dcd2f07113a17bae43e9ff433498ded2fcc00c474e499cb
-link      due             optional            id w04AKaVkBVBm6SBAsoghrdb3OaIp5ayboDsVXgeM8OQ  at 1794795263808  nonce f2ab139822ed388b175b8179819c9e81193f83b35e4d242700f33f8a7fe51568
-property  counts_against  string  lww         id nDDKCz62I6sMHpUESEs01X2cqfIDmX1tTpwCMyP35M0  at 1794795263809  nonce e2e84355aad7f6fcbaae22921d87b2ea548cecf5bcb8acf4237090883b1c9593
-link      counts_against  required            id QOaG_kQAVzp97NdiROsJw_01-_wT0dj9EQxALkDBlb4  at 1794795263809  nonce 53c62e4f8d837c81bd48cbb63b672829b25c4808ed5f8bc4f099f2c7ee0dbcb6
-property  probability     i64     lww         id vxuIJYLjnpovF7oIw9eD8oTqGCJtGb2acsw_NISKEk4  at 1794795263809  nonce 35397ddc1784ced2b6a401ba68a6554366baf8faaa8976a500a5712bf2c40ac8
-link      probability     optional            id rAmBrUskk3XnqzxcenzTBsz_P7fIbgdWQExEDd5pe1E  at 1794795263809  nonce 4c2fcff6bc10c932b92fb7fe09783addcd888d4bf3bc737871f0ac98751bb0b0
+[G08Dtf2xjJUfP8tCTnvtbJmox5B8tAhkxPqf58Ghxvs]
+nonce: zgN-TALe0Yi8hNlawQA-VaEag8m25rkywODx1kc49Lc, timestamp: 2026-11-16T02:14:23.808Z
+lww: { label: "cognition.expectation", name: "Expectation" }, member: system:model
+
+[BBSukrDlZjPWavb3jgl5J721A8N7r8ThxiWzGLyNQY8]
+nonce: 1ZyoObrP7cbJ3lFqYzTUMX1eQSmCdVgNBWMX8D6aEEg, timestamp: 2026-11-16T02:14:23.808Z
+lww: {
+    name: "expects"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $cognition.expectation
+    target_model: none
+}
+member: system:property
+
+[GCn-JP2KMxdQzxXrvqbjs3Fe45c7dQByvQXasTqkVGU]
+nonce: dGTdWZMgn9m-WJrbwdJVbaIu7LDDewV7iR5yLm9R2jc, timestamp: 2026-11-16T02:14:23.808Z
+lww: {
+    model: $cognition.expectation
+    property: $expects
+    optional: false
+}
+member: system:model-property
+
+[AFMq1YTqUmhUXRc2ohS_rshi-e7d2TCgkCOt96nBC9k]
+nonce: PZxGlB7q4pMYHKQfzQ-T_qIteUG61GnzAcSXpdD6Fxg, timestamp: 2026-11-16T02:14:23.808Z
+lww: {
+    name: "check"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $cognition.expectation
+    target_model: none
+}
+member: system:property
+
+[oxUfOlVYm4M_9ABiky5iq8U0LfLp1aE6lfcrykWxfik]
+nonce: 2PZM7YKfKKk9jqu3l7c5c6YMSWq0uqZxrMuLynq9tu0, timestamp: 2026-11-16T02:14:23.808Z
+lww: {
+    model: $cognition.expectation
+    property: $check
+    optional: false
+}
+member: system:model-property
+
+[iTfycmFDU5QzwGYy4OIPnVQMgaeDsUQYA-JwVAtCWi8]
+nonce: 7NB61Zq7TQR9zS8HEToXuuQ-n_QzSY3tL8wAxHTkmcs, timestamp: 2026-11-16T02:14:23.808Z
+lww: {
+    name: "due"
+    backend: "lww"
+    value_type: "i64"
+    minted_for: $cognition.expectation
+    target_model: none
+}
+member: system:property
+
+[w04AKaVkBVBm6SBAsoghrdb3OaIp5ayboDsVXgeM8OQ]
+nonce: 8qsTmCLtOIsXW4F5gZyegRk_g7NeTSQnAPM_in_lFWg, timestamp: 2026-11-16T02:14:23.808Z
+lww: {
+    model: $cognition.expectation
+    property: $due
+    optional: true
+}
+member: system:model-property
+
+[nDDKCz62I6sMHpUESEs01X2cqfIDmX1tTpwCMyP35M0]
+nonce: 4uhDVarX9vy6riKSHYey6lSM7PW8uKz0I3CQiDsclZM, timestamp: 2026-11-16T02:14:23.809Z
+lww: {
+    name: "counts_against"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $cognition.expectation
+    target_model: none
+}
+member: system:property
+
+[QOaG_kQAVzp97NdiROsJw_01-_wT0dj9EQxALkDBlb4]
+nonce: U8YuT42DfIG9SMu2O2coKbJcSAjtX4vE8Jnyx-4NvLY, timestamp: 2026-11-16T02:14:23.809Z
+lww: {
+    model: $cognition.expectation
+    property: $counts_against
+    optional: false
+}
+member: system:model-property
+
+[vxuIJYLjnpovF7oIw9eD8oTqGCJtGb2acsw_NISKEk4]
+nonce: NTl93BeEztK2pAG6aKZVQ2a6-PqqiXalAKVxK_LECsg, timestamp: 2026-11-16T02:14:23.809Z
+lww: {
+    name: "probability"
+    backend: "lww"
+    value_type: "i64"
+    minted_for: $cognition.expectation
+    target_model: none
+}
+member: system:property
+
+[rAmBrUskk3XnqzxcenzTBsz_P7fIbgdWQExEDd5pe1E]
+nonce: TC_P9rwQyTK5L7f-CXg63c2IjUvzvHN4cfCsmHUbsLA, timestamp: 2026-11-16T02:14:23.809Z
+lww: {
+    model: $cognition.expectation
+    property: $probability
+    optional: true
+}
+member: system:model-property

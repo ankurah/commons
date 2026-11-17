@@ -1,5 +1,43 @@
-model     cognition.claim  Claim  id THctMWzZhys_PU4JvYUUl84QsAXk_rkigH31agBk4G8  at 1794795263761  nonce 25016215df5bd403206d43f46bf505234382cce33ee8155d4b1d39fa7d8ea317
-property  title  string  lww      id F1hEoa4E8S3xslilO0RED7M52SDpH9FPE_wOQ6ZJssY  at 1794795263761  nonce 44388a61dea7844ac63d000bcccf35e65ed2f700b5186c73d343e397eb62d0b9
-link      title  required         id NkVSCrUbMwdYxGqm9DChBuoFAYrZmzho6SjxVHM88cI  at 1794795263761  nonce 3798d2ced193c4a3714a9f78c87c797fe99b23b92406a7d0c56dcd4f4a060bbd
-property  words  string  lww      id ScTsNP3ag-Kl8VkaqkUFRYFTqWqvcId6maYzX2kgqEc  at 1794795263761  nonce bc4d275999d8f276028058d0e8751afa3699ae37d7ce1071a324eac173b9f2ed
-link      words  required         id 0ycoPAR9dM6TL13mYTTnx-at9ZcZgt6-O9A_OvyzZ5s  at 1794795263761  nonce fed0acb42a3c0b75e0c040b83bc709f58edb9c9c45fa51c843f8d6b6d3103535
+[THctMWzZhys_PU4JvYUUl84QsAXk_rkigH31agBk4G8]
+nonce: JQFiFd9b1AMgbUP0a_UFI0OCzOM-6BVdSx05-n2Ooxc, timestamp: 2026-11-16T02:14:23.761Z
+lww: { label: "cognition.claim", name: "Claim" }, member: system:model
+
+[F1hEoa4E8S3xslilO0RED7M52SDpH9FPE_wOQ6ZJssY]
+nonce: RDiKYd6nhErGPQALzM815l7S9wC1GGxz00Pjl-ti0Lk, timestamp: 2026-11-16T02:14:23.761Z
+lww: {
+    name: "title"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $cognition.claim
+    target_model: none
+}
+member: system:property
+
+[NkVSCrUbMwdYxGqm9DChBuoFAYrZmzho6SjxVHM88cI]
+nonce: N5jSztGTxKNxSp94yHx5f-mbI7kkBqfQxW3NT0oGC70, timestamp: 2026-11-16T02:14:23.761Z
+lww: {
+    model: $cognition.claim
+    property: $title
+    optional: false
+}
+member: system:model-property
+
+[ScTsNP3ag-Kl8VkaqkUFRYFTqWqvcId6maYzX2kgqEc]
+nonce: vE0nWZnY8nYCgFjQ6HUa-jaZrjfXzhBxoyTqwXO58u0, timestamp: 2026-11-16T02:14:23.761Z
+lww: {
+    name: "words"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $cognition.claim
+    target_model: none
+}
+member: system:property
+
+[0ycoPAR9dM6TL13mYTTnx-at9ZcZgt6-O9A_OvyzZ5s]
+nonce: _tCstCo8C3XgwEC4O8cJ9Y7bnJxF-lHIQ_jWttMQNTU, timestamp: 2026-11-16T02:14:23.761Z
+lww: {
+    model: $cognition.claim
+    property: $words
+    optional: false
+}
+member: system:model-property

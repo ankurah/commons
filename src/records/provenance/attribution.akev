@@ -1,3 +1,23 @@
-model     records.attribution  Attribution  id DfGhlrbNm6EcEMTL1XOU1Cft54dEbjxZ1b0AX-R0ibE  at 1794795263435  nonce 86b35fe3bf97019fa0aba25dd7cdcb2e06b57908d7a91278b17f48ebc2e36be9
-property  speaker  entityid  lww            id ndaehucnhocM6kSFp8JbyzUw2xoyM5Z7PzouhPAnkNE  at 1794795263436  nonce f80b72381b02b0cf014886cabd6b19235b679a076d6a6c753adfac3640ff892f
-link      speaker  optional                 id JzvSBDWcv_6DAvEd1RHMKZo4P5uvJVIRZ3LXDk3SSOg  at 1794795263436  nonce a5ae7d26eadb57f10b10d94cd451a158cc6aab0dfcbca4dc06c0f7d8b0ba83a9
+[DfGhlrbNm6EcEMTL1XOU1Cft54dEbjxZ1b0AX-R0ibE]
+nonce: hrNf47-XAZ-gq6Jd183LLga1eQjXqRJ4sX9I68Lja-k, timestamp: 2026-11-16T02:14:23.435Z
+lww: { label: "records.attribution", name: "Attribution" }, member: system:model
+
+[ndaehucnhocM6kSFp8JbyzUw2xoyM5Z7PzouhPAnkNE]
+nonce: -AtyOBsCsM8BSIbKvWsZI1tnmgdtamx1Ot-sNkD_iS8, timestamp: 2026-11-16T02:14:23.436Z
+lww: {
+    name: "speaker"
+    backend: "lww"
+    value_type: "entityid"
+    minted_for: $records.attribution
+    target_model: none
+}
+member: system:property
+
+[JzvSBDWcv_6DAvEd1RHMKZo4P5uvJVIRZ3LXDk3SSOg]
+nonce: pa59JurbV_ELENlM1FGhWMxqqw38vKTcBsD32LC6g6k, timestamp: 2026-11-16T02:14:23.436Z
+lww: {
+    model: $records.attribution
+    property: $speaker
+    optional: true
+}
+member: system:model-property

@@ -1,15 +1,143 @@
-model     health.heart_rate_summary  HeartRateSummary  id ABJk8PXGYqZtdHOInmA-bpSzSxqf_rWGp0MvucPqa6k  at 1794795263486  nonce 346a3240755c2203a7a1f4f8a7295f3a567ec938b84b328fb9f5018c4206139e
-property  measured_person  entityid  lww               id ovxQM9oCKZXve92OOMZm9nZxv5dwWHXTs__fsIEfWec  at 1794795263486  nonce 0cb5aece4041f61366a798a659050c6a103e39954174ddda5fe6aca5fac00bc2
-link      measured_person  required                    id SK6dm8MYV54idBqqO2KkCJTO99yWA6y0M-1MN-rUI-8  at 1794795263486  nonce e900fe450503b96d45e1760d8863c6d0f3a8f8fbbf411ad4a697475a7331b00b
-property  activity         entityid  lww               id OuWZdE6-vjtaXVeFcADelRnzRB9HO92270zuR22xweM  at 1794795263486  nonce dd1b495cbbf25f54d089a3fb03f15aa8e72c4a975fd91849ed0f52d94ea298d5
-link      activity         optional                    id ddWWI1kAuLsr_QN7jHQFvF8fgGmTAMyUtlwim2OvXLI  at 1794795263486  nonce 8fb9d4758ec22edac87f58990cc915f252d8ecac1615112852d5e7881af39926
-property  window_start     i64       lww               id Br5NJjrLWE_LB8_kE_A-2E7awF8rJQpb6QhZbzenZ3g  at 1794795263486  nonce b3ad77831693d69cdd1dd1b425877b844143d71b24ce81ed4fb73a571e9c2e9e
-link      window_start     required                    id owyhcUHp3zz0qibCKlbI5mExm2YWSj_lbHt8gXistWw  at 1794795263486  nonce 3b7b44aa65aef110cf45c61d3dd89a09aea09d27469fffaa70ee3c98b88621dd
-property  window_end       i64       lww               id UU74poOAnWXTIYz7xsDQGojx0HVgClH4JNE3egCvhro  at 1794795263486  nonce efeff0273bf2b766177f4b6f11361ce1cf537b206591947a8663b2d857ff0d0d
-link      window_end       required                    id KD6m3aJ3dmDAO1RYL3-VZeNKdFbUN88hstm4pES6Bw8  at 1794795263486  nonce 88d49d47537510c34f31b3a83cbab73f365de3b0fb0d7618cf1585c96cff3b2d
-property  sample_count     i64       lww               id ug1V-DH6oVgir1GQQSVKwQXQsOHq0nUKB9_fk_gxHrk  at 1794795263486  nonce 656010e9cdf09a05ef9ff4b25da07d78acaf7789cea39bbeacb22a855c458990
-link      sample_count     required                    id rCyYCwkzUkiINvR2Kmdp3Rcja90rhcYQBJTueyfCBzc  at 1794795263486  nonce cf4a3aade253ce8c04d20d55a965dba7b10bad3427f60cedeec141f3043c3041
-property  min_bpm          f64       lww               id eGttzYnezEWtmYw4YSWAqSQNWdGqwGL1Vfe-9crTIgw  at 1794795263486  nonce 66168f21c1bc21013c8ca239a950bd9c4d97b3b675bb2647760e1746eb0bb081
-link      min_bpm          required                    id 367UChe6xkJWUyv0c6S4WOJn-K-ffJ5I3jQUu3-0y1o  at 1794795263487  nonce 38b79b0bb004cf6dcde755ea9ac9891066500d05be3459d501b259b5802dfdb0
-property  max_bpm          f64       lww               id 68fkGWZswuO6Ma0iv0R7bSjOlsIn2-cCcrIkj3pI0Sg  at 1794795263487  nonce 58d455eca6b581e1910486beba5b84756f8c84c3a33c3cf6e136fe78c736589d
-link      max_bpm          required                    id c4B44mtIBIVFq52j_eEb-y2a1EBFL3sp8KDvHnwNhLo  at 1794795263487  nonce fc3d1ecc6b3b0d59e9f94cfafb37ef2c6f97e61035eeb8aa13495d14ad0edcac
+[ABJk8PXGYqZtdHOInmA-bpSzSxqf_rWGp0MvucPqa6k]
+nonce: NGoyQHVcIgOnofT4pylfOlZ-yTi4SzKPufUBjEIGE54, timestamp: 2026-11-16T02:14:23.486Z
+lww: { label: "health.heart_rate_summary", name: "HeartRateSummary" }, member: system:model
+
+[ovxQM9oCKZXve92OOMZm9nZxv5dwWHXTs__fsIEfWec]
+nonce: DLWuzkBB9hNmp5imWQUMahA-OZVBdN3aX-aspfrAC8I, timestamp: 2026-11-16T02:14:23.486Z
+lww: {
+    name: "measured_person"
+    backend: "lww"
+    value_type: "entityid"
+    minted_for: $health.heart_rate_summary
+    target_model: none
+}
+member: system:property
+
+[SK6dm8MYV54idBqqO2KkCJTO99yWA6y0M-1MN-rUI-8]
+nonce: 6QD-RQUDuW1F4XYNiGPG0POo-Pu_QRrUppdHWnMxsAs, timestamp: 2026-11-16T02:14:23.486Z
+lww: {
+    model: $health.heart_rate_summary
+    property: $measured_person
+    optional: false
+}
+member: system:model-property
+
+[OuWZdE6-vjtaXVeFcADelRnzRB9HO92270zuR22xweM]
+nonce: 3RtJXLvyX1TQiaP7A_FaqOcsSpdf2RhJ7Q9S2U6imNU, timestamp: 2026-11-16T02:14:23.486Z
+lww: {
+    name: "activity"
+    backend: "lww"
+    value_type: "entityid"
+    minted_for: $health.heart_rate_summary
+    target_model: none
+}
+member: system:property
+
+[ddWWI1kAuLsr_QN7jHQFvF8fgGmTAMyUtlwim2OvXLI]
+nonce: j7nUdY7CLtrIf1iZDMkV8lLY7KwWFREoUtXniBrzmSY, timestamp: 2026-11-16T02:14:23.486Z
+lww: {
+    model: $health.heart_rate_summary
+    property: $activity
+    optional: true
+}
+member: system:model-property
+
+[Br5NJjrLWE_LB8_kE_A-2E7awF8rJQpb6QhZbzenZ3g]
+nonce: s613gxaT1pzdHdG0JYd7hEFD1xskzoHtT7c6Vx6cLp4, timestamp: 2026-11-16T02:14:23.486Z
+lww: {
+    name: "window_start"
+    backend: "lww"
+    value_type: "i64"
+    minted_for: $health.heart_rate_summary
+    target_model: none
+}
+member: system:property
+
+[owyhcUHp3zz0qibCKlbI5mExm2YWSj_lbHt8gXistWw]
+nonce: O3tEqmWu8RDPRcYdPdiaCa6gnSdGn_-qcO48mLiGId0, timestamp: 2026-11-16T02:14:23.486Z
+lww: {
+    model: $health.heart_rate_summary
+    property: $window_start
+    optional: false
+}
+member: system:model-property
+
+[UU74poOAnWXTIYz7xsDQGojx0HVgClH4JNE3egCvhro]
+nonce: 7-_wJzvyt2YXf0tvETYc4c9TeyBlkZR6hmOy2Ff_DQ0, timestamp: 2026-11-16T02:14:23.486Z
+lww: {
+    name: "window_end"
+    backend: "lww"
+    value_type: "i64"
+    minted_for: $health.heart_rate_summary
+    target_model: none
+}
+member: system:property
+
+[KD6m3aJ3dmDAO1RYL3-VZeNKdFbUN88hstm4pES6Bw8]
+nonce: iNSdR1N1EMNPMbOoPLq3PzZd47D7DXYYzxWFyWz_Oy0, timestamp: 2026-11-16T02:14:23.486Z
+lww: {
+    model: $health.heart_rate_summary
+    property: $window_end
+    optional: false
+}
+member: system:model-property
+
+[ug1V-DH6oVgir1GQQSVKwQXQsOHq0nUKB9_fk_gxHrk]
+nonce: ZWAQ6c3wmgXvn_SyXaB9eKyvd4nOo5u-rLIqhVxFiZA, timestamp: 2026-11-16T02:14:23.486Z
+lww: {
+    name: "sample_count"
+    backend: "lww"
+    value_type: "i64"
+    minted_for: $health.heart_rate_summary
+    target_model: none
+}
+member: system:property
+
+[rCyYCwkzUkiINvR2Kmdp3Rcja90rhcYQBJTueyfCBzc]
+nonce: z0o6reJTzowE0g1VqWXbp7ELrTQn9gzt7sFB8wQ8MEE, timestamp: 2026-11-16T02:14:23.486Z
+lww: {
+    model: $health.heart_rate_summary
+    property: $sample_count
+    optional: false
+}
+member: system:model-property
+
+[eGttzYnezEWtmYw4YSWAqSQNWdGqwGL1Vfe-9crTIgw]
+nonce: ZhaPIcG8IQE8jKI5qVC9nE2Xs7Z1uyZHdg4XRusLsIE, timestamp: 2026-11-16T02:14:23.486Z
+lww: {
+    name: "min_bpm"
+    backend: "lww"
+    value_type: "f64"
+    minted_for: $health.heart_rate_summary
+    target_model: none
+}
+member: system:property
+
+[367UChe6xkJWUyv0c6S4WOJn-K-ffJ5I3jQUu3-0y1o]
+nonce: OLebC7AEz23N51XqmsmJEGZQDQW-NFnVAbJZtYAt_bA, timestamp: 2026-11-16T02:14:23.487Z
+lww: {
+    model: $health.heart_rate_summary
+    property: $min_bpm
+    optional: false
+}
+member: system:model-property
+
+[68fkGWZswuO6Ma0iv0R7bSjOlsIn2-cCcrIkj3pI0Sg]
+nonce: WNRV7Ka1geGRBIa-uluEdW-MhMOjPDz24Tb-eMc2WJ0, timestamp: 2026-11-16T02:14:23.487Z
+lww: {
+    name: "max_bpm"
+    backend: "lww"
+    value_type: "f64"
+    minted_for: $health.heart_rate_summary
+    target_model: none
+}
+member: system:property
+
+[c4B44mtIBIVFq52j_eEb-y2a1EBFL3sp8KDvHnwNhLo]
+nonce: _D0ezGs7DVnp-Uz6-zfvLG-X5hA17riqE0ldFK0O3Kw, timestamp: 2026-11-16T02:14:23.487Z
+lww: {
+    model: $health.heart_rate_summary
+    property: $max_bpm
+    optional: false
+}
+member: system:model-property

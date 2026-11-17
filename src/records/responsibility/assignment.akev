@@ -1,5 +1,43 @@
-model     records.assignment  Assignment  id PYDgBCw8YrEL-v1aXA0hLfQCc198-QalzjqywpCXwow  at 1794795263444  nonce e87511f166c34e3d0dae1d3b71a0fa70917daa1972b210a5b9f96e4d8057e1df
-property  assignee     entityid  lww      id OHvXRou9_LJ7KqQNV_0vdpw7PuP7OuExio-od0fU4g4  at 1794795263444  nonce 247178cd8aa51f332d1f5931b2c1203fb0b62366fb9833045268a474da4eb3d5
-link      assignee     optional           id kiaUDFtjIFUfuUVm_TCD6JI5eNdLDlW4zXmJ7qh0Mmc  at 1794795263444  nonce ba2f10e7a8ff553cdb404ddda9f1f2d88812555a1231ec40b9ff3844df1e92f5
-property  assigned_by  entityid  lww      id uKkGmHREKBdvRC_7KBRDD39CrOmZ3pvQYriyC0_vrVg  at 1794795263444  nonce 2ab5c42955551cf8361e188395d209dec95a6a9594ecb7001c415ebe9ce6d75c
-link      assigned_by  optional           id lmiRkfEwRYvmaPDLo-CqxLsIU9Qccd3c_RArMn7aLws  at 1794795263444  nonce da5c6e785baa8f209c2b5857f3702b32638d5fbb9be5c42bfa152849e5bd69be
+[PYDgBCw8YrEL-v1aXA0hLfQCc198-QalzjqywpCXwow]
+nonce: 6HUR8WbDTj0Nrh07caD6cJF9qhlyshClufluTYBX4d8, timestamp: 2026-11-16T02:14:23.444Z
+lww: { label: "records.assignment", name: "Assignment" }, member: system:model
+
+[OHvXRou9_LJ7KqQNV_0vdpw7PuP7OuExio-od0fU4g4]
+nonce: JHF4zYqlHzMtH1kxssEgP7C2I2b7mDMEUmikdNpOs9U, timestamp: 2026-11-16T02:14:23.444Z
+lww: {
+    name: "assignee"
+    backend: "lww"
+    value_type: "entityid"
+    minted_for: $records.assignment
+    target_model: none
+}
+member: system:property
+
+[kiaUDFtjIFUfuUVm_TCD6JI5eNdLDlW4zXmJ7qh0Mmc]
+nonce: ui8Q56j_VTzbQE3dqfHy2IgSVVoSMexAuf84RN8ekvU, timestamp: 2026-11-16T02:14:23.444Z
+lww: {
+    model: $records.assignment
+    property: $assignee
+    optional: true
+}
+member: system:model-property
+
+[uKkGmHREKBdvRC_7KBRDD39CrOmZ3pvQYriyC0_vrVg]
+nonce: KrXEKVVVHPg2HhiDldIJ3slaapWU7LcAHEFevpzm11w, timestamp: 2026-11-16T02:14:23.444Z
+lww: {
+    name: "assigned_by"
+    backend: "lww"
+    value_type: "entityid"
+    minted_for: $records.assignment
+    target_model: none
+}
+member: system:property
+
+[lmiRkfEwRYvmaPDLo-CqxLsIU9Qccd3c_RArMn7aLws]
+nonce: 2lxueFuqjyCcK1hX83ArMmONX7ub5cQr-hUoSeW9ab4, timestamp: 2026-11-16T02:14:23.444Z
+lww: {
+    model: $records.assignment
+    property: $assigned_by
+    optional: true
+}
+member: system:model-property

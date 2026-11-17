@@ -1,3 +1,23 @@
-model     records.via  Via  id rJGiTNzdN5kxd_hM7FFF5I2Fs8HGIsPFIf--4aCx3Ng  at 1794795263439  nonce 792f826f796caf138215338e8d82293a8f4b8cb7d1c3a87ed4eca8a88e3d4057
-property  via  json  lww    id TPAZQ-engXvv1VeoJ2lTtWwXtmL04IoKDBK2Qaq6cEw  at 1794795263440  nonce 8712835dced390d4a8ab0832317066b0b3be5eda8046d3bbd6a1e36b8e5551a0
-link      via  required     id aUyXw22Li9u5YEuBDSCl_poaILoUaIxXz141weSj35Y  at 1794795263440  nonce 2850357bff8779b2b585d31d3e7287da9927add3681788375be295f5df0b0278
+[rJGiTNzdN5kxd_hM7FFF5I2Fs8HGIsPFIf--4aCx3Ng]
+nonce: eS-Cb3lsrxOCFTOOjYIpOo9LjLfRw6h-1OyoqI49QFc, timestamp: 2026-11-16T02:14:23.439Z
+lww: { label: "records.via", name: "Via" }, member: system:model
+
+[TPAZQ-engXvv1VeoJ2lTtWwXtmL04IoKDBK2Qaq6cEw]
+nonce: hxKDXc7TkNSoqwgyMXBmsLO-XtqARtO71qHja45VUaA, timestamp: 2026-11-16T02:14:23.440Z
+lww: {
+    name: "via"
+    backend: "lww"
+    value_type: "json"
+    minted_for: $records.via
+    target_model: none
+}
+member: system:property
+
+[aUyXw22Li9u5YEuBDSCl_poaILoUaIxXz141weSj35Y]
+nonce: KFA1e_-HebK1hdMdPnKH2pknrdNoF4g3W-KV9d8LAng, timestamp: 2026-11-16T02:14:23.440Z
+lww: {
+    model: $records.via
+    property: $via
+    optional: false
+}
+member: system:model-property

@@ -1,13 +1,123 @@
-model     git.file_anchor  FileAnchor  id V1NIGvz1uewWPssVaOiWxlTHjV0RrImDwFzmOB6ueHw  at 1794795263599  nonce fa876df77032d7e7096ff47a26072261f71678b63f5328ff39600c1fc19ca430
-property  repository  entityid  lww    id JGHdmb2QlSnN3m8im4prDaN-6nuxa3co7U4VKVICzwg  at 1794795263599  nonce 2a7ab856a691d8be92c56f0ea39e44ebdfad5c86770af6b3a2d91f0325c7f252
-link      repository  required         id wWp3LvTL7OuUOx8ORX0e0hbsvDiQJTEekeXERgjtXV4  at 1794795263599  nonce a71383ba6026851262fa2bddd77aa5d31c4392aca11d1648d11d2e49cd2c289d
-property  path        string    lww    id lG225xiGZhzvKzMpi3q0y9idSJByikqa4ZpUFvuR5H4  at 1794795263599  nonce 2a6672d5d9079bd2d98a1590b6d6d4d129b4146581fcf8382427801e01a90e82
-link      path        required         id CiOZ2BJ3ZVq6DTdcqyPCD6JijTQO55TwMw5oUhxVAkA  at 1794795263599  nonce d980e65e7994e5312c7ac91f9a36727ef99c32aefc07260e7ff2cb7e4949e235
-property  basis_blob  string    lww    id Z4qfvgH0rG2p4PkAL6CsuJXqrzKMKSk7vXinFsvEQos  at 1794795263600  nonce 5589f301399b38f3f199a1f00a3bd531ba6ec9fd09906ce2e3dc0fcf7105cc1d
-link      basis_blob  optional         id dZ1izoytqs4inJgxZJUSJs1uivI4enLsnc9wRULH_iY  at 1794795263600  nonce 34a81a45245f293823eb77ca958e3de6226fcc719ec0bec48c3785b372b44b84
-property  start_line  i64       lww    id iTVRnh4Vy2hSZXtiGeJKXInLlhN4wxkvR8pLSE3w-Ko  at 1794795263600  nonce 8579b30b0f8ecdf9f3249e1a695d02001cb0cf0b452f2fa29ba826fb91cb3d11
-link      start_line  required         id aBcJL1IhsFGitOaD9cG4w0_0KzMNn2xB1KCeglEoF2w  at 1794795263600  nonce 792d588a7c8cfea280e5feeddc4c95bf55ae7db12287a77bb7dd16431d5f18f2
-property  end_line    i64       lww    id p3cxT3EgTJUHLbB272Va3st2u97zMXQK9A4idnvJcT0  at 1794795263600  nonce 643708b0c376c2e1078692d071d346756e2ff9be7c35635e51cbce91450c795e
-link      end_line    required         id s-t7JorNHVcnVoZxApiGizWHOwsZhjAz9aEiDaXELvY  at 1794795263600  nonce c366b621af4837d1b61211d5bd01aedc5d456198b940e009a851ce8bc5ae64e1
-property  whole_file  bool      lww    id s020MccN2-1qqZN4dY2NxysLctzBTdb7N3poLdCPtck  at 1794795263600  nonce 6a89cccaf2f880f4f229992802fe5b7444f4c5736b5550a69ee1bf838a880e84
-link      whole_file  required         id kNbwTe_cWsNne7EEUPVPhk1qeJFzRqlkaOPXFJ6Cwco  at 1794795263600  nonce d3398befafa29ba860d61843a22579c0f0465926c19c4445f5116c3a47aad892
+[V1NIGvz1uewWPssVaOiWxlTHjV0RrImDwFzmOB6ueHw]
+nonce: -odt93Ay1-cJb_R6JgciYfcWeLY_Uyj_OWAMH8GcpDA, timestamp: 2026-11-16T02:14:23.599Z
+lww: { label: "git.file_anchor", name: "FileAnchor" }, member: system:model
+
+[JGHdmb2QlSnN3m8im4prDaN-6nuxa3co7U4VKVICzwg]
+nonce: Knq4VqaR2L6SxW8Oo55E69-tXIZ3CvazotkfAyXH8lI, timestamp: 2026-11-16T02:14:23.599Z
+lww: {
+    name: "repository"
+    backend: "lww"
+    value_type: "entityid"
+    minted_for: $git.file_anchor
+    target_model: none
+}
+member: system:property
+
+[wWp3LvTL7OuUOx8ORX0e0hbsvDiQJTEekeXERgjtXV4]
+nonce: pxODumAmhRJi-ivd13ql0xxDkqyhHRZI0R0uSc0sKJ0, timestamp: 2026-11-16T02:14:23.599Z
+lww: {
+    model: $git.file_anchor
+    property: $repository
+    optional: false
+}
+member: system:model-property
+
+[lG225xiGZhzvKzMpi3q0y9idSJByikqa4ZpUFvuR5H4]
+nonce: KmZy1dkHm9LZihWQttbU0Sm0FGWB_Pg4JCeAHgGpDoI, timestamp: 2026-11-16T02:14:23.599Z
+lww: {
+    name: "path"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $git.file_anchor
+    target_model: none
+}
+member: system:property
+
+[CiOZ2BJ3ZVq6DTdcqyPCD6JijTQO55TwMw5oUhxVAkA]
+nonce: 2YDmXnmU5TEseskfmjZyfvmcMq78ByYOf_LLfklJ4jU, timestamp: 2026-11-16T02:14:23.599Z
+lww: {
+    model: $git.file_anchor
+    property: $path
+    optional: false
+}
+member: system:model-property
+
+[Z4qfvgH0rG2p4PkAL6CsuJXqrzKMKSk7vXinFsvEQos]
+nonce: VYnzATmbOPPxmaHwCjvVMbpuyf0JkGzi49wPz3EFzB0, timestamp: 2026-11-16T02:14:23.600Z
+lww: {
+    name: "basis_blob"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $git.file_anchor
+    target_model: none
+}
+member: system:property
+
+[dZ1izoytqs4inJgxZJUSJs1uivI4enLsnc9wRULH_iY]
+nonce: NKgaRSRfKTgj63fKlY495iJvzHGewL7EjDeFs3K0S4Q, timestamp: 2026-11-16T02:14:23.600Z
+lww: {
+    model: $git.file_anchor
+    property: $basis_blob
+    optional: true
+}
+member: system:model-property
+
+[iTVRnh4Vy2hSZXtiGeJKXInLlhN4wxkvR8pLSE3w-Ko]
+nonce: hXmzCw-OzfnzJJ4aaV0CABywzwtFLy-im6gm-5HLPRE, timestamp: 2026-11-16T02:14:23.600Z
+lww: {
+    name: "start_line"
+    backend: "lww"
+    value_type: "i64"
+    minted_for: $git.file_anchor
+    target_model: none
+}
+member: system:property
+
+[aBcJL1IhsFGitOaD9cG4w0_0KzMNn2xB1KCeglEoF2w]
+nonce: eS1YinyM_qKA5f7t3EyVv1WufbEih6d7t90WQx1fGPI, timestamp: 2026-11-16T02:14:23.600Z
+lww: {
+    model: $git.file_anchor
+    property: $start_line
+    optional: false
+}
+member: system:model-property
+
+[p3cxT3EgTJUHLbB272Va3st2u97zMXQK9A4idnvJcT0]
+nonce: ZDcIsMN2wuEHhpLQcdNGdW4v-b58NWNeUcvOkUUMeV4, timestamp: 2026-11-16T02:14:23.600Z
+lww: {
+    name: "end_line"
+    backend: "lww"
+    value_type: "i64"
+    minted_for: $git.file_anchor
+    target_model: none
+}
+member: system:property
+
+[s-t7JorNHVcnVoZxApiGizWHOwsZhjAz9aEiDaXELvY]
+nonce: w2a2Ia9IN9G2EhHVvQGu3F1FYZi5QOAJqFHOi8WuZOE, timestamp: 2026-11-16T02:14:23.600Z
+lww: {
+    model: $git.file_anchor
+    property: $end_line
+    optional: false
+}
+member: system:model-property
+
+[s020MccN2-1qqZN4dY2NxysLctzBTdb7N3poLdCPtck]
+nonce: aonMyvL4gPTyKZkoAv5bdET0xXNrVVCmnuG_g4qIDoQ, timestamp: 2026-11-16T02:14:23.600Z
+lww: {
+    name: "whole_file"
+    backend: "lww"
+    value_type: "bool"
+    minted_for: $git.file_anchor
+    target_model: none
+}
+member: system:property
+
+[kNbwTe_cWsNne7EEUPVPhk1qeJFzRqlkaOPXFJ6Cwco]
+nonce: 0zmL76-im6hg1hhDoiV5wPBGWSbBnERF9RFsOkeq2JI, timestamp: 2026-11-16T02:14:23.600Z
+lww: {
+    model: $git.file_anchor
+    property: $whole_file
+    optional: false
+}
+member: system:model-property

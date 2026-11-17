@@ -1,5 +1,43 @@
-model     work.submission  Submission  id vc9YgO8iHlsyARnnjQgKWwTQMbAjaQaoHHOKnHGYMFI  at 1794795263914  nonce 6f70fd1395b803c60fc3ec4e2408f748f90a04957b654b8e69ecdb935065931c
-property  of        entityid  lww      id d5NMYDDAtPXWYAQktcNtSSubJ0YTxkshgfgOHR9cCCQ  at 1794795263914  nonce f4a0d64d5c4b0937a977ccfefc61021d38eb951be706ea6d345ea309b1342b53
-link      of        required           id 4FgAPKlrYxY12Y8TAGyGbUhDe58VlDrzFE5ueKr7k2Y  at 1794795263914  nonce 7b7b0aef831b0119118736ff3edcd1bd2b9ed698210215344bc266af24911f40
-property  evidence  string    lww      id V23FeeQTh0UT5en2HGOV5lYIGu6ZXBAnmSPgCisvinI  at 1794795263914  nonce 9783e1a55cdeb14b3d750e245e5b806e27c28f5a7080ae0f1b94822139d884e7
-link      evidence  required           id bXrI98IMNxNCvAgw5ZgGyPpLKHD8KbOIf4Oj42nAtbs  at 1794795263915  nonce b6f641daf867fca606eb48904b3488ff270400c8803826d2497bb043926cbaae
+[vc9YgO8iHlsyARnnjQgKWwTQMbAjaQaoHHOKnHGYMFI]
+nonce: b3D9E5W4A8YPw-xOJAj3SPkKBJV7ZUuOaezbk1Blkxw, timestamp: 2026-11-16T02:14:23.914Z
+lww: { label: "work.submission", name: "Submission" }, member: system:model
+
+[d5NMYDDAtPXWYAQktcNtSSubJ0YTxkshgfgOHR9cCCQ]
+nonce: 9KDWTVxLCTepd8z-_GECHTjrlRvnBuptNF6jCbE0K1M, timestamp: 2026-11-16T02:14:23.914Z
+lww: {
+    name: "of"
+    backend: "lww"
+    value_type: "entityid"
+    minted_for: $work.submission
+    target_model: none
+}
+member: system:property
+
+[4FgAPKlrYxY12Y8TAGyGbUhDe58VlDrzFE5ueKr7k2Y]
+nonce: e3sK74MbARkRhzb_PtzRvSue1pghAhU0S8JmrySRH0A, timestamp: 2026-11-16T02:14:23.914Z
+lww: {
+    model: $work.submission
+    property: $of
+    optional: false
+}
+member: system:model-property
+
+[V23FeeQTh0UT5en2HGOV5lYIGu6ZXBAnmSPgCisvinI]
+nonce: l4PhpVzesUs9dQ4kXluAbifCj1pwgK4PG5SCITnYhOc, timestamp: 2026-11-16T02:14:23.914Z
+lww: {
+    name: "evidence"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $work.submission
+    target_model: none
+}
+member: system:property
+
+[bXrI98IMNxNCvAgw5ZgGyPpLKHD8KbOIf4Oj42nAtbs]
+nonce: tvZB2vhn_KYG60iQSzSI_ycEAMiAOCbSSXuwQ5Jsuq4, timestamp: 2026-11-16T02:14:23.915Z
+lww: {
+    model: $work.submission
+    property: $evidence
+    optional: false
+}
+member: system:model-property

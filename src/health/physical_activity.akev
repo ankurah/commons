@@ -1,9 +1,83 @@
-model     health.physical_activity  PhysicalActivity  id 48bPysiZLc_-nQxCCC0W6GUfwdls3jNgqLRdgd07H8E  at 1794795263514  nonce 4926971119e3aa91d90a0c2cb10b476c1b6a68929ab1eecbd297daaab84cbcf6
-property  performed_by  entityid  lww                 id 0uxUEjpityI4YvZgLb0ExkTpdzUjuY2ppmh9xDEoWDw  at 1794795263514  nonce b79dc5d01943474ec040252e9c2ec64c415e1a8a7e23ab35eb41e315002d37db
-link      performed_by  required                      id x4xoPSdxi_bQTXDNBKBMP2JnICSdMMKs3uoW_tjBNsc  at 1794795263514  nonce cba53ead59ca1dec6af4585a9085515bea61d75fd06f28c6cd664bcf11129ce8
-property  kind          string    lww                 id g07qffJiFApuh5uthKyyEmZCooobA3_2IN3wTrU4U9E  at 1794795263514  nonce 596f26a8e765f0ce4b9625c67cec384375f93271e534289a6827a0fd91f9ae2b
-link      kind          required                      id yXqgV7nnN7aj7CXL5vdfPgIpaMkptyCZXw5Q2s08ZHA  at 1794795263514  nonce e5d1a7e0dce7ea8a24e322d611a0a56cb3df327d62b61135c749ab2923e37d6e
-property  started_at    i64       lww                 id 1S8SePMq2pID-NdAP2uvaLbWxd3vYOk7XDEiVk7IpLQ  at 1794795263514  nonce 49869b32ba262a04ff024a3049254756e9d02dae6e288bc847a10058179f200e
-link      started_at    required                      id 66zs_oyumv2k4_U9UcMPnv6NL-gqys0xurrqafSgwyU  at 1794795263514  nonce 455a23d79017ea900cc5f9f6bbd3a644ca738c939729a26e5ed03e7ae8290ff6
-property  ended_at      i64       lww                 id twq-dRs3zzexHZ6JoB4n-tdQQtJXiHZj-7TrThDiLn8  at 1794795263514  nonce 178173368b844541bae64806f321414e758eb0d445b46a615787b38abeab10df
-link      ended_at      optional                      id M6NnRALeHHbd9lYDpNd6YgNEGEOZEazvIFHjolaFRtM  at 1794795263514  nonce 9d9b813b3aa2c15d9a6b14a01f5aec7245dc1fa685b9ff02556a2658c4f67951
+[48bPysiZLc_-nQxCCC0W6GUfwdls3jNgqLRdgd07H8E]
+nonce: SSaXERnjqpHZCgwssQtHbBtqaJKase7L0pfaqrhMvPY, timestamp: 2026-11-16T02:14:23.514Z
+lww: { label: "health.physical_activity", name: "PhysicalActivity" }, member: system:model
+
+[0uxUEjpityI4YvZgLb0ExkTpdzUjuY2ppmh9xDEoWDw]
+nonce: t53F0BlDR07AQCUunC7GTEFeGop-I6s160HjFQAtN9s, timestamp: 2026-11-16T02:14:23.514Z
+lww: {
+    name: "performed_by"
+    backend: "lww"
+    value_type: "entityid"
+    minted_for: $health.physical_activity
+    target_model: none
+}
+member: system:property
+
+[x4xoPSdxi_bQTXDNBKBMP2JnICSdMMKs3uoW_tjBNsc]
+nonce: y6U-rVnKHexq9FhakIVRW-ph11_QbyjGzWZLzxESnOg, timestamp: 2026-11-16T02:14:23.514Z
+lww: {
+    model: $health.physical_activity
+    property: $performed_by
+    optional: false
+}
+member: system:model-property
+
+[g07qffJiFApuh5uthKyyEmZCooobA3_2IN3wTrU4U9E]
+nonce: WW8mqOdl8M5LliXGfOw4Q3X5MnHlNCiaaCeg_ZH5ris, timestamp: 2026-11-16T02:14:23.514Z
+lww: {
+    name: "kind"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $health.physical_activity
+    target_model: none
+}
+member: system:property
+
+[yXqgV7nnN7aj7CXL5vdfPgIpaMkptyCZXw5Q2s08ZHA]
+nonce: 5dGn4Nzn6ook4yLWEaClbLPfMn1ithE1x0mrKSPjfW4, timestamp: 2026-11-16T02:14:23.514Z
+lww: {
+    model: $health.physical_activity
+    property: $kind
+    optional: false
+}
+member: system:model-property
+
+[1S8SePMq2pID-NdAP2uvaLbWxd3vYOk7XDEiVk7IpLQ]
+nonce: SYabMromKgT_AkowSSVHVunQLa5uKIvIR6EAWBefIA4, timestamp: 2026-11-16T02:14:23.514Z
+lww: {
+    name: "started_at"
+    backend: "lww"
+    value_type: "i64"
+    minted_for: $health.physical_activity
+    target_model: none
+}
+member: system:property
+
+[66zs_oyumv2k4_U9UcMPnv6NL-gqys0xurrqafSgwyU]
+nonce: RVoj15AX6pAMxfn2u9OmRMpzjJOXKaJuXtA-eugpD_Y, timestamp: 2026-11-16T02:14:23.514Z
+lww: {
+    model: $health.physical_activity
+    property: $started_at
+    optional: false
+}
+member: system:model-property
+
+[twq-dRs3zzexHZ6JoB4n-tdQQtJXiHZj-7TrThDiLn8]
+nonce: F4FzNouERUG65kgG8yFBTnWOsNRFtGphV4ezir6rEN8, timestamp: 2026-11-16T02:14:23.514Z
+lww: {
+    name: "ended_at"
+    backend: "lww"
+    value_type: "i64"
+    minted_for: $health.physical_activity
+    target_model: none
+}
+member: system:property
+
+[M6NnRALeHHbd9lYDpNd6YgNEGEOZEazvIFHjolaFRtM]
+nonce: nZuBOzqiwV2aaxSgH1rsckXcH6aFuf8CVWomWMT2eVE, timestamp: 2026-11-16T02:14:23.514Z
+lww: {
+    model: $health.physical_activity
+    property: $ended_at
+    optional: true
+}
+member: system:model-property

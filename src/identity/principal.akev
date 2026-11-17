@@ -1,7 +1,63 @@
-model     identity.principal  Principal  id ZITgy1aws0-JJAI_D6t__wr3kAKaAIPZImNVQr1YLmU  at 1794795263388  nonce 8f80be064de69555e4be5c3554779515ef404332b63dd61601c2c9ce0d74617c
-property  kind          string  lww      id SNpy8mNteUTuGD6sCFVjH_za0g0Y4PcFvHvL4oZItBo  at 1794795263389  nonce 203e7264536ed1be15d0c882f4fbd08025b4096cbe0a0ff152d6291012d86497
-link      kind          required         id wbySqJILMgo8SS7kapgwfsJn5gFN7Tws11-W9bsXG9w  at 1794795263389  nonce 32faf4fba4d2488592c161530bb71e76fb7de25fe7d3a7820145bc2b06873ee7
-property  handle        string  lww      id d8hkaJmIk-bvv_Nqoh-HakCLfy8V9XXdLKtUhwjm3d0  at 1794795263389  nonce de34476c8295c5d0964972ddad5c7915c2b72b5b5f2192d381ad0b15a8ceaea0
-link      handle        required         id oW31x8cRzDSTHYzkaLFitqszGXCE26ZMdRwuQuSB7bM  at 1794795263389  nonce 4ee120a0b41b063abdd777735c71a4ab65f48335be36a862f495a10640da494b
-property  display_name  string  lww      id rZShtG3Z-n1Iq4nQOY8jgmhBPc5u57D8adSW4C7JHuU  at 1794795263389  nonce e29bf237fa716512dd446662c618d22ef3fc56c1c411b7a2014717f620228457
-link      display_name  required         id B1Ugk0qxHN3cPksHv_Ce3BJApRaLCNfC2pfR-aukV4s  at 1794795263389  nonce 753c6003276a0ed96ab3fa53333b436c8352384abcbe8f21c94d0eb54ecaf3de
+[ZITgy1aws0-JJAI_D6t__wr3kAKaAIPZImNVQr1YLmU]
+nonce: j4C-Bk3mlVXkvlw1VHeVFe9AQzK2PdYWAcLJzg10YXw, timestamp: 2026-11-16T02:14:23.388Z
+lww: { label: "identity.principal", name: "Principal" }, member: system:model
+
+[SNpy8mNteUTuGD6sCFVjH_za0g0Y4PcFvHvL4oZItBo]
+nonce: ID5yZFNu0b4V0MiC9PvQgCW0CWy-Cg_xUtYpEBLYZJc, timestamp: 2026-11-16T02:14:23.389Z
+lww: {
+    name: "kind"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $identity.principal
+    target_model: none
+}
+member: system:property
+
+[wbySqJILMgo8SS7kapgwfsJn5gFN7Tws11-W9bsXG9w]
+nonce: Mvr0-6TSSIWSwWFTC7cedvt94l_n06eCAUW8KwaHPuc, timestamp: 2026-11-16T02:14:23.389Z
+lww: {
+    model: $identity.principal
+    property: $kind
+    optional: false
+}
+member: system:model-property
+
+[d8hkaJmIk-bvv_Nqoh-HakCLfy8V9XXdLKtUhwjm3d0]
+nonce: 3jRHbIKVxdCWSXLdrVx5FcK3K1tfIZLTga0LFajOrqA, timestamp: 2026-11-16T02:14:23.389Z
+lww: {
+    name: "handle"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $identity.principal
+    target_model: none
+}
+member: system:property
+
+[oW31x8cRzDSTHYzkaLFitqszGXCE26ZMdRwuQuSB7bM]
+nonce: TuEgoLQbBjq913dzXHGkq2X0gzW-Nqhi9JWhBkDaSUs, timestamp: 2026-11-16T02:14:23.389Z
+lww: {
+    model: $identity.principal
+    property: $handle
+    optional: false
+}
+member: system:model-property
+
+[rZShtG3Z-n1Iq4nQOY8jgmhBPc5u57D8adSW4C7JHuU]
+nonce: 4pvyN_pxZRLdRGZixhjSLvP8VsHEEbeiAUcX9iAihFc, timestamp: 2026-11-16T02:14:23.389Z
+lww: {
+    name: "display_name"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $identity.principal
+    target_model: none
+}
+member: system:property
+
+[B1Ugk0qxHN3cPksHv_Ce3BJApRaLCNfC2pfR-aukV4s]
+nonce: dTxgAydqDtlqs_pTMztDbINSOEq8vo8hyU0OtU7K894, timestamp: 2026-11-16T02:14:23.389Z
+lww: {
+    model: $identity.principal
+    property: $display_name
+    optional: false
+}
+member: system:model-property

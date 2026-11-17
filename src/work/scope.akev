@@ -1,3 +1,23 @@
-model     work.scope  Scope   id iT1lR2sfIvf735FsTAYXpXI76PXKwkAxRZ5cyPti8gQ  at 1794795263902  nonce bfe8b298343da3746ee42a1daf37ad434a36da08f9f9d1550aec5cb404e33056
-property  title  string  lww  id Plt5j-bbvzLDTdpgDGcNwEr5E9DfN5UU98Ncmapejg4  at 1794795263902  nonce 1289b280d9efc76676a1c5e7a2c1057d2e71ea494c23f25f4fba32d09b59c6c4
-link      title  required     id 5pb0UfSSgWxvTB7VlGoL6YGnTxkhm0pnIZuqQN-SuJo  at 1794795263903  nonce 840e0d7636d10574f9cf20cc9daceb45ab508fa09b1073924328d5e35cc27c7f
+[iT1lR2sfIvf735FsTAYXpXI76PXKwkAxRZ5cyPti8gQ]
+nonce: v-iymDQ9o3Ru5CodrzetQ0o22gj5-dFVCuxctATjMFY, timestamp: 2026-11-16T02:14:23.902Z
+lww: { label: "work.scope", name: "Scope" }, member: system:model
+
+[Plt5j-bbvzLDTdpgDGcNwEr5E9DfN5UU98Ncmapejg4]
+nonce: EomygNnvx2Z2ocXnosEFfS5x6klMI_JfT7oy0JtZxsQ, timestamp: 2026-11-16T02:14:23.902Z
+lww: {
+    name: "title"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $work.scope
+    target_model: none
+}
+member: system:property
+
+[5pb0UfSSgWxvTB7VlGoL6YGnTxkhm0pnIZuqQN-SuJo]
+nonce: hA4NdjbRBXT5zyDMnazrRatQj6CbEHOSQyjV41zCfH8, timestamp: 2026-11-16T02:14:23.903Z
+lww: {
+    model: $work.scope
+    property: $title
+    optional: false
+}
+member: system:model-property

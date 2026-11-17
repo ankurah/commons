@@ -1,15 +1,143 @@
-model     git.checkout_state  CheckoutState  id ma3v4p3sBurgqG2sLcBeRjdDleP8lAqJ5oh9C2nyW40  at 1794795263564  nonce fb4cd9f37abbd2864403475aee60c70f56adb5ae20edb25d78c0157663e225d7
-property  side          string  lww          id bFSx-YH_kx435Uxm2_4mXi3d-9btDffCqt2UbSQFX1Y  at 1794795263564  nonce 90054920d008aa3bb3f433514bc937f502b6ab34197f3ee9f5ea0b1af6ea16ee
-link      side          required             id qbeRK1YK7uVl1b9zd8A69n6J8p3_bKBKMXjM3MOe5dg  at 1794795263564  nonce ae7d4cfada54db5c006449a3e81b1009bdb955898ef8ab64d09a4ee9f2eedd3e
-property  commit_sha    string  lww          id m2XbxstBaMWK0iMxNv5nqWtkJK0VNAUN4-ZsboZVjh0  at 1794795263564  nonce a21501993660d12672527214ca2cb4fb42a024f1ca0896ad0bc9c4baafacced7
-link      commit_sha    optional             id TYhzO-FiDfup6FTU6PB4zZoR9qKGsx_TRgOk_WpLe90  at 1794795263564  nonce 858f5228061f4e8c8edb166a88649d31a4d30a1eb6e036323e435aebfb1178b4
-property  head_blob     string  lww          id oWDaJBa839JIVEKbXOYfOhlq1_PSvknngdzMDNmAp3A  at 1794795263564  nonce 9169c062e10a17480b9d228b61cc64795babccb699c0f08aacb801e30a3257fa
-link      head_blob     optional             id YypNnDwQTJjbg0693au5F5JHdem-3iC85vIsmGwHPSo  at 1794795263564  nonce 7a70500b0f3a0877747a5599e6b65ec18230877fe54c7a52a520965d2ea48390
-property  index_blob    string  lww          id 8rOW5kJOvEfvxqla6ZqO-xFZlCvrUv6SPD-tydR9BZc  at 1794795263565  nonce 77f8129998af76cea4983e89e15eb912bdd29db01563b9ff36b38519a2b2fa77
-link      index_blob    optional             id qdFrwPFdog4rXSiPsw5x0y9FnIO9xNtPlmCQeHfbESA  at 1794795263565  nonce f15f1655edabd295114e3e66722168620a094cc64fd39f4dd9daa644da80a0f6
-property  nearest_blob  string  lww          id ise3sx0JlljxW44SQmWiZ5GyI26b0muKnzkq3sBCjc8  at 1794795263565  nonce ec7a41722b5b05fa70df0a92e206ecadaaaf5e026796b9221a87b3c31c4924f4
-link      nearest_blob  optional             id pnTOHWVIWxZJuYSM14djsIn_dx34h7fsl7wLKWF5tuQ  at 1794795263565  nonce 6dbce20fb4c32f698bad52211c0dc0b28ae935da3c7f890e682c00a65ecd9bd5
-property  basis_patch   string  lww          id mnn80diYJ3J0aqVGu6z_HEnMDv8az8DPMpnT4YUWTwA  at 1794795263565  nonce 57525eeacd34df692f9b371a7cca45c3a1be86bc058a24cc10d88f4096407fe9
-link      basis_patch   optional             id dFtY3B3vF_1ULcCC1JTYnS41ZvnVQrWStyCo8DWn_4w  at 1794795263565  nonce af47be6eca0ba848115c0c08b36416d57a42d5eb6ba6d2b44d37edf516efa7ec
-property  pieces        json    lww          id ZBwXXXJKG8hZfNRhFaSpvlEKGnnRegDYMM9SMTANFZA  at 1794795263565  nonce 21067d3be6ab0bff5f2524703e081fbd6f5c908bf53e5df385430a9142220230
-link      pieces        required             id 2Q2A8ii9fwZhCTvNGy6pDJxUB8vrtmoYoKRwGP3iZNc  at 1794795263565  nonce f2549153210d3e80c61ee617548904529eaced43df1baeddb25a71494a2e2405
+[ma3v4p3sBurgqG2sLcBeRjdDleP8lAqJ5oh9C2nyW40]
+nonce: -0zZ83q70oZEA0da7mDHD1atta4g7bJdeMAVdmPiJdc, timestamp: 2026-11-16T02:14:23.564Z
+lww: { label: "git.checkout_state", name: "CheckoutState" }, member: system:model
+
+[bFSx-YH_kx435Uxm2_4mXi3d-9btDffCqt2UbSQFX1Y]
+nonce: kAVJINAIqjuz9DNRS8k39QK2qzQZfz7p9eoLGvbqFu4, timestamp: 2026-11-16T02:14:23.564Z
+lww: {
+    name: "side"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $git.checkout_state
+    target_model: none
+}
+member: system:property
+
+[qbeRK1YK7uVl1b9zd8A69n6J8p3_bKBKMXjM3MOe5dg]
+nonce: rn1M-tpU21wAZEmj6BsQCb25VYmO-Ktk0JpO6fLu3T4, timestamp: 2026-11-16T02:14:23.564Z
+lww: {
+    model: $git.checkout_state
+    property: $side
+    optional: false
+}
+member: system:model-property
+
+[m2XbxstBaMWK0iMxNv5nqWtkJK0VNAUN4-ZsboZVjh0]
+nonce: ohUBmTZg0SZyUnIUyiy0-0KgJPHKCJatC8nEuq-sztc, timestamp: 2026-11-16T02:14:23.564Z
+lww: {
+    name: "commit_sha"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $git.checkout_state
+    target_model: none
+}
+member: system:property
+
+[TYhzO-FiDfup6FTU6PB4zZoR9qKGsx_TRgOk_WpLe90]
+nonce: hY9SKAYfToyO2xZqiGSdMaTTCh624DYyPkNa6_sReLQ, timestamp: 2026-11-16T02:14:23.564Z
+lww: {
+    model: $git.checkout_state
+    property: $commit_sha
+    optional: true
+}
+member: system:model-property
+
+[oWDaJBa839JIVEKbXOYfOhlq1_PSvknngdzMDNmAp3A]
+nonce: kWnAYuEKF0gLnSKLYcxkeVurzLaZwPCKrLgB4woyV_o, timestamp: 2026-11-16T02:14:23.564Z
+lww: {
+    name: "head_blob"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $git.checkout_state
+    target_model: none
+}
+member: system:property
+
+[YypNnDwQTJjbg0693au5F5JHdem-3iC85vIsmGwHPSo]
+nonce: enBQCw86CHd0elWZ5rZewYIwh3_lTHpSpSCWXS6kg5A, timestamp: 2026-11-16T02:14:23.564Z
+lww: {
+    model: $git.checkout_state
+    property: $head_blob
+    optional: true
+}
+member: system:model-property
+
+[8rOW5kJOvEfvxqla6ZqO-xFZlCvrUv6SPD-tydR9BZc]
+nonce: d_gSmZivds6kmD6J4V65Er3SnbAVY7n_NrOFGaKy-nc, timestamp: 2026-11-16T02:14:23.565Z
+lww: {
+    name: "index_blob"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $git.checkout_state
+    target_model: none
+}
+member: system:property
+
+[qdFrwPFdog4rXSiPsw5x0y9FnIO9xNtPlmCQeHfbESA]
+nonce: 8V8WVe2r0pURTj5mciFoYgoJTMZP059N2dqmRNqAoPY, timestamp: 2026-11-16T02:14:23.565Z
+lww: {
+    model: $git.checkout_state
+    property: $index_blob
+    optional: true
+}
+member: system:model-property
+
+[ise3sx0JlljxW44SQmWiZ5GyI26b0muKnzkq3sBCjc8]
+nonce: 7HpBcitbBfpw3wqS4gbsraqvXgJnlrkiGoezwxxJJPQ, timestamp: 2026-11-16T02:14:23.565Z
+lww: {
+    name: "nearest_blob"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $git.checkout_state
+    target_model: none
+}
+member: system:property
+
+[pnTOHWVIWxZJuYSM14djsIn_dx34h7fsl7wLKWF5tuQ]
+nonce: bbziD7TDL2mLrVIhHA3AsorpNdo8f4kOaCwApl7Nm9U, timestamp: 2026-11-16T02:14:23.565Z
+lww: {
+    model: $git.checkout_state
+    property: $nearest_blob
+    optional: true
+}
+member: system:model-property
+
+[mnn80diYJ3J0aqVGu6z_HEnMDv8az8DPMpnT4YUWTwA]
+nonce: V1Je6s0032kvmzcafMpFw6G-hrwFiiTMENiPQJZAf-k, timestamp: 2026-11-16T02:14:23.565Z
+lww: {
+    name: "basis_patch"
+    backend: "lww"
+    value_type: "string"
+    minted_for: $git.checkout_state
+    target_model: none
+}
+member: system:property
+
+[dFtY3B3vF_1ULcCC1JTYnS41ZvnVQrWStyCo8DWn_4w]
+nonce: r0e-bsoLqEgRXAwIs2QW1XpC1etrptK0TTft9Rbvp-w, timestamp: 2026-11-16T02:14:23.565Z
+lww: {
+    model: $git.checkout_state
+    property: $basis_patch
+    optional: true
+}
+member: system:model-property
+
+[ZBwXXXJKG8hZfNRhFaSpvlEKGnnRegDYMM9SMTANFZA]
+nonce: IQZ9O-arC_9fJSRwPggfvW9ckIv1Pl3zhUMKkUIiAjA, timestamp: 2026-11-16T02:14:23.565Z
+lww: {
+    name: "pieces"
+    backend: "lww"
+    value_type: "json"
+    minted_for: $git.checkout_state
+    target_model: none
+}
+member: system:property
+
+[2Q2A8ii9fwZhCTvNGy6pDJxUB8vrtmoYoKRwGP3iZNc]
+nonce: 8lSRUyENPoDGHuYXVIkEUp6s7UPfG67dslpxSUouJAU, timestamp: 2026-11-16T02:14:23.565Z
+lww: {
+    model: $git.checkout_state
+    property: $pieces
+    optional: false
+}
+member: system:model-property
