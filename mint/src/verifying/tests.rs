@@ -1,5 +1,5 @@
 use super::*;
-use crate::copies::{copied, edit, files, mint, sources};
+use crate::copies::{copied, edit_and_restate, files, mint, sources};
 use ankurah_commons::{
     akev::{self, Problem},
     namespaces::NAMESPACES,
@@ -17,23 +17,6 @@ fn minted() -> TempDir {
 
 fn failure(src: &TempDir) -> VerifyError {
     verify(src.path(), NAMESPACES).unwrap_err()
-}
-
-/// Edits the first occurrence of `from` in the file at `path`, then gives each block whose
-/// event no longer is the entity its header names the header of the entity it is, so that
-/// the file reads again.
-fn edit_and_restate(path: &Path, from: &str, to: &str) {
-    edit(path, from, to);
-    loop {
-        let text = fs::read_to_string(path).unwrap();
-        match akev::read(&[(path, &text)]) {
-            Ok(_) => return,
-            Err(ReadError { problem: Problem::NotTheHeadersEntity { header, built }, .. }) => {
-                fs::write(path, text.replace(&header.to_base64(), &built.to_base64())).unwrap()
-            }
-            Err(error) => panic!("{error}"),
-        }
-    }
 }
 
 /// Each entity keeps its nonce and timestamp, so minting the kept mint again under the
@@ -119,6 +102,24 @@ fn a_file_that_states_other_events_than_the_sources_need_fails_naming_it() {
     let error = failure(&src);
     assert_eq!(error.path, edge_kind);
     assert!(matches!(error.failure, Failure::NotAsDeclared(Minted::EdgeKind("serves"))), "{error}");
+}
+
+/// A genesis that no declaration needs, beside every one that the declarations do.
+#[test]
+fn a_kept_event_no_declaration_needs_fails_naming_its_file_and_id() {
+    let src = minted();
+    let intention = src.path().join("cognition").join("intention.akev");
+    let spare = format!(
+        "member: system:model\n\n[{}]\nnonce: {}, timestamp: 1970-01-01T00:00:00.000Z\nlww: {{ name: \"spare\" }}\n",
+        EntityId::from_bytes([0; 32]),
+        EntityId::from_bytes([1; 32])
+    );
+    edit_and_restate(&intention, "member: system:model\n", &spare);
+    let text = fs::read_to_string(&intention).unwrap();
+    let spare = akev::read(&[(&intention, &text)]).unwrap().remove(0)[1].entity_id;
+    let error = failure(&src);
+    assert_eq!(error.path, intention);
+    assert!(matches!(error.failure, Failure::Unneeded(id) if id == spare), "{error}");
 }
 
 #[test]

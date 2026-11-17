@@ -160,3 +160,42 @@ fn drawn() -> ([u8; 32], u64) {
     let since_1970 = SystemTime::now().duration_since(UNIX_EPOCH).expect("the clock reads after 1970");
     (rand::random(), since_1970.as_millis().try_into().expect("milliseconds since 1970 fit in 64 bits"))
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::copies::{copied, edit_and_restate};
+    use ankurah_commons::{akev, namespaces::NAMESPACES};
+    use std::fs;
+
+    /// The events of the file at `path`.
+    fn events(path: &Path) -> Vec<Event> {
+        akev::read(&[(path, &fs::read_to_string(path).unwrap())]).unwrap().remove(0)
+    }
+
+    /// A kept link that holds another optionality than its property declares: the mint
+    /// draws the link anew, every other entity of the file keeps its nonce and timestamp,
+    /// and the stale link is no longer needed.
+    #[test]
+    fn a_changed_need_draws_its_event_anew_and_leaves_the_kept_one_unneeded() {
+        let src = copied();
+        let intention = src.path().join("cognition").join("intention.akev");
+        let before = events(&intention);
+        edit_and_restate(&intention, "optional: false", "optional: true");
+        let kept = events(&intention);
+        let stale: Vec<EntityId> =
+            kept.iter().map(|event| event.entity_id).filter(|id| before.iter().all(|event| event.entity_id != *id)).collect();
+        assert_eq!(stale.len(), 1);
+
+        let minted = mint(src.path(), NAMESPACES).unwrap();
+        let file = minted.iter().find(|file| file.path == intention).unwrap();
+        assert_eq!(file.drawn, [Minted::Definition(Definition::Link("title"))]);
+        assert_eq!(file.unneeded, stale);
+        // The model's definition, then `title`'s, then the link drawn anew.
+        let drawn = &file.geneses[2];
+        assert!(kept.iter().all(|event| *event.nonce() != drawn.nonce));
+        for (index, (genesis, event)) in file.geneses.iter().zip(&before).enumerate().filter(|(index, _)| *index != 2) {
+            assert_eq!((genesis.nonce, genesis.timestamp), (*event.nonce(), event.timestamp()), "the genesis at {index}");
+        }
+    }
+}
