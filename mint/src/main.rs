@@ -5,7 +5,10 @@
 #[cfg(test)]
 mod copies;
 mod declaring;
+mod edge_kinds;
+mod kept;
 mod minting;
+mod placement;
 mod verifying;
 mod writing;
 
@@ -24,8 +27,8 @@ use crate::{minting::MintError, verifying::VerifyError, writing::WriteError};
 #[command(about = "Mints the definitions of the Commons' models and kinds of edge into .akev files, and checks them")]
 enum Command {
     /// Mint the definitions of every model of every namespace, and the records of the kinds
-    /// of edge, into `.akev` files beside the structs that declare them. An entity that the
-    /// kept mint there holds keeps its time and nonce.
+    /// of edge, into `.akev` files beside the structs that declare them. An entity whose
+    /// event the kept mint there holds keeps that event's nonce and timestamp.
     Mint {
         /// The namespaces' parent directory.
         #[arg(long, default_value_os_t = sources())]
@@ -72,14 +75,16 @@ fn sources() -> PathBuf {
 
 fn mint(src: &Path) -> Result<(), CommandError> {
     let minted = minting::mint(src, NAMESPACES)?;
-    writing::write(src, &minted)?;
+    writing::write(&minted)?;
 
-    let models: usize = minted.iter().map(|namespace| namespace.models.len()).sum();
-    let properties: usize = minted.iter().flat_map(|namespace| &namespace.models).map(|model| model.properties.len()).sum();
-    let edge_kinds: usize = minted.iter().flat_map(|namespace| &namespace.edge_kinds).map(|edge_kinds| edge_kinds.kinds.len()).sum();
+    let properties: usize = minted.iter().map(|file| file.descriptor.properties.len()).sum();
+    let edge_kinds: usize = NAMESPACES.iter().flat_map(|namespace| &namespace.edge_kinds).map(|edge_kinds| edge_kinds.kinds.len()).sum();
+    let drawn: usize = minted.iter().map(|file| file.drawn.len()).sum();
     println!(
-        "Minted {models} models in {} namespaces, with {properties} properties and their links, and {edge_kinds} edge kinds, into {}",
+        "Minted {} models in {} namespaces, with {properties} properties and their links, and {edge_kinds} edge kinds, into {}; {drawn} \
+         events drawn anew",
         minted.len(),
+        NAMESPACES.len(),
         src.display()
     );
     Ok(())
@@ -87,6 +92,6 @@ fn mint(src: &Path) -> Result<(), CommandError> {
 
 fn verify(src: &Path) -> Result<(), CommandError> {
     let verified = verifying::verify(src, NAMESPACES)?;
-    println!("Verified {} files, rebuilding {} creation events", verified.files, verified.events);
+    println!("Verified {} files, reading {} creation events", verified.files, verified.events);
     Ok(())
 }

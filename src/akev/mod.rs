@@ -31,8 +31,10 @@ mod reading;
 #[cfg(test)]
 mod sample;
 mod timestamp;
+mod writing;
 
 pub use genesis::{BackendOperations, BuildError, Genesis, Operations};
 pub use read_error::{Problem, ReadError};
 pub use reading::read;
 pub use timestamp::TimestampError;
+pub use writing::{write, WriteError};

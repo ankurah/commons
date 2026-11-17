@@ -1,6 +1,11 @@
 use super::*;
 use crate::copies::{copied, edit, files, mint, sources};
-use ankurah_commons::namespaces::NAMESPACES;
+use ankurah_commons::{
+    akev::{self, Problem},
+    namespaces::NAMESPACES,
+    registration::Definition,
+};
+use std::fs;
 use tempfile::TempDir;
 
 /// A copy of the sources with the kept mint minted again.
@@ -14,9 +19,26 @@ fn failure(src: &TempDir) -> VerifyError {
     verify(src.path(), NAMESPACES).unwrap_err()
 }
 
-/// Each entity keeps its time and nonce, so minting the kept mint again under the same
-/// declarations and the same format of Ankurah's events writes every file as it was, the
-/// ids the declarations state with them.
+/// Edits the first occurrence of `from` in the file at `path`, then gives each block whose
+/// event no longer is the entity its header names the header of the entity it is, so that
+/// the file reads again.
+fn edit_and_restate(path: &Path, from: &str, to: &str) {
+    edit(path, from, to);
+    loop {
+        let text = fs::read_to_string(path).unwrap();
+        match akev::read(&[(path, &text)]) {
+            Ok(_) => return,
+            Err(ReadError { problem: Problem::NotTheHeadersEntity { header, built }, .. }) => {
+                fs::write(path, text.replace(&header.to_base64(), &built.to_base64())).unwrap()
+            }
+            Err(error) => panic!("{error}"),
+        }
+    }
+}
+
+/// Each entity keeps its nonce and timestamp, so minting the kept mint again under the
+/// same declarations and the same encoding of Ankurah's events writes every file as it
+/// was, the ids the declarations state with them.
 #[test]
 fn minting_the_kept_mint_again_changes_no_file_and_it_verifies() {
     let src = minted();
@@ -25,54 +47,78 @@ fn minting_the_kept_mint_again_changes_no_file_and_it_verifies() {
     let models = NAMESPACES.iter().map(|namespace| namespace.models.len()).sum::<usize>();
     let definitions: usize = NAMESPACES.iter().flat_map(|namespace| namespace.models).map(|model| 1 + 2 * model().properties.len()).sum();
     let edge_kinds: usize = NAMESPACES.iter().flat_map(|namespace| &namespace.edge_kinds).map(|edge_kinds| edge_kinds.kinds.len()).sum();
-    assert_eq!((verified.files, verified.events), (models + 1, definitions + edge_kinds));
+    assert_eq!((verified.files, verified.events), (models, definitions + edge_kinds));
 }
 
-/// A file whose model line gives an id other than the one the struct declares fails, naming
-/// the file, before its events are rebuilt.
-#[test]
-fn a_model_line_whose_id_the_struct_does_not_declare_fails_naming_the_file() {
-    let src = minted();
-    let intention = src.path().join("cognition").join("intention.akev");
-    let text = fs::read_to_string(&intention).unwrap();
-    let (_, ids) = ModelDefinitions::parse(&text).unwrap();
-    edit(&intention, &ids[0].to_base64(), &EntityId::from_bytes([1; 32]).to_base64());
-    let error = failure(&src);
-    assert_eq!(error.path, intention);
-    assert!(matches!(error.failure, Failure::NotAsDeclared("id")), "{error}");
+/// `cognition.intention` as its struct declares it, but for the id.
+#[derive(ankurah::Model, Debug, Clone)]
+#[model(label = "cognition.intention")]
+#[model(id = "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE")]
+#[model(no_ffi)]
+pub struct Intention {
+    #[active_type(LWW)]
+    pub title: String,
+    #[active_type(LWW)]
+    pub description: String,
 }
 
-/// A creation field changed in the writer's form still parses, but rebuilds another event.
+/// After a mint that changed a model's id, its struct declares the old id until the tool is
+/// built again; the file's id is the one that holds.
 #[test]
-fn a_changed_creation_field_fails_the_rebuild_naming_the_file() {
+fn a_struct_that_declares_another_id_than_its_file_states_fails_naming_the_file() {
+    static NAMESPACES: &[Namespace] =
+        &[Namespace { name: "cognition", models: &[<Intention as ankurah::Model>::descriptor], edge_kinds: None }];
+    let src = tempfile::tempdir().unwrap();
+    let cognition = src.path().join("cognition");
+    fs::create_dir(&cognition).unwrap();
+    for file in ["intention.rs", "intention.akev"] {
+        fs::copy(sources().join("cognition").join(file), cognition.join(file)).unwrap();
+    }
+    let error = verify(src.path(), NAMESPACES).unwrap_err();
+    assert_eq!(error.path, cognition.join("intention.akev"));
+    let kept = EntityId::from_base64(<ankurah_commons::cognition::Intention as ankurah::Model>::descriptor().explicit_id.unwrap()).unwrap();
+    assert!(
+        matches!(error.failure, Failure::OtherId { stated, declared: Some("AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE") } if stated == kept),
+        "{error}"
+    );
+}
+
+/// A nonce changed by a character reads as another event than its header names.
+#[test]
+fn a_changed_nonce_fails_the_read_naming_the_file_and_the_line() {
     let src = minted();
     let file = src.path().join("cognition").join("intention.akev");
     let text = fs::read_to_string(&file).unwrap();
-    let digit = text.find(" nonce ").unwrap() + " nonce ".len();
-    let changed = if &text[digit..digit + 1] == "0" { "1" } else { "0" };
+    let digit = text.find("nonce: ").unwrap() + "nonce: ".len();
+    let changed = if &text[digit..digit + 1] == "A" { "B" } else { "A" };
     fs::write(&file, format!("{}{changed}{}", &text[..digit], &text[digit + 1..])).unwrap();
     let error = failure(&src);
     assert_eq!(error.path, file);
-    assert!(matches!(error.failure, Failure::NotRebuilt(RebuildError::NotTheMintedEvent { .. })), "{error}");
+    let read = match error.failure {
+        Failure::Unread(read) => read,
+        failure => panic!("{failure}"),
+    };
+    assert!(matches!(*read, ReadError { line: 1, problem: Problem::NotTheHeadersEntity { .. }, .. }), "{read}");
 }
 
 /// A file must state what the sources declare, so that a mint left behind by a change to a
-/// struct or to the table of edge kinds fails.
+/// struct or to the table of edge kinds fails, though every file reads.
 #[test]
-fn a_file_that_states_other_than_the_sources_fails_naming_it() {
+fn a_file_that_states_other_events_than_the_sources_need_fails_naming_it() {
     let src = minted();
     let intention = src.path().join("cognition").join("intention.akev");
-    edit(&intention, "required", "optional");
+    let kept = fs::read_to_string(&intention).unwrap();
+    edit_and_restate(&intention, "optional: false", "optional: true");
     let error = failure(&src);
     assert_eq!(error.path, intention);
-    assert!(matches!(error.failure, Failure::NotAsDeclared("optionality")), "{error}");
-    edit(&intention, "optional", "required");
+    assert!(matches!(error.failure, Failure::NotAsDeclared(Minted::Definition(Definition::Link("title")))), "{error}");
+    fs::write(&intention, kept).unwrap();
 
-    let edge_kinds = src.path().join("graph").join(EDGE_KINDS_FILE);
-    edit(&edge_kinds, "Many to many", "Many to one");
+    let edge_kind = src.path().join("graph").join("edge_kind.akev");
+    edit_and_restate(&edge_kind, "Many to many", "Many to one");
     let error = failure(&src);
-    assert_eq!(error.path, edge_kinds);
-    assert!(matches!(error.failure, Failure::NotAsListed), "{error}");
+    assert_eq!(error.path, edge_kind);
+    assert!(matches!(error.failure, Failure::NotAsDeclared(Minted::EdgeKind("serves"))), "{error}");
 }
 
 #[test]

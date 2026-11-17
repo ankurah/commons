@@ -9,7 +9,7 @@ use std::{
 use ankurah_commons::namespaces::NAMESPACES;
 use tempfile::TempDir;
 
-use crate::{minting, writing};
+use crate::{minting, placement, writing};
 
 /// The crate's own sources.
 pub fn sources() -> PathBuf {
@@ -30,7 +30,7 @@ fn copy_sources(from: &Path, to: &Path) {
         if path.is_dir() {
             fs::create_dir(&target).unwrap();
             copy_sources(&path, &target);
-        } else if path.extension().is_some_and(|extension| extension == "rs" || extension == writing::EXTENSION) {
+        } else if path.extension().is_some_and(|extension| extension == "rs" || extension == placement::EXTENSION) {
             fs::copy(&path, &target).unwrap();
         }
     }
@@ -38,7 +38,7 @@ fn copy_sources(from: &Path, to: &Path) {
 
 /// Mints into `src` as `mint` does.
 pub fn mint(src: &Path) {
-    writing::write(src, &minting::mint(src, NAMESPACES).unwrap()).unwrap();
+    writing::write(&minting::mint(src, NAMESPACES).unwrap()).unwrap();
 }
 
 /// Every file under `dir`, by its path from `dir`, with its text.

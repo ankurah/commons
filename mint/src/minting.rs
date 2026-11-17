@@ -1,112 +1,162 @@
-//! Mints the definitions of every listed model, and the records of the listed kinds of edge,
-//! without a node. An entity's values are what registering its model's declaration writes, or
-//! a kind's name and description. Its time and nonce are those of its line in the kept mint,
-//! when the kept mint has one, and are drawn now otherwise. Its id follows from those, so
-//! minting a kept mint again changes only what the declarations or Ankurah's events changed.
+//! Mints the definitions of every listed model, and the records of the listed kinds of
+//! edge, without a node. An entity's operations are what registering its model's
+//! declaration writes (`ankurah_commons::registration`), or a kind's record
+//! (`edge_kinds`). It keeps the nonce and timestamp of a kept event of its file whose
+//! operations are exactly those, and draws a fresh nonce and the current time otherwise.
+//! Its id follows from those, so minting a kept mint again changes only what the
+//! declarations changed.
 
 use std::{
-    fs, io,
+    fmt,
     path::{Path, PathBuf},
     time::{SystemTime, UNIX_EPOCH},
 };
 
-use ankurah::{core::schema::ModelStructDescriptor, EntityId};
+use ankurah::{
+    core::schema::ModelStructDescriptor,
+    proto::{Event, OperationSet},
+    EntityId,
+};
 use ankurah_commons::{
-    akev::{Creation, EdgeKindRecord, EdgeKinds, ModelDefinitions, ParseError},
+    akev::{BuildError, Genesis},
     namespaces::Namespace,
-    rebuilding::Definition,
+    registration::{self, Definition},
 };
 use thiserror::Error;
 
-use crate::writing::{self, WriteError, EDGE_KINDS_FILE};
+use crate::{
+    edge_kinds::{self, EdgeKindModel},
+    kept::{Kept, KeptError},
+    placement::{self, PlaceError, EXTENSION},
+};
 
-/// What minting one namespace made: each model's definitions, and the records of the kinds
-/// of edge minted with it.
-pub struct MintedNamespace {
-    pub namespace: &'static Namespace,
-    pub models: Vec<ModelDefinitions>,
-    pub edge_kinds: Option<EdgeKinds>,
+/// What minting made of one model: the file of its definitions, beside the struct that
+/// declares it, and, for the model whose records the kinds of edge are, those records after
+/// the definitions.
+pub struct MintedFile {
+    pub descriptor: &'static ModelStructDescriptor,
+    /// The struct's source, which declares the model's id.
+    pub source: PathBuf,
+    /// The `.akev` file beside it.
+    pub path: PathBuf,
+    /// The id of the model's definition.
+    pub model: EntityId,
+    pub geneses: Vec<Genesis>,
+    /// What the file needs that no kept event matched, whose nonce and timestamp were drawn.
+    pub drawn: Vec<Minted>,
+    /// The kept events of the file that nothing it needs matched.
+    pub unneeded: Vec<EntityId>,
+}
+
+/// An entity the mint makes: one of a model's definitions, or the record of a kind of edge.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Minted {
+    Definition(Definition),
+    EdgeKind(&'static str),
+}
+
+impl fmt::Display for Minted {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Minted::Definition(Definition::Model) => f.write_str("the model's definition"),
+            Minted::Definition(Definition::Property(name)) => write!(f, "the definition of the property `{name}`"),
+            Minted::Definition(Definition::Link(name)) => write!(f, "the link that gives the model the property `{name}`"),
+            Minted::EdgeKind(name) => write!(f, "the record of the kind of edge `{name}`"),
+        }
+    }
 }
 
 /// Why minting stopped.
 #[derive(Debug, Error)]
 pub enum MintError {
     #[error(transparent)]
-    Placement(#[from] WriteError),
-    #[error("{}: the kept mint cannot be read: {source}", path.display())]
-    Unreadable { path: PathBuf, source: io::Error },
-    #[error("{}: the kept mint does not parse: {source}", path.display())]
-    Unparsable { path: PathBuf, source: ParseError },
+    Placement(#[from] PlaceError),
+    #[error("the kept mint: {0}")]
+    Kept(#[from] KeptError),
+    #[error("{label}: the operations do not build: {source}")]
+    Build { label: &'static str, source: BuildError },
+    #[error("the kinds of edge are records of {label}, which declares no property `{property}`")]
+    NoEdgeKindProperty { label: &'static str, property: &'static str },
 }
 
-/// Mints every model of `namespaces`, and their kinds of edge, keeping the times and nonces of
-/// the kept mint under `src`, the namespaces' parent directory.
-pub fn mint(src: &Path, namespaces: &'static [Namespace]) -> Result<Vec<MintedNamespace>, MintError> {
-    namespaces
-        .iter()
-        .map(|namespace| {
-            let directory = src.join(namespace.name);
-            let mut models = Vec::with_capacity(namespace.models.len());
-            for model in namespace.models {
-                let descriptor = model();
-                models.push(definitions(descriptor, kept(&writing::model_file(&directory, descriptor.name)?, ModelDefinitions::parse)?));
+/// Mints every model of `namespaces`, and their kinds of edge, keeping the nonces and
+/// timestamps of the kept mint under `src`, the namespaces' parent directory.
+pub fn mint(src: &Path, namespaces: &'static [Namespace]) -> Result<Vec<MintedFile>, MintError> {
+    let kept = Kept::read(src)?;
+    let mut files = Vec::new();
+    for namespace in namespaces {
+        let directory = src.join(namespace.name);
+        for model in namespace.models {
+            let descriptor = model();
+            let source = placement::model_source(&directory, descriptor.name)?;
+            let path = source.with_extension(EXTENSION);
+            let mut keeping = Keeping::new(kept.events(&path));
+            let built = |source| MintError::Build { label: descriptor.label, source };
+            let geneses = registration::definitions(descriptor, |definition, operations| {
+                keeping.creation(Minted::Definition(definition), operations)
+            })
+            .map_err(built)?;
+            let ids = geneses.iter().map(|genesis| Ok(genesis.event()?.entity_id)).collect::<Result<Vec<_>, _>>().map_err(built)?;
+            let mut file = MintedFile { descriptor, source, path, model: ids[0], geneses, drawn: Vec::new(), unneeded: Vec::new() };
+            let records_of = namespace.edge_kinds.as_ref().filter(|edge_kinds| (edge_kinds.model)().label == descriptor.label);
+            if let Some(edge_kinds) = records_of {
+                // Each property's definition follows the model's, and the definition and link
+                // of each property before it.
+                let property = |property| {
+                    let index = descriptor.properties.iter().position(|declared| declared.name == property);
+                    let index = index.ok_or(MintError::NoEdgeKindProperty { label: descriptor.label, property })?;
+                    Ok::<_, MintError>(ids[1 + 2 * index])
+                };
+                let model = EdgeKindModel { model: ids[0], name: property("name")?, description: property("description")? };
+                for &(name, description) in edge_kinds.kinds {
+                    let operations = edge_kinds::record(&model, name, description);
+                    let (nonce, timestamp) = keeping.creation(Minted::EdgeKind(name), &operations.build().map_err(built)?);
+                    file.geneses.push(Genesis { nonce, timestamp, operations });
+                }
             }
-            let edge_kinds = match &namespace.edge_kinds {
-                Some(edge_kinds) => Some(records(edge_kinds.kinds, kept(&directory.join(EDGE_KINDS_FILE), EdgeKinds::parse)?)),
-                None => None,
-            };
-            Ok(MintedNamespace { namespace, models, edge_kinds })
-        })
-        .collect()
-}
-
-/// The definitions that registering `descriptor`'s model writes, each entity keeping the time
-/// and nonce of its line in `kept`.
-fn definitions(descriptor: &ModelStructDescriptor, kept: Option<ModelDefinitions>) -> ModelDefinitions {
-    let kept_property = |name: &str| kept.as_ref().and_then(|kept| kept.properties.iter().find(|property| property.name == name));
-    ModelDefinitions::declared(descriptor, |definition| {
-        let kept = match definition {
-            Definition::Model => kept.as_ref().map(|kept| kept.model),
-            Definition::Property(name) => kept_property(name).map(|kept| kept.property),
-            Definition::Link(name) => kept_property(name).map(|kept| kept.link),
-        };
-        kept.unwrap_or_else(drawn)
-    })
-}
-
-/// A record of each kind in `table`, its name and description, keeping the time and nonce of
-/// its line in `kept`.
-fn records(table: &[(&str, &str)], kept: Option<EdgeKinds>) -> EdgeKinds {
-    let kept_record = |name: &str| kept.as_ref().and_then(|kept| kept.kinds.iter().find(|kind| kind.name == name)).map(|kind| kind.record);
-    let kinds = table
-        .iter()
-        .map(|&(name, description)| EdgeKindRecord {
-            name: name.to_owned(),
-            description: description.to_owned(),
-            record: kept_record(name).unwrap_or_else(drawn),
-        })
-        .collect();
-    EdgeKinds { kinds }
-}
-
-/// How a minted file's text is read: what it states, and the id each line states.
-type Parse<T> = fn(&str) -> Result<(T, Vec<EntityId>), ParseError>;
-
-/// What the kept mint's file at `path` states, if there is one. The ids its lines state are
-/// ignored, so that a mint whose events Ankurah now encodes otherwise keeps its times and
-/// nonces.
-fn kept<T>(path: &Path, parse: Parse<T>) -> Result<Option<T>, MintError> {
-    match fs::read_to_string(path) {
-        Ok(text) => {
-            parse(&text).map(|(stated, _ids)| Some(stated)).map_err(|source| MintError::Unparsable { path: path.to_owned(), source })
+            (file.drawn, file.unneeded) = keeping.finish();
+            files.push(file);
         }
-        Err(error) if error.kind() == io::ErrorKind::NotFound => Ok(None),
-        Err(source) => Err(MintError::Unreadable { path: path.to_owned(), source }),
+    }
+    Ok(files)
+}
+
+/// The kept events of one file, and which of them the mint has kept.
+struct Keeping<'k> {
+    kept: &'k [Event],
+    used: Vec<bool>,
+    drawn: Vec<Minted>,
+}
+
+impl<'k> Keeping<'k> {
+    fn new(kept: &'k [Event]) -> Self {
+        Keeping { kept, used: vec![false; kept.len()], drawn: Vec::new() }
+    }
+
+    /// The nonce and timestamp of `minted`, whose operations are `operations`: those of the
+    /// first kept event not yet used with exactly these operations, or drawn now.
+    fn creation(&mut self, minted: Minted, operations: &OperationSet) -> ([u8; 32], u64) {
+        match (0..self.kept.len()).find(|&index| !self.used[index] && self.kept[index].operations() == operations) {
+            Some(index) => {
+                self.used[index] = true;
+                (*self.kept[index].nonce(), self.kept[index].timestamp())
+            }
+            None => {
+                self.drawn.push(minted);
+                drawn()
+            }
+        }
+    }
+
+    /// What was drawn, and the kept events nothing used.
+    fn finish(self) -> (Vec<Minted>, Vec<EntityId>) {
+        let unused = self.kept.iter().zip(&self.used).filter(|(_, used)| !**used).map(|(event, _)| event.entity_id).collect();
+        (self.drawn, unused)
     }
 }
 
-/// The time and nonce of an entity the kept mint does not hold: now, and a fresh nonce.
-fn drawn() -> Creation {
+/// The nonce and timestamp of an entity the kept mint does not hold: a fresh nonce, and now.
+fn drawn() -> ([u8; 32], u64) {
     let since_1970 = SystemTime::now().duration_since(UNIX_EPOCH).expect("the clock reads after 1970");
-    Creation { at: since_1970.as_millis().try_into().expect("milliseconds since 1970 fit in 64 bits"), nonce: rand::random() }
+    (rand::random(), since_1970.as_millis().try_into().expect("milliseconds since 1970 fit in 64 bits"))
 }

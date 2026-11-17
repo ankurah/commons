@@ -7,11 +7,12 @@
 //!
 //! The models' definitions are minted once and kept beside their structs, as events in the
 //! text form of `akev`. `seed` loads them into a durable node, so that the models take the
-//! minted ids there.
+//! minted ids there; `registration` makes the events of any declaration.
 
 pub mod akev;
 pub mod namespaces;
 pub mod property;
+pub mod registration;
 mod seed;
 #[cfg(any(feature = "identity", feature = "records", feature = "git", feature = "work"))]
 mod support;

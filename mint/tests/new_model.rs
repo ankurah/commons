@@ -8,7 +8,7 @@ use std::{
     process::Command,
 };
 
-use ankurah_commons::akev::ModelDefinitions;
+use ankurah_commons::akev;
 
 /// A model declared after the mint was kept.
 const HUNCH: &str = "use ankurah::Model;
@@ -82,10 +82,13 @@ fn a_model_declared_anew_is_minted_from_its_declaration_alone() {
     edit(&src.join("namespaces.rs"), listed, &format!("declared::<crate::cognition::Hunch>(),\n            {listed}"));
 
     run(root.path(), "mint");
-    let (definitions, ids) = ModelDefinitions::parse(&fs::read_to_string(cognition.join("hunch.akev")).unwrap()).unwrap();
-    assert_eq!(definitions.label, "cognition.hunch");
-    assert_eq!(definitions.properties.iter().map(|property| property.name.as_str()).collect::<Vec<_>>(), ["words"]);
-    let declared = format!("#[model(label = \"cognition.hunch\")]\n#[model(id = \"{}\")]\n", ids[0].to_base64());
+    let hunch = cognition.join("hunch.akev");
+    let text = fs::read_to_string(&hunch).unwrap();
+    let events = akev::read(&[(&hunch, &text)]).unwrap().remove(0);
+    assert_eq!(events.len(), 3, "the model, the property `words` and its link:\n{text}");
+    assert!(text.contains(r#"lww: { label: "cognition.hunch", name: "Hunch" }, member: system:model"#), "{text}");
+    assert!(text.contains(r#"    name: "words""#), "{text}");
+    let declared = format!("#[model(label = \"cognition.hunch\")]\n#[model(id = \"{}\")]\n", events[0].entity_id);
     assert!(fs::read_to_string(cognition.join("hunch.rs")).unwrap().contains(&declared));
     for kept in ["intuition.akev", "intention.akev"] {
         assert_eq!(

@@ -1,31 +1,26 @@
 //! Checks the `.akev` files a mint keeps in the crate's sources, stopping at the first that
 //! fails:
 //!
-//! - every listed model has its file beside its struct, the `graph` namespace has the edge
-//!   kinds' file, and no other `.akev` file is there;
-//! - each file parses, in exactly the form the writer gives it;
-//! - each states its model as the struct declares it: its label, its name, its id, and its
-//!   properties in order, each with its value type, backend and whether it is optional;
-//!   the edge kinds' file states the kinds the `graph` namespace's table lists, in order;
-//! - every creation event rebuilt from a file has the id its line gives.
+//! - every listed model has its file beside its struct, and no other `.akev` file is there;
+//! - the files read: every block builds an event, the genesis of the entity its header names;
+//! - each file states exactly the events the declarations need, the definitions of its model
+//!   as its struct declares it and, beside `graph.edge_kind`'s, the records of the kinds of
+//!   edge the `graph` namespace's table lists; and the struct declares the id the file states
+//!   for its model.
 //!
 //! It does not check who minted the events, since nothing is signed.
 
-use std::{
-    collections::BTreeSet,
-    fs, io,
-    path::{Path, PathBuf},
-};
+use std::path::{Path, PathBuf};
 
-use ankurah::{core::schema::ModelStructDescriptor, EntityId};
-use ankurah_commons::{
-    akev::{EdgeKinds, ModelDefinitions, ParseError},
-    namespaces::Namespace,
-    rebuilding::RebuildError,
-};
+use ankurah::EntityId;
+use ankurah_commons::{akev::ReadError, namespaces::Namespace};
 use thiserror::Error;
 
-use crate::writing::{self, WriteError, EDGE_KINDS_FILE};
+use crate::{
+    kept::KeptError,
+    minting::{self, MintError, Minted},
+    placement::{self, PlaceError, EXTENSION},
+};
 
 #[cfg(test)]
 mod tests;
@@ -43,22 +38,20 @@ pub struct VerifyError {
 pub enum Failure {
     #[error("is missing")]
     Missing,
-    #[error("cannot be read: {0}")]
-    Unreadable(io::Error),
     #[error("cannot be placed: {0}")]
-    Unplaced(WriteError),
+    Unplaced(PlaceError),
     #[error("is a minted file of nothing listed")]
     Stray,
-    #[error("does not parse: {0}")]
-    Unparsable(ParseError),
-    #[error("states a {0} other than the struct declares")]
-    NotAsDeclared(&'static str),
-    #[error("states other kinds of edge than the `graph` namespace's table lists")]
-    NotAsListed,
-    #[error("lies beside no definitions of the edge kinds' model")]
-    NoEdgeKindModel,
-    #[error("does not rebuild: {0}")]
-    NotRebuilt(RebuildError),
+    #[error("does not read, at line {}: {}", .0.line, .0.problem)]
+    Unread(Box<ReadError>),
+    #[error("cannot be minted: {0}")]
+    Unminted(Box<MintError>),
+    #[error("states no event of {0} as the declarations need it")]
+    NotAsDeclared(Minted),
+    #[error("states the genesis of {0}, which the declarations do not need")]
+    Unneeded(EntityId),
+    #[error("states the model's id as {stated}, and its struct declares {declared:?}")]
+    OtherId { stated: EntityId, declared: Option<&'static str> },
 }
 
 /// What `verify` checked.
@@ -69,86 +62,39 @@ pub struct Verified {
 }
 
 /// Checks the minted files of `namespaces` under `src`, the namespaces' parent directory.
-pub fn verify(src: &Path, namespaces: &[Namespace]) -> Result<Verified, VerifyError> {
-    let mut checked = BTreeSet::new();
-    let mut events = 0;
+pub fn verify(src: &Path, namespaces: &'static [Namespace]) -> Result<Verified, VerifyError> {
+    let mut listed = Vec::new();
     for namespace in namespaces {
         let directory = src.join(namespace.name);
-        let edge_kind_label = namespace.edge_kinds.as_ref().map(|edge_kinds| (edge_kinds.model)().label);
-        let mut edge_kind = None;
         for model in namespace.models {
-            let descriptor = model();
-            let path = writing::model_file(&directory, descriptor.name)
+            let source = placement::model_source(&directory, model().name)
                 .map_err(|failure| VerifyError { path: directory.clone(), failure: Failure::Unplaced(failure) })?;
-            let failed = |failure| VerifyError { path: path.clone(), failure };
-            let (definitions, ids) = ModelDefinitions::parse(&read(&path)?).map_err(|error| failed(Failure::Unparsable(error)))?;
-            // The model's line comes first.
-            as_declared(&definitions, ids[0], descriptor).map_err(failed)?;
-            events += definitions.events_as_stated(&ids).map_err(|error| failed(Failure::NotRebuilt(error)))?.len();
-            if Some(descriptor.label) == edge_kind_label {
-                edge_kind = Some(definitions);
-            }
-            checked.insert(path);
-        }
-        if let Some(edge_kinds) = &namespace.edge_kinds {
-            let path = directory.join(EDGE_KINDS_FILE);
-            let failed = |failure| VerifyError { path: path.clone(), failure };
-            let (kinds, ids) = EdgeKinds::parse(&read(&path)?).map_err(|error| failed(Failure::Unparsable(error)))?;
-            let stated = kinds.kinds.iter().map(|kind| (kind.name.as_str(), kind.description.as_str()));
-            if !stated.eq(edge_kinds.kinds.iter().copied()) {
-                return Err(failed(Failure::NotAsListed));
-            }
-            let edge_kind = edge_kind.as_ref().ok_or(failed(Failure::NoEdgeKindModel))?;
-            events += kinds.events_as_stated(edge_kind, &ids).map_err(|error| failed(Failure::NotRebuilt(error)))?.len();
-            checked.insert(path);
+            listed.push(source.with_extension(EXTENSION));
         }
     }
-    let files = writing::minted_files(src).map_err(|failure| VerifyError { path: src.to_owned(), failure: Failure::Unplaced(failure) })?;
-    if let Some(stray) = files.into_iter().find(|file| !checked.contains(file)) {
+    let files =
+        placement::minted_files(src).map_err(|failure| VerifyError { path: src.to_owned(), failure: Failure::Unplaced(failure) })?;
+    if let Some(missing) = listed.iter().find(|path| !files.contains(path)) {
+        return Err(VerifyError { path: missing.clone(), failure: Failure::Missing });
+    }
+    if let Some(stray) = files.into_iter().find(|file| !listed.contains(file)) {
         return Err(VerifyError { path: stray, failure: Failure::Stray });
     }
-    Ok(Verified { files: checked.len(), events })
-}
-
-fn read(path: &Path) -> Result<String, VerifyError> {
-    fs::read_to_string(path).map_err(|source| VerifyError {
-        path: path.to_owned(),
-        failure: match source.kind() {
-            io::ErrorKind::NotFound => Failure::Missing,
-            _ => Failure::Unreadable(source),
-        },
-    })
-}
-
-/// Checks that `definitions`, whose model's line states the id `id`, state the model
-/// `descriptor` declares, naming the first part that differs.
-fn as_declared(definitions: &ModelDefinitions, id: EntityId, descriptor: &ModelStructDescriptor) -> Result<(), Failure> {
-    let differs = |part| Err(Failure::NotAsDeclared(part));
-    if definitions.label != descriptor.label {
-        return differs("label");
-    }
-    if definitions.name != descriptor.name {
-        return differs("name");
-    }
-    if descriptor.explicit_id != Some(id.to_base64().as_str()) {
-        return differs("id");
-    }
-    if definitions.properties.len() != descriptor.properties.len() {
-        return differs("number of properties");
-    }
-    for (stated, declared) in definitions.properties.iter().zip(descriptor.properties) {
-        if stated.name != declared.name {
-            return differs("property");
+    let minted = minting::mint(src, namespaces).map_err(|error| match error {
+        MintError::Kept(KeptError::Unread(error)) => VerifyError { path: error.path.clone(), failure: Failure::Unread(Box::new(error)) },
+        other => VerifyError { path: src.to_owned(), failure: Failure::Unminted(Box::new(other)) },
+    })?;
+    for file in &minted {
+        let failed = |failure| Err(VerifyError { path: file.path.clone(), failure });
+        if let Some(&needed) = file.drawn.first() {
+            return failed(Failure::NotAsDeclared(needed));
         }
-        if stated.value_type != declared.value_type {
-            return differs("value type");
+        if let Some(&unneeded) = file.unneeded.first() {
+            return failed(Failure::Unneeded(unneeded));
         }
-        if stated.backend != declared.backend {
-            return differs("backend");
-        }
-        if stated.optional != declared.optional {
-            return differs("optionality");
+        if file.descriptor.explicit_id != Some(file.model.to_base64().as_str()) {
+            return failed(Failure::OtherId { stated: file.model, declared: file.descriptor.explicit_id });
         }
     }
-    Ok(())
+    Ok(Verified { files: minted.len(), events: minted.iter().map(|file| file.geneses.len()).sum() })
 }
