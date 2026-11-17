@@ -140,8 +140,8 @@ that event once and keeping what was minted.
 `.akev` file, text from which a node builds the very event: each model's definitions
 beside the struct that declares it, and the edge kinds' records after `EdgeKind`'s
 definitions in `src/graph/edge_kind.akev`. A mint that is kept is committed to this
-repository, and that text is then the authority. Each creation event names no system root and no author, so it is the same
-entity on every node.
+repository, and that text is then the authority. Each creation event names no system
+root and no author, so it is the same entity on every node.
 
 The mint is unsigned: what vouches for the events is this repository. Signed statements
 can be added later without changing an id.

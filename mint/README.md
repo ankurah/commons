@@ -119,7 +119,8 @@ first three of `src/cognition/intention.akev`:
 - **Names.** `$name` is the entity of the same file whose `lww` text holds `label:
   "name"`, or, where no entity's does, `name: "name"`; `name@other.akev` is the same in
   another file, by its path from the directory of the file that refers. Exactly one
-  entity must answer to a name. A name stands wherever an id may, but in a header.
+  entity must answer to a name. A name stands as a `member`'s value, or as a key or a
+  value of `lww` text; never in a header or an `id`.
 - **Comments** are `//` to the end of the line and `/* ... */`.
 
 The writer lays each block out as above: the values on the line of their key, with the
@@ -179,10 +180,15 @@ any other way is not seen.
 
 - **Ids hold only for one format.** An entity's id is the hash of its creation event, so
   the ids of a kept mint stay valid only while the Ankurah revision's event format, the
-  way its last-writer-wins backend encodes values, and what a definition holds stay the
-  same. After such a change no kept file reads, each block's event being another entity
-  than its header names, and carrying the mint over takes a one-time conversion like a
-  change of the text form, which keeps every nonce and timestamp and gives new ids.
+  way its last-writer-wins backend encodes values, and what registering a declaration
+  writes stay the same. The two kinds of change play out differently:
+  - A change to the event format, or to how `lww` encodes the values its text sets, means
+    no block's text builds the entity its header names any more. No kept file then reads,
+    and `mint` stops until a one-time conversion, like a change of the text form, carries
+    the mint over, keeping every nonce and timestamp and giving new ids.
+  - A change to what registering a declaration writes leaves every file readable.
+    `verify` fails, naming the first file that lacks an event the declarations now need,
+    and `mint` draws the changed definitions anew, with new ids.
 - **A reference property does not say what it refers to.** Registration writes a
   reference property's target model empty (Ankurah issue 513), so the definition of,
   say, `records.created`'s `by` does not name `identity.principal`, and an
