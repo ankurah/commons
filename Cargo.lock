@@ -74,6 +74,7 @@ dependencies = [
  "ankurah-connector-local-process",
  "ankurah-storage-sled",
  "ankurah-storage-sqlite",
+ "base64",
  "jiff",
  "serde",
  "serde_json",

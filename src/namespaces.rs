@@ -122,9 +122,10 @@ pub const NAMESPACES: &[Namespace] = &[
 
 /// The guard that keeps `NAMESPACES` complete, so that a model added to a namespace module,
 /// or a new namespace module, cannot be forgotten in the list. It needs every namespace
-/// enabled. It relies on one convention: a model is a struct with `#[derive(Model, ..)]`
-/// written directly on it, in a file under its namespace's directory in `src/`. A model
-/// declared any other way is not seen.
+/// enabled. It relies on two conventions: a namespace module is a module of the crate's root
+/// behind the feature of its own name, kept in the directory of that name in `src/`; and a
+/// model is a struct with `#[derive(Model, ..)]` written directly on it, in a file under its
+/// namespace's directory. A model declared any other way is not seen.
 #[cfg(all(test, feature = "full"))]
 mod tests {
     use super::*;
@@ -161,17 +162,29 @@ mod tests {
         namespaces.iter().map(|namespace| (namespace.name.to_owned(), names(namespace))).collect()
     }
 
-    /// The models the namespace modules in `src` declare: every directory there, named as
-    /// its namespace.
+    /// The models the namespace modules in `src` declare, by namespace.
     fn declared(src: &Path) -> Models {
-        let modules = fs::read_dir(src).unwrap().map(|entry| entry.unwrap().path()).filter(|path| path.is_dir());
+        let root = syn::parse_file(&fs::read_to_string(src.join("lib.rs")).unwrap()).unwrap();
+        let modules = root.items.into_iter().filter_map(|item| match item {
+            syn::Item::Mod(module) if behind_its_feature(&module) => Some(module.ident.to_string()),
+            _ => None,
+        });
         modules
             .map(|module| {
                 let mut names = Vec::new();
-                collect(&module, &mut names);
-                (module.file_name().unwrap().to_str().unwrap().to_owned(), names)
+                collect(&src.join(&module), &mut names);
+                (module, names)
             })
             .collect()
+    }
+
+    /// Whether `module` is compiled only with the feature of its own name.
+    fn behind_its_feature(module: &syn::ItemMod) -> bool {
+        module.attrs.iter().filter(|attribute| attribute.path().is_ident("cfg")).any(|attribute| {
+            let Ok(syn::Meta::NameValue(feature)) = attribute.parse_args::<syn::Meta>() else { return false };
+            let syn::Expr::Lit(syn::ExprLit { lit: syn::Lit::Str(name), .. }) = feature.value else { return false };
+            feature.path.is_ident("feature") && module.ident == name.value()
+        })
     }
 
     /// Adds to `names` every struct that a Rust file under `dir` derives `Model` for.
@@ -239,9 +252,11 @@ mod tests {
     #[test]
     fn an_unlisted_model_or_namespace_module_is_named() {
         let src = tempfile::tempdir().unwrap();
-        fs::write(src.path().join("lib.rs"), "").unwrap();
+        // `akev` is behind no feature, so it is no namespace, whatever it declares.
+        let root = "pub mod akev;\n#[cfg(feature = \"alpha\")]\npub mod alpha;\n#[cfg(feature = \"beta\")]\nmod beta;\n";
+        fs::write(src.path().join("lib.rs"), root).unwrap();
         let alpha = "#[derive(Debug, Model)]\npub struct Listed {}\n#[derive(ankurah::Model)]\npub struct Unlisted {}\n";
-        for (module, source) in [("alpha", alpha), ("beta", "")] {
+        for (module, source) in [("akev", alpha), ("alpha", alpha), ("beta", "")] {
             fs::create_dir_all(src.path().join(module)).unwrap();
             fs::write(src.path().join(module).join("mod.rs"), source).unwrap();
         }

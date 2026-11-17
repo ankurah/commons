@@ -1,8 +1,8 @@
-//! Seeding a node: the kept mint's creation events, rebuilt from the `.akev` text compiled
-//! into this crate, imported into a durable node's store, so that the Commons' models bind
-//! to the minted definitions there rather than minting their own.
+//! Seeding a node: the kept mint's events, read from the `.akev` text compiled into this
+//! crate, imported into a durable node's store, so that the Commons' models bind to the
+//! minted definitions there rather than minting their own.
 
-use std::{error::Error, fmt};
+use std::{error::Error, fmt, path::Path};
 
 use ankurah::{
     error::MutationError,
@@ -12,28 +12,20 @@ use ankurah::{
     Node,
 };
 
-use crate::{
-    akev::{EdgeKinds, ModelDefinitions, ParseError},
-    namespaces::Declaration,
-    rebuilding::RebuildError,
-};
+use crate::akev::{self, ReadError};
 
-/// Why a node was not seeded. The kept mint is compiled into the crate and its tests
-/// rebuild all of it, so in a build whose tests pass only the import can fail.
+/// Why a node was not seeded. The kept mint is compiled into the crate and its tests read
+/// all of it, so in a build whose tests pass only the import can fail.
 #[derive(Debug)]
 pub enum SeedError {
-    Unparsable { namespace: &'static str, source: ParseError },
-    NotRebuilt { namespace: &'static str, source: RebuildError },
+    Unreadable(ReadError),
     Import(Box<MutationError>),
 }
 
 impl fmt::Display for SeedError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            SeedError::Unparsable { namespace, source } => write!(f, "the kept mint of the {namespace} namespace does not parse: {source}"),
-            SeedError::NotRebuilt { namespace, source } => {
-                write!(f, "the kept mint of the {namespace} namespace does not rebuild: {source}")
-            }
+            SeedError::Unreadable(source) => write!(f, "the kept mint does not read: {source}"),
             SeedError::Import(source) => write!(f, "the node did not import the kept mint: {source}"),
         }
     }
@@ -44,8 +36,7 @@ impl fmt::Display for SeedError {
 impl Error for SeedError {
     fn source(&self) -> Option<&(dyn Error + 'static)> {
         match self {
-            SeedError::Unparsable { source, .. } => Some(source),
-            SeedError::NotRebuilt { source, .. } => Some(source),
+            SeedError::Unreadable(source) => Some(source),
             SeedError::Import(source) => Some(source.as_ref()),
         }
     }
@@ -68,129 +59,68 @@ where
     node.import_events(&kept_mint()?).await.map_err(|error| SeedError::Import(Box::new(error)))
 }
 
-/// The kept mint of one namespace, as compiled into the crate: the text of each of its
-/// models' `.akev` files, and of the records of the kinds of edge it mints.
-struct Kept {
-    namespace: &'static str,
-    models: &'static [&'static str],
-    edge_kinds: Option<KeptEdgeKinds>,
+/// Each file's path under `src/` and its text, compiled in.
+macro_rules! kept {
+    ($($path:literal),* $(,)?) => {
+        &[$(($path, include_str!($path))),*]
+    };
 }
 
-struct KeptEdgeKinds {
-    /// The model whose records they are.
-    model: Declaration,
-    akev: &'static str,
-}
-
-/// The kept mint of every namespace this build enables, as compiled into the crate.
-const KEPT_MINT: &[Kept] = &[
+/// The kept mint of every namespace this build enables, as compiled into the crate: each
+/// model's `.akev` file, by its path under `src/`.
+const KEPT_MINT: &[&[(&str, &str)]] = &[
     #[cfg(feature = "identity")]
-    Kept {
-        namespace: "identity",
-        models: &[include_str!("identity/identity_binding.akev"), include_str!("identity/principal.akev")],
-        edge_kinds: None,
-    },
+    kept!["identity/identity_binding.akev", "identity/principal.akev"],
     #[cfg(feature = "records")]
-    Kept {
-        namespace: "records",
-        models: &[
-            include_str!("records/deferred.akev"),
-            include_str!("records/fractional_position.akev"),
-            include_str!("records/lifecycle/acceptance.akev"),
-            include_str!("records/lifecycle/checked.akev"),
-            include_str!("records/lifecycle/closed.akev"),
-            include_str!("records/lifecycle/created.akev"),
-            include_str!("records/lifecycle/edited.akev"),
-            include_str!("records/note.akev"),
-            include_str!("records/provenance/attribution.akev"),
-            include_str!("records/provenance/via.akev"),
-            include_str!("records/responsibility/assignment.akev"),
-            include_str!("records/responsibility/ownership.akev"),
-        ],
-        edge_kinds: None,
-    },
+    kept![
+        "records/deferred.akev",
+        "records/fractional_position.akev",
+        "records/lifecycle/acceptance.akev",
+        "records/lifecycle/checked.akev",
+        "records/lifecycle/closed.akev",
+        "records/lifecycle/created.akev",
+        "records/lifecycle/edited.akev",
+        "records/note.akev",
+        "records/provenance/attribution.akev",
+        "records/provenance/via.akev",
+        "records/responsibility/assignment.akev",
+        "records/responsibility/ownership.akev",
+    ],
     #[cfg(feature = "health")]
-    Kept {
-        namespace: "health",
-        models: &[
-            include_str!("health/activity_interval.akev"),
-            include_str!("health/distance.akev"),
-            include_str!("health/heart_rate.akev"),
-            include_str!("health/heart_rate_summary.akev"),
-            include_str!("health/physical_activity.akev"),
-            include_str!("health/workout.akev"),
-        ],
-        edge_kinds: None,
-    },
+    kept![
+        "health/activity_interval.akev",
+        "health/distance.akev",
+        "health/heart_rate.akev",
+        "health/heart_rate_summary.akev",
+        "health/physical_activity.akev",
+        "health/workout.akev",
+    ],
     #[cfg(feature = "text")]
-    Kept { namespace: "text", models: &[include_str!("text/fragment.akev"), include_str!("text/quotation.akev")], edge_kinds: None },
+    kept!["text/fragment.akev", "text/quotation.akev"],
     #[cfg(feature = "git")]
-    Kept {
-        namespace: "git",
-        models: &[
-            include_str!("git/checkout_state.akev"),
-            include_str!("git/file_anchor.akev"),
-            include_str!("git/repository.akev"),
-            include_str!("git/work_location.akev"),
-        ],
-        edge_kinds: None,
-    },
+    kept!["git/checkout_state.akev", "git/file_anchor.akev", "git/repository.akev", "git/work_location.akev"],
     #[cfg(feature = "graph")]
-    Kept {
-        namespace: "graph",
-        models: &[include_str!("graph/dyn_edge.akev"), include_str!("graph/edge_kind.akev")],
-        edge_kinds: Some(KeptEdgeKinds {
-            model: crate::namespaces::declared::<crate::graph::EdgeKind>(),
-            akev: include_str!("graph/edge_kinds.akev"),
-        }),
-    },
+    kept!["graph/dyn_edge.akev", "graph/edge_kind.akev"],
     #[cfg(feature = "cognition")]
-    Kept {
-        namespace: "cognition",
-        models: &[
-            include_str!("cognition/claim.akev"),
-            include_str!("cognition/decision.akev"),
-            include_str!("cognition/expectation.akev"),
-            include_str!("cognition/intention.akev"),
-            include_str!("cognition/intuition.akev"),
-            include_str!("cognition/perspective.akev"),
-        ],
-        edge_kinds: None,
-    },
+    kept![
+        "cognition/claim.akev",
+        "cognition/decision.akev",
+        "cognition/expectation.akev",
+        "cognition/intention.akev",
+        "cognition/intuition.akev",
+        "cognition/perspective.akev",
+    ],
     #[cfg(feature = "work")]
-    Kept {
-        namespace: "work",
-        models: &[include_str!("work/scope.akev"), include_str!("work/submission.akev"), include_str!("work/task.akev")],
-        edge_kinds: None,
-    },
+    kept!["work/scope.akev", "work/submission.akev", "work/task.akev"],
     #[cfg(feature = "messaging")]
-    Kept {
-        namespace: "messaging",
-        models: &[include_str!("messaging/mention.akev"), include_str!("messaging/message.akev")],
-        edge_kinds: None,
-    },
+    kept!["messaging/mention.akev", "messaging/message.akev"],
 ];
 
-/// The creation events of the kept mint of every namespace this build enables.
+/// The events of the kept mint of every namespace this build enables.
 fn kept_mint() -> Result<Vec<Attested<Event>>, SeedError> {
-    let mut events = Vec::new();
-    for kept in KEPT_MINT {
-        let namespace = kept.namespace;
-        let mut models = Vec::with_capacity(kept.models.len());
-        for text in kept.models {
-            let (definitions, ids) = ModelDefinitions::parse(text).map_err(|source| SeedError::Unparsable { namespace, source })?;
-            events.extend(definitions.events_as_stated(&ids).map_err(|source| SeedError::NotRebuilt { namespace, source })?);
-            models.push(definitions);
-        }
-        if let Some(edge_kinds) = &kept.edge_kinds {
-            let label = (edge_kinds.model)().label;
-            let edge_kind =
-                models.iter().find(|definitions| definitions.label == label).expect("a namespace mints records of its own models");
-            let (records, ids) = EdgeKinds::parse(edge_kinds.akev).map_err(|source| SeedError::Unparsable { namespace, source })?;
-            events.extend(records.events_as_stated(edge_kind, &ids).map_err(|source| SeedError::NotRebuilt { namespace, source })?);
-        }
-    }
-    Ok(events.into_iter().map(Attested::from).collect())
+    let files: Vec<(&Path, &str)> = KEPT_MINT.iter().flat_map(|files| files.iter()).map(|&(path, text)| (Path::new(path), text)).collect();
+    let events = akev::read(&files).map_err(SeedError::Unreadable)?;
+    Ok(events.into_iter().flatten().map(Attested::from).collect())
 }
 
 #[cfg(test)]

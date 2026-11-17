@@ -24,6 +24,8 @@ jiff      = ["dep:jiff"]
 
 [dependencies]
 ankurah   = { workspace = true }
+# Operation bytes of any length in `.akev` files, in the base64 of Ankurah's ids.
+base64    = "0.22.1"
 jiff      = { workspace = true, optional = true }
 serde     = { workspace = true }
 strum     = { workspace = true }
