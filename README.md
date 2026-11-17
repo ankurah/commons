@@ -9,10 +9,10 @@ in the nine namespaces, 39 models with 107 properties and their links, and the 2
 of edge in the `graph` namespace's table are minted, unsigned, in the `.akev` files
 beside the structs, in the format of the Ankurah revision this crate builds against.
 
-The crate builds against a revision of Ankurah named in `Cargo.toml`: its branch
-`fwd-pin/portable-genesis`, which is its main with a node that imports events made
-outside it. An application that uses the crate pins the same revision, and seeds its
-node with the kept mint (see Seeding) so that the models take the minted ids.
+The crate builds against a revision of Ankurah's main named in `Cargo.toml`, where a
+node imports events made outside it. An application that uses the crate pins the same
+revision, and seeds its node with the kept mint (see Seeding) so that the models take
+the minted ids.
 
 ## Layout
 

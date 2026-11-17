@@ -13,7 +13,7 @@ use ankurah::{
     },
     error::MutationError,
     property::PropertyError,
-    proto::{AuthorId, Event, Membership, ModelId, Operation, OperationSet, PropertyId, SystemModel, SystemProperty},
+    proto::{Event, Membership, ModelId, Operation, OperationSet, PropertyId, SystemModel, SystemProperty},
     value::Value,
     EntityId, Property,
 };
@@ -91,18 +91,19 @@ impl ModelDefinitions {
     /// property's followed by its model-property link's. Each names the definitions before it
     /// by the ids their own events derive.
     pub fn events(&self) -> Result<Vec<Event>, RebuildError> {
-        self.events_in(None)
+        self.events_by(genesis)
     }
 
-    /// The creation events as a node whose system root is `system` would make them.
-    fn events_in(&self, system: Option<EntityId>) -> Result<Vec<Event>, RebuildError> {
-        let model = genesis(system, &self.model, model_operations(&self.label, &self.name)?);
+    /// The creation events, each the genesis that `genesis` makes of a creation and its
+    /// operations.
+    fn events_by(&self, genesis: impl Fn(&Creation, OperationSet) -> Event) -> Result<Vec<Event>, RebuildError> {
+        let model = genesis(&self.model, model_operations(&self.label, &self.name)?);
         let model_id = model.entity_id;
         let mut events = vec![model];
         for property in &self.properties {
             let operations = property_operations(&property.name, &property.backend, &property.value_type, model_id)?;
-            let definition = genesis(system, &property.property, operations);
-            let link = genesis(system, &property.link, link_operations(model_id, definition.entity_id, property.optional)?);
+            let definition = genesis(&property.property, operations);
+            let link = genesis(&property.link, link_operations(model_id, definition.entity_id, property.optional)?);
             events.extend([definition, link]);
         }
         Ok(events)
@@ -121,12 +122,16 @@ impl EdgeKinds {
     /// The creation events of the kinds' records, in the file's order, each a record of the
     /// model `edge_kind` defines.
     pub fn events(&self, edge_kind: &ModelDefinitions) -> Result<Vec<Event>, RebuildError> {
-        self.events_in(edge_kind, None)
+        self.events_by(edge_kind, genesis)
     }
 
-    /// The creation events as a node whose system root is `system`, holding the definitions of
-    /// `edge_kind`, would make them.
-    fn events_in(&self, edge_kind: &ModelDefinitions, system: Option<EntityId>) -> Result<Vec<Event>, RebuildError> {
+    /// The creation events, each the genesis that `genesis` makes of a creation and its
+    /// operations, of records of the model whose minted definitions are `edge_kind`.
+    fn events_by(
+        &self,
+        edge_kind: &ModelDefinitions,
+        genesis: impl Fn(&Creation, OperationSet) -> Event,
+    ) -> Result<Vec<Event>, RebuildError> {
         let definitions = edge_kind.events()?;
         // A property's definition follows the model's, and the definition and link of each
         // property before it.
@@ -140,7 +145,7 @@ impl EdgeKinds {
             .iter()
             .map(|kind| {
                 let values = [(name, value(&kind.name)?), (description, value(&kind.description)?)];
-                Ok(genesis(system, &kind.record, operations(model, values)?))
+                Ok(genesis(&kind.record, operations(model, values)?))
             })
             .collect()
     }
@@ -164,10 +169,9 @@ fn check(stated: &[EntityId], events: &[Event]) -> Result<(), RebuildError> {
     }
 }
 
-/// The genesis that `creation` and `operations` make under the system root `system`, naming
-/// no author. A minted entity names no root.
-fn genesis(system: Option<EntityId>, creation: &Creation, operations: OperationSet) -> Event {
-    Event::genesis_from_parts(system, creation.nonce, creation.at, AuthorId::Unknown, operations)
+/// The genesis that `creation` and `operations` make, naming no system root and no author.
+fn genesis(creation: &Creation, operations: OperationSet) -> Event {
+    Event::genesis_from_parts(creation.nonce, creation.at, operations)
 }
 
 /// What registration writes for a model's definition.
@@ -237,6 +241,16 @@ mod tests {
         (Creation { at: created.timestamp(), nonce: *created.nonce() }, created)
     }
 
+    /// The genesis a node whose system root is `root` makes of `creation` and `operations`,
+    /// naming no author. `Event::genesis_from_parts` names no root, so this builds the event
+    /// from the parts its id derives from.
+    fn genesis_under(root: Option<EntityId>, creation: &Creation, operations: OperationSet) -> Event {
+        use ankurah::proto::{AuthorId, Clock, EventBody, EventId};
+        let (nonce, timestamp, author) = (creation.nonce, creation.at, AuthorId::Unknown);
+        let entity_id = EventId::from_genesis_parts(&root, &nonce, timestamp, &author, &operations).into();
+        Event { entity_id, parent: Clock::default(), body: EventBody::Genesis { system: root, nonce, timestamp, author, operations } }
+    }
+
     /// Minted from the same times and nonces, through the text a mint keeps, a model's
     /// definitions rebuild, under the registrar's root, as exactly the events the registrar
     /// wrote when it registered `registered`.
@@ -259,7 +273,13 @@ mod tests {
         let (kept, stated) = ModelDefinitions::parse(&definitions.write().unwrap()).unwrap();
         assert_eq!(kept, definitions);
         kept.events_as_stated(&stated).unwrap();
-        assert_eq!(kept.events_in(registrar.system.root_id()).unwrap(), written, "{}", descriptor.label);
+        let root = registrar.system.root_id();
+        assert_eq!(
+            kept.events_by(|creation, operations| genesis_under(root, creation, operations)).unwrap(),
+            written,
+            "{}",
+            descriptor.label
+        );
     }
 
     /// A durable node that registers declarations sent by the other, which it is connected to.
@@ -367,6 +387,7 @@ mod tests {
         let (kept, stated) = EdgeKinds::parse(&kinds.write(&edge_kind).unwrap()).unwrap();
         assert_eq!(kept, kinds);
         kept.events_as_stated(&edge_kind, &stated).unwrap();
-        assert_eq!(kept.events_in(&edge_kind, node.system.root_id()).unwrap(), written);
+        let root = node.system.root_id();
+        assert_eq!(kept.events_by(&edge_kind, |creation, operations| genesis_under(root, creation, operations)).unwrap(), written);
     }
 }
