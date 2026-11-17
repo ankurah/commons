@@ -34,8 +34,12 @@ pub enum Problem {
     /// A key in a backend's values that is neither a built-in property, an entity id nor a
     /// name.
     Property(DecodeError),
-    /// A value in a backend's values that is not one the text form writes.
-    Value(String),
+    /// A value in a backend's values that is not one the text form writes; as it is no
+    /// literal, it would be an entity id, which it is not.
+    Value {
+        word: String,
+        source: DecodeError,
+    },
     /// A word that looks like a name, holding `$` or `@`, and is not `$name` or
     /// `name@file`.
     Name(String),
@@ -97,7 +101,7 @@ impl fmt::Display for Problem {
             Problem::Timestamp(source) => write!(f, "not a timestamp: {source}"),
             Problem::ModelId(source) => write!(f, "neither a model id nor a name: {source}"),
             Problem::Property(source) => write!(f, "neither a built-in property, an entity id nor a name: {source}"),
-            Problem::Value(word) => {
+            Problem::Value { word, .. } => {
                 write!(f, "`{word}` is no value: a value is a string, `true`, `false`, `none`, an entity id or a name")
             }
             Problem::Name(word) => write!(f, "`{word}` is no name: a name is `$name` or `name@file`"),
@@ -132,7 +136,11 @@ impl Error for ReadError {
 impl Error for Problem {
     fn source(&self) -> Option<&(dyn Error + 'static)> {
         match self {
-            Problem::Id(source) | Problem::Nonce(source) | Problem::ModelId(source) | Problem::Property(source) => Some(source),
+            Problem::Id(source)
+            | Problem::Nonce(source)
+            | Problem::ModelId(source)
+            | Problem::Property(source)
+            | Problem::Value { source, .. } => Some(source),
             Problem::Timestamp(source) => Some(source),
             Problem::Bytes(source) => Some(source),
             Problem::Build(source) => Some(source),

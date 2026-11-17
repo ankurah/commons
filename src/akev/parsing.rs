@@ -1,6 +1,6 @@
 //! Reads a file's tokens as blocks, one for each event, with names not yet resolved.
 
-use std::str::FromStr;
+use std::{path::Path, str::FromStr};
 
 use ankurah::{
     proto::{BackendOperation, ModelId},
@@ -235,7 +235,7 @@ impl<'a, 't> Parser<'a, 't> {
             _ => match self.name(word)? {
                 Some(name) => Reference::Named(name),
                 None => Reference::Given(Some(Value::EntityId(
-                    EntityId::from_base64(word).map_err(|_| self.problem(Problem::Value(word.to_owned())))?,
+                    EntityId::from_base64(word).map_err(|source| self.problem(Problem::Value { word: word.to_owned(), source }))?,
                 ))),
             },
         })
@@ -246,18 +246,22 @@ impl<'a, 't> Parser<'a, 't> {
         if !word.contains(['$', '@']) {
             return Ok(None);
         }
+        let refused = || self.problem(Problem::Name(word.to_owned()));
         let name = match word.strip_prefix('$') {
             Some(name) => Name { name, file: None },
             None => match word.split_once('@') {
                 Some((name, file)) => Name { name, file: Some(file) },
-                None => unreachable!("a word that holds `$` or `@`"),
+                // A `$` within the word, not before it.
+                None => return Err(refused()),
             },
         };
-        let file_reads = name.file.is_none_or(|file| !file.is_empty() && !file.contains(['$', '@', ':']));
+        // A path from the directory of the file that refers, never a rooted one: the mint reads
+        // files by their full paths and the seed by paths under `src/`.
+        let file_reads = name.file.is_none_or(|file| !file.is_empty() && !file.contains(['$', '@', ':']) && !Path::new(file).has_root());
         if is_name(name.name) && file_reads {
             Ok(Some(name))
         } else {
-            Err(self.problem(Problem::Name(word.to_owned())))
+            Err(refused())
         }
     }
 
@@ -379,17 +383,25 @@ mod tests {
         assert!(matches!(refused(&block("lww: { name: \"a\", }")), At { line: 3, problem: Problem::Expected(_) }));
     }
 
+    /// Each word as a `member`, as a value of `lww` text and, where it holds no colon, which
+    /// would end a key, as a key.
     #[test]
-    fn a_word_with_the_marks_of_a_name_that_is_no_name_is_refused() {
-        for word in ["$", "$a@b.akev", "a@", "@b.akev", "$a:b"] {
-            let problem = refused(&block(&format!("member: {word}"))).problem;
-            assert!(matches!(&problem, Problem::Name(refused) if refused == word), "{word}: {problem}");
+    fn a_word_with_the_marks_of_a_name_that_is_no_name_is_refused_naming_its_line() {
+        for word in ["$", "$a@b.akev", "a@", "@b.akev", "$a:b", "a$b", "a@/rooted/b.akev"] {
+            let mut places = vec![format!("member: {word}"), format!("lww: {{ name: {word} }}")];
+            if !word.contains(':') {
+                places.push(format!("lww: {{ {word}: true }}"));
+            }
+            for place in places {
+                let refused = refused(&block(&place));
+                assert!(matches!(&refused, At { line: 3, problem: Problem::Name(name) } if name == word), "{place}: {}", refused.problem);
+            }
         }
     }
 
     #[test]
     fn a_value_that_is_no_literal_and_no_id_is_refused() {
-        assert!(matches!(refused(&block("lww: { name: maybe }")).problem, Problem::Value(word) if word == "maybe"));
+        assert!(matches!(refused(&block("lww: { name: maybe }")).problem, Problem::Value { word, .. } if word == "maybe"));
         assert!(matches!(refused(&block("member: model")).problem, Problem::ModelId(_)));
         assert!(matches!(refused(&block("lww: { title: \"a\" }")).problem, Problem::Property(_)));
         assert!(matches!(refused(&block("lww: a")).problem, Problem::Bytes(_)));

@@ -172,10 +172,17 @@ fn an_entity_that_needs_its_own_event_is_refused_as_a_cycle() {
     assert!(matches!(refused(text), ReadError { line: 5, problem: Problem::ReferenceCycle, .. }));
 }
 
-/// The source of the timestamp's error is the reader's, so that a caller can downcast it.
+/// The source of a timestamp's error or of a value's is the reader's, so that a caller can
+/// downcast it.
 #[test]
 fn a_problem_that_wraps_an_error_gives_it_as_its_source() {
+    use ankurah::proto::DecodeError;
     use std::error::Error;
     let error = refused(&sample::TEXT.replacen("23.846Z", "23.85Z", 1));
     assert!(matches!(error.source().and_then(|source| source.downcast_ref::<TimestampError>()), Some(TimestampError::Form)), "{error}");
+    let short = "A".repeat(42);
+    let error = refused(&sample::TEXT.replacen("\"Intention\"", &short, 1));
+    assert!(matches!(&error.problem, Problem::Value { word, .. } if *word == short), "{error}");
+    assert_eq!(error.line, 3);
+    assert!(matches!(error.source().and_then(|source| source.downcast_ref::<DecodeError>()), Some(DecodeError::InvalidLength)), "{error}");
 }
