@@ -44,8 +44,9 @@ beside each model's file the `.akev` file of its minted definitions:
                            SnapshotRef and RefMap
     src/support.rs         what the namespaces share that is not a model or a property
                            type
-    src/akev.rs            the text form of minted creation events, `.akev` files
-    src/rebuilding.rs      the creation events rebuilt from `.akev` files
+    src/akev/              the text form of events, `.akev` files, read and written
+                           without knowing any model
+    src/registration.rs    the events that registering a model's declaration writes
     src/namespaces.rs      the namespaces a build enables and their models
     src/seed.rs            seeding a node with the kept mint, which it compiles in
     mint/                  the tool that mints the definitions and checks a mint
@@ -135,11 +136,11 @@ model only if they hold the same event. Publishing a model therefore means minti
 that event once and keeping what was minted.
 
 `mint/` does this: it mints every definition, and a record of each kind of edge in the
-`graph` namespace's table, and writes each entity as a line of an `.akev` file, text
-from which its creation event is rebuilt exactly: each model's definitions beside the
-struct that declares it, and the edge kinds' records in `src/graph/edge_kinds.akev`. A
-mint that is kept is committed to this repository, and that text is then the
-authority. Each creation event names no system root and no author, so it is the same
+`graph` namespace's table, and writes each entity's creation event as a block of an
+`.akev` file, text from which a node builds the very event: each model's definitions
+beside the struct that declares it, and the edge kinds' records after `EdgeKind`'s
+definitions in `src/graph/edge_kind.akev`. A mint that is kept is committed to this
+repository, and that text is then the authority. Each creation event names no system root and no author, so it is the same
 entity on every node.
 
 The mint is unsigned: what vouches for the events is this repository. Signed statements
