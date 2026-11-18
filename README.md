@@ -42,6 +42,8 @@ beside each model's file the `.akev` file of its minted definitions:
                            work happens
     src/property.rs        the property types the namespaces share: Timestamp, DynRef,
                            SnapshotRef and RefMap
+    src/dimension.rs       Dimension, the size of something along one line, a property
+                           type for applications built on the Commons
     src/support.rs         what the namespaces share that is not a model or a property
                            type
     src/akev/              the text form of events, `.akev` files, read and written
