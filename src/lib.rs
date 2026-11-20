@@ -7,8 +7,10 @@
 //! holds one for applications built on the Commons.
 //!
 //! The models' definitions are minted once and kept beside their structs, as events in the
-//! text form of `akev`. `seed` loads them into a durable node, so that the models take the
-//! minted ids there; `registration` makes the events of any declaration.
+//! text form of `akev`, and each struct declares the minted ids of its model and of each of
+//! its properties. `seed` loads them into a durable node, where a model and each of its
+//! properties bind by those ids, never by label or name; `registration` makes the events of
+//! any declaration.
 
 pub mod akev;
 pub mod dimension;

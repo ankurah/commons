@@ -55,8 +55,8 @@ beside each model's file the `.akev` file of its minted definitions:
                            (mint/README.md)
 
 The Rust declarations are the source: each `#[derive(Model)]` struct states a
-model, its properties, how each is stored and which are optional, and names the id the
-kept mint gives the model.
+model, its properties, how each is stored and which are optional, and names the ids the
+kept mint gives the model and each of its properties.
 
 Every model is marked `no_ffi`, so the derive generates no JavaScript or Swift
 bindings for it. Without the mark the crate does not compile in a build that
@@ -148,8 +148,10 @@ root and no author, so it is the same entity on every node.
 The mint is unsigned: what vouches for the events is this repository. Signed statements
 can be added later without changing an id.
 
-Each struct declares the id its kept mint gives its model, `#[model(id = "...")]`, which
-the mint tool writes.
+Each struct declares the id its kept mint gives its model, `#[model(id = "...")]`, and
+each field that declares a property the id the kept mint gives that property,
+`#[property(id = "...")]`; the mint tool writes both. A model and each of its properties
+bind by these ids, never by label or name.
 
 Still to come: changes to a definition after it is minted, as further events beside its
 creation.
@@ -169,11 +171,11 @@ definitions instead of minting their own:
 
 Seed the node before it first binds any of the Commons' models: registering a model
 binds it, and so do a fetch, a query, a get and a create of it. Each model declares its
-minted id and binds by that id, never by its label. On a node not yet seeded it fails
+minted id and binds by that id, never by its label, and each of its properties binds by
+the id its field declares, never by its name. On a node not yet seeded a model fails
 with Ankurah's `RegistrationError::ExplicitModelIdNotFound` rather than minting
-definitions of its own; on a seeded node it binds to its minted definition even where the
-store holds an older one under the same label, and finds its properties within that
-definition, by name.
+definitions of its own; on a seeded node it binds to its minted definitions even where
+the store holds an older definition under the same label.
 
 Seeding a store that holds the kept mint already changes nothing, so a node can be
 seeded at every start.

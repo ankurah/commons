@@ -37,12 +37,15 @@ pub use kept::KeptError;
 /// the definitions.
 pub struct MintedFile {
     pub descriptor: &'static ModelStructDescriptor,
-    /// The struct's source, which declares the model's id.
+    /// The struct's source, which declares the model's id and each property's.
     pub source: PathBuf,
     /// The `.akev` file beside it.
     pub path: PathBuf,
     /// The id of the model's definition.
     pub model: EntityId,
+    /// The id of each property's definition, by the field that declares the property, in the
+    /// order the struct declares them.
+    pub properties: Vec<(&'static str, EntityId)>,
     pub geneses: Vec<Genesis>,
     /// What the file needs that no kept event matched, whose nonce and timestamp were drawn.
     pub drawn: Vec<Minted>,
@@ -98,18 +101,25 @@ pub fn mint(src: &Path, namespaces: &'static [Namespace]) -> Result<Vec<MintedFi
                 keeping.creation(Minted::Definition(definition), operations)
             })
             .map_err(built)?;
-            let ids = geneses.iter().map(|genesis| Ok(genesis.event()?.entity_id)).collect::<Result<Vec<_>, _>>().map_err(built)?;
-            let mut file = MintedFile { descriptor, source, path, model: ids[0], geneses, drawn: Vec::new(), unneeded: Vec::new() };
+            let id = |genesis: &Genesis| genesis.event().map(|event| event.entity_id).map_err(built);
+            // The model's definition comes first, then each property's followed by its link's,
+            // in the order the struct declares the properties.
+            let model = id(&geneses[0])?;
+            let properties = descriptor
+                .properties
+                .iter()
+                .zip(geneses[1..].iter().step_by(2))
+                .map(|(property, genesis)| Ok((property.field, id(genesis)?)))
+                .collect::<Result<_, MintError>>()?;
+            let mut file = MintedFile { descriptor, source, path, model, properties, geneses, drawn: Vec::new(), unneeded: Vec::new() };
             let records_of = namespace.edge_kinds.as_ref().filter(|edge_kinds| (edge_kinds.model)().label == descriptor.label);
             if let Some(edge_kinds) = records_of {
-                // Each property's definition follows the model's, and the definition and link
-                // of each property before it.
                 let property = |property| {
                     let index = descriptor.properties.iter().position(|declared| declared.name == property);
                     let index = index.ok_or(MintError::NoEdgeKindProperty { label: descriptor.label, property })?;
-                    Ok::<_, MintError>(ids[1 + 2 * index])
+                    Ok::<_, MintError>(file.properties[index].1)
                 };
-                let model = EdgeKindModel { model: ids[0], name: property("name")?, description: property("description")? };
+                let model = EdgeKindModel { model, name: property("name")?, description: property("description")? };
                 for &(name, description) in edge_kinds.kinds {
                     let operations = edge_kinds::record(&model, name, description);
                     let (nonce, timestamp) = keeping.creation(Minted::EdgeKind(name), &operations.build().map_err(built)?);
@@ -198,6 +208,24 @@ mod tests {
         assert!(kept.iter().all(|event| *event.nonce() != drawn.nonce));
         for (index, (genesis, event)) in file.geneses.iter().zip(&before).enumerate().filter(|(index, _)| *index != 2) {
             assert_eq!((genesis.nonce, genesis.timestamp), (*event.nonce(), event.timestamp()), "the genesis at {index}");
+        }
+    }
+
+    /// Each field carries the id of its property's definition, the genesis that makes its
+    /// entity a property, in the order the struct declares the fields, and never the id of the
+    /// link that gives the model the property, nor that of a kind of edge's record.
+    #[test]
+    fn each_field_carries_the_id_of_the_definition_of_its_property() {
+        use ankurah::proto::{ModelId, SystemModel};
+        let src = copied();
+        for file in mint(src.path(), NAMESPACES).unwrap() {
+            let definitions = file
+                .geneses
+                .iter()
+                .filter(|genesis| genesis.operations.memberships == [ModelId::System(SystemModel::Property)])
+                .map(|genesis| genesis.event().unwrap().entity_id);
+            let fields = file.descriptor.properties.iter().map(|property| property.field);
+            assert_eq!(file.properties, fields.zip(definitions).collect::<Vec<_>>(), "{}", file.descriptor.label);
         }
     }
 }

@@ -14,8 +14,10 @@ use serde::{Deserialize, Serialize};
 #[model(no_ffi)]
 pub struct Submission {
     /// The work handed in, such as a task.
+    #[property(id = "d5NMYDDAtPXWYAQktcNtSSubJ0YTxkshgfgOHR9cCCQ")]
     pub of: DynRef,
     /// The commits, test runs and the like that show the work is done.
     #[active_type(LWW)]
+    #[property(id = "V23FeeQTh0UT5en2HGOV5lYIGu6ZXBAnmSPgCisvinI")]
     pub evidence: String,
 }

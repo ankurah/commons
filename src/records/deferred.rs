@@ -13,5 +13,6 @@ use serde::{Deserialize, Serialize};
 #[model(no_ffi)]
 pub struct Deferred {
     #[active_type(LWW)]
+    #[property(id = "cBqg4i8tL80d6sgbESlAI-EBlHUYYA5LIbGAxLAFdbU")]
     pub until: Option<Timestamp>,
 }

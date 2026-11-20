@@ -10,10 +10,13 @@ use serde::{Deserialize, Serialize};
 #[model(no_ffi)]
 pub struct HeartRate {
     /// The person whose heart rate was observed.
+    #[property(id = "chJxiUIeMQHbalkkd5BmozOoKHcjEDanMcLmti6bhiQ")]
     pub measured_person: Ref<Principal>,
     /// Time of the observation. For live readings without a sensor timestamp,
     /// the recorder uses the time it received the reading.
+    #[property(id = "x2solFLSc5NfjHpzlgjED-4Fy7CEwGZs4e1yynOGFkI")]
     pub observed_at: Timestamp,
     /// A valid heart rate in beats per minute. Device codes for missing readings are omitted.
+    #[property(id = "ytJOMFpTSDNnNW7N0RR9ejzzPkjKIB00dgaKZQC4XF0")]
     pub beats_per_minute: f64,
 }

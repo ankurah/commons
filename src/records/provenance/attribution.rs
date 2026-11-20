@@ -11,5 +11,6 @@ use serde::{Deserialize, Serialize};
 #[model(id = "DfGhlrbNm6EcEMTL1XOU1Cft54dEbjxZ1b0AX-R0ibE")]
 #[model(no_ffi)]
 pub struct Attribution {
+    #[property(id = "ndaehucnhocM6kSFp8JbyzUw2xoyM5Z7PzouhPAnkNE")]
     pub speaker: Option<Ref<Principal>>,
 }

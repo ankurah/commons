@@ -14,8 +14,10 @@ use serde::{Deserialize, Serialize};
 #[model(no_ffi)]
 pub struct Perspective {
     /// The record it is of, at the head it read.
+    #[property(id = "Yu5KT5_2fskMY-wg_B92B4pEuapy6dqxTmmd08GyOu4")]
     pub of: SnapshotRef,
     #[active_type(LWW)]
+    #[property(id = "2aVqWXQDLiGdV5wDts88vGVU2LDQVmKgfClS6_8xcig")]
     pub words: String,
 }
 

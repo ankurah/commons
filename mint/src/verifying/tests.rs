@@ -1,11 +1,12 @@
 use super::*;
 use crate::copies::{copied, edit_and_restate, files, mint, sources};
+use ankurah::core::schema::{ModelStructDescriptor, PerSystemOnceCell, StructProperty};
 use ankurah_commons::{
     akev::{self, Problem},
     namespaces::NAMESPACES,
     registration::Definition,
 };
-use std::fs;
+use std::{fs, sync::OnceLock};
 use tempfile::TempDir;
 
 /// A copy of the sources with the kept mint minted again.
@@ -33,7 +34,26 @@ fn minting_the_kept_mint_again_changes_no_file_and_it_verifies() {
     assert_eq!((verified.files, verified.events), (models, definitions + edge_kinds));
 }
 
-/// `cognition.intention` as its struct declares it, but for the id.
+/// A copy of the intention's struct and its kept mint, alone, for a namespace that lists only
+/// the intention.
+fn the_intention_alone() -> TempDir {
+    let src = tempfile::tempdir().unwrap();
+    let cognition = src.path().join("cognition");
+    fs::create_dir(&cognition).unwrap();
+    for file in ["intention.rs", "intention.akev"] {
+        fs::copy(sources().join("cognition").join(file), cognition.join(file)).unwrap();
+    }
+    src
+}
+
+/// The id the kept mint gives the intention's property `title`, which its struct declares.
+fn kept_title() -> &'static str {
+    let intention = <ankurah_commons::cognition::Intention as ankurah::Model>::descriptor();
+    intention.properties.iter().find(|property| property.field == "title").and_then(|property| property.explicit_id).unwrap()
+}
+
+/// `cognition.intention` as its struct declares it, but for its ids: another model id, and
+/// none for its properties.
 #[derive(ankurah::Model, Debug, Clone)]
 #[model(label = "cognition.intention")]
 #[model(id = "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE")]
@@ -51,17 +71,70 @@ pub struct Intention {
 fn a_struct_that_declares_another_id_than_its_file_states_fails_naming_the_file() {
     static NAMESPACES: &[Namespace] =
         &[Namespace { name: "cognition", models: &[<Intention as ankurah::Model>::descriptor], edge_kinds: None }];
-    let src = tempfile::tempdir().unwrap();
-    let cognition = src.path().join("cognition");
-    fs::create_dir(&cognition).unwrap();
-    for file in ["intention.rs", "intention.akev"] {
-        fs::copy(sources().join("cognition").join(file), cognition.join(file)).unwrap();
-    }
+    let src = the_intention_alone();
     let error = verify(src.path(), NAMESPACES).unwrap_err();
-    assert_eq!(error.path, cognition.join("intention.akev"));
+    assert_eq!(error.path, src.path().join("cognition").join("intention.akev"));
     let kept = EntityId::from_base64(<ankurah_commons::cognition::Intention as ankurah::Model>::descriptor().explicit_id.unwrap()).unwrap();
     assert!(
         matches!(error.failure, Failure::OtherId { stated, declared: Some("AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE") } if stated == kept),
+        "{error}"
+    );
+}
+
+/// The intention's declaration as the derive describes it, but for its field `title`, which
+/// declares no id, as a field does until the mint gives it one.
+fn intention_whose_title_declares_no_id() -> &'static ModelStructDescriptor {
+    static DESCRIPTOR: OnceLock<ModelStructDescriptor> = OnceLock::new();
+    DESCRIPTOR.get_or_init(|| {
+        let intention = <ankurah_commons::cognition::Intention as ankurah::Model>::descriptor();
+        let properties: Vec<StructProperty> = intention
+            .properties
+            .iter()
+            .map(|property| StructProperty {
+                explicit_id: property.explicit_id.filter(|_| property.field != "title"),
+                resolved: PerSystemOnceCell::per_epoch(),
+                ..*property
+            })
+            .collect();
+        ModelStructDescriptor { properties: properties.leak(), resolved: PerSystemOnceCell::per_epoch(), ..*intention }
+    })
+}
+
+/// A field declares no property id until the mint gives it one, as none did before the tool
+/// gave properties their ids.
+#[test]
+fn a_field_that_declares_no_property_id_fails_naming_the_file_the_struct_and_the_field() {
+    static WITHOUT_THE_ID: &[Namespace] =
+        &[Namespace { name: "cognition", models: &[intention_whose_title_declares_no_id], edge_kinds: None }];
+    let src = the_intention_alone();
+    let error = verify(src.path(), WITHOUT_THE_ID).unwrap_err();
+    assert_eq!(error.path, src.path().join("cognition").join("intention.akev"));
+    let kept = EntityId::from_base64(kept_title()).unwrap();
+    assert!(
+        matches!(error.failure, Failure::NoPropertyId { struct_name: "Intention", field: "title", stated } if stated == kept),
+        "{error}"
+    );
+}
+
+/// After a mint that changed a property's id, its field declares the old id until the tool is
+/// built again; the file's id is the one that holds.
+#[test]
+fn a_field_that_declares_another_property_id_than_its_file_states_fails_naming_the_file_the_struct_and_the_field() {
+    let src = minted();
+    let intention = src.path().join("cognition").join("intention.akev");
+    // The definition of `title` drawn anew: another nonce, and so another id.
+    let text = fs::read_to_string(&intention).unwrap();
+    let start = text[..text.find("name: \"title\"").unwrap()].rfind("nonce: ").unwrap() + "nonce: ".len();
+    let kept_nonce = &text[start..start + text[start..].find(',').unwrap()];
+    let drawn = [2; 32];
+    edit_and_restate(&intention, kept_nonce, &EntityId::from_bytes(drawn).to_base64());
+    let text = fs::read_to_string(&intention).unwrap();
+    let redrawn = akev::read(&[(&intention, &text)]).unwrap().remove(0).into_iter().find(|event| *event.nonce() == drawn).unwrap();
+    let error = failure(&src);
+    assert_eq!(error.path, intention);
+    assert!(
+        matches!(error.failure, Failure::OtherPropertyId { struct_name: "Intention", field: "title", stated, declared }
+            if stated == redrawn.entity_id && declared == kept_title()),
         "{error}"
     );
 }

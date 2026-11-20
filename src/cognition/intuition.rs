@@ -13,7 +13,9 @@ use serde::{Deserialize, Serialize};
 #[model(no_ffi)]
 pub struct Intuition {
     #[active_type(LWW)]
+    #[property(id = "exdQ4Hy1nFix7AalV-uWG6KEDbV8KKxT49Tf75mRO_g")]
     pub title: String,
     #[active_type(LWW)]
+    #[property(id = "yvmPI59mrZ-Z7S3YywCHXIvBpFCgoo3po5yRIJhRrUg")]
     pub words: String,
 }

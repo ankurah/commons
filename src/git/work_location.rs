@@ -16,7 +16,9 @@ pub struct WorkLocation {
     /// None, with no branches, once the scope's place is cleared: a component
     /// cannot be taken off an entity.
     #[active_type(LWW)]
+    #[property(id = "5hoQtGk3aJ01Rh3waEbIQmewNsmi05j7vgH_rG9jRuA")]
     pub repository: Option<Ref<Repository>>,
     /// An array of branch names, each trimmed and listed once.
+    #[property(id = "-Ba421-NnCBV4M5pjXZvbjzM9x7-TxPHhAoetaHjPpQ")]
     pub branches: Json,
 }

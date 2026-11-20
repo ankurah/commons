@@ -1,6 +1,6 @@
 //! Writes what `mint` minted into the crate's sources: each model's file of events beside
-//! the struct that declares it, which is given its model's minted id (`declaring`). A file
-//! the kept mint has is replaced.
+//! the struct that declares it, which is given the minted ids of its model and of each
+//! property (`declaring`). A file the kept mint has is replaced.
 
 use std::{fs, io, path::PathBuf};
 
@@ -24,13 +24,13 @@ pub enum WriteError {
 }
 
 /// Writes the files of `minted`. Every file's text is made before any is written, so that a
-/// declaration that cannot be given its id stops the mint with every file as it was.
+/// declaration that cannot be given its ids stops the mint with every file as it was.
 pub fn write(minted: &[MintedFile]) -> Result<(), WriteError> {
     let mut files = Vec::with_capacity(2 * minted.len());
     for file in minted {
         let text = akev::write(&file.geneses).map_err(|source| WriteError::Akev { path: file.path.clone(), source })?;
         let source = fs::read_to_string(&file.source).map_err(|source| WriteError::Io { path: file.source.clone(), source })?;
-        let declared = declaring::declared(&file.source, &source, file.descriptor.name, file.model)?;
+        let declared = declaring::declared(&file.source, &source, file.descriptor.name, file.model, &file.properties)?;
         files.push((&file.path, text));
         files.push((&file.source, declared));
     }

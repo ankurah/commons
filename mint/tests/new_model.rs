@@ -1,6 +1,6 @@
 //! Minting a model declared anew. The tool builds from the declarations alone, before the
-//! model has a kept file or an id; it mints the model and gives its struct the id, and, built
-//! again, it verifies the mint.
+//! model has a kept file or an id; it mints the model and gives its struct the model's id and
+//! its field the property's, and, built again, it verifies the mint.
 
 use std::{
     fs,
@@ -88,8 +88,13 @@ fn a_model_declared_anew_is_minted_from_its_declaration_alone() {
     assert_eq!(events.len(), 3, "the model, the property `words` and its link:\n{text}");
     assert!(text.contains(r#"lww: { label: "cognition.hunch", name: "Hunch" }, member: system:model"#), "{text}");
     assert!(text.contains(r#"    name: "words""#), "{text}");
-    let declared = format!("#[model(label = \"cognition.hunch\")]\n#[model(id = \"{}\")]\n", events[0].entity_id);
-    assert!(fs::read_to_string(cognition.join("hunch.rs")).unwrap().contains(&declared));
+    let declared = fs::read_to_string(cognition.join("hunch.rs")).unwrap();
+    assert!(
+        declared.contains(&format!("#[model(label = \"cognition.hunch\")]\n#[model(id = \"{}\")]\n", events[0].entity_id)),
+        "{declared}"
+    );
+    let words = format!("    #[active_type(LWW)]\n    #[property(id = \"{}\")]\n    pub words: String,\n", events[1].entity_id);
+    assert!(declared.contains(&words), "{declared}");
     for kept in ["intuition.akev", "intention.akev"] {
         assert_eq!(
             fs::read_to_string(cognition.join(kept)).unwrap(),

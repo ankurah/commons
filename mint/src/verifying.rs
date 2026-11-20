@@ -5,8 +5,8 @@
 //! - the files read: every block builds an event, the genesis of the entity its header names;
 //! - each file states exactly the events the declarations need, the definitions of its model
 //!   as its struct declares it and, beside `graph.edge_kind`'s, the records of the kinds of
-//!   edge the `graph` namespace's table lists; and the struct declares the id the file states
-//!   for its model.
+//!   edge the `graph` namespace's table lists; and the struct declares the ids the file states:
+//!   its model's, and each property's on the field that declares it.
 //!
 //! It does not check who minted the events, since nothing is signed.
 
@@ -51,6 +51,10 @@ pub enum Failure {
     Unneeded(EntityId),
     #[error("states the model's id as {stated}, and its struct declares {declared:?}")]
     OtherId { stated: EntityId, declared: Option<&'static str> },
+    #[error("states the id of `{struct_name}`'s property `{field}` as {stated}, and the field declares none")]
+    NoPropertyId { struct_name: &'static str, field: &'static str, stated: EntityId },
+    #[error("states the id of `{struct_name}`'s property `{field}` as {stated}, and the field declares {declared}")]
+    OtherPropertyId { struct_name: &'static str, field: &'static str, stated: EntityId, declared: &'static str },
 }
 
 /// What `verify` checked.
@@ -93,6 +97,19 @@ pub fn verify(src: &Path, namespaces: &'static [Namespace]) -> Result<Verified, 
         }
         if file.descriptor.explicit_id != Some(file.model.to_base64().as_str()) {
             return failed(Failure::OtherId { stated: file.model, declared: file.descriptor.explicit_id });
+        }
+        // `mint` gives the properties' ids in the order the struct declares the properties.
+        let struct_name = file.descriptor.name;
+        for (&(field, stated), declared) in
+            file.properties.iter().zip(file.descriptor.properties.iter().map(|property| property.explicit_id))
+        {
+            match declared {
+                None => return failed(Failure::NoPropertyId { struct_name, field, stated }),
+                Some(declared) if declared != stated.to_base64() => {
+                    return failed(Failure::OtherPropertyId { struct_name, field, stated, declared })
+                }
+                Some(_) => {}
+            }
         }
     }
     Ok(Verified { files: minted.len(), events: minted.iter().map(|file| file.geneses.len()).sum() })

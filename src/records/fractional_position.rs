@@ -17,5 +17,6 @@ use serde::{Deserialize, Serialize};
 #[model(no_ffi)]
 pub struct FractionalPosition {
     #[active_type(LWW)]
+    #[property(id = "LpXXe33UW5ZuhLTzFdRGS0tsB2_nO8CswNNo77jy82U")]
     pub key: String,
 }

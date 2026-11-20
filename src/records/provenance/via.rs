@@ -13,5 +13,6 @@ use serde::{Deserialize, Serialize};
 #[model(id = "rJGiTNzdN5kxd_hM7FFF5I2Fs8HGIsPFIf--4aCx3Ng")]
 #[model(no_ffi)]
 pub struct Via {
+    #[property(id = "TPAZQ-engXvv1VeoJ2lTtWwXtmL04IoKDBK2Qaq6cEw")]
     pub via: RefMap,
 }

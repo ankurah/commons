@@ -12,9 +12,11 @@ use serde::{Deserialize, Serialize};
 #[model(no_ffi)]
 pub struct Edited {
     #[active_type(LWW)]
+    #[property(id = "LrgsFF2Cuew4YHBy6DkioTxKgxW2M5uM97PDgTLhY4c")]
     pub edited: Timestamp,
     /// Optional so that an importer can say a record was edited without
     /// naming who; an application may require it.
     #[active_type(LWW)]
+    #[property(id = "bU9rfGhXCIhhq3gGRTkkSP_pGENGUpwUspLpg-wlu_w")]
     pub by: Option<Ref<Principal>>,
 }

@@ -24,21 +24,29 @@ string_enum!(TaskStatus);
 #[model(no_ffi)]
 pub struct Task {
     #[active_type(LWW)]
+    #[property(id = "S_IBUYg8QStL93yTW4v26MeORGHmjeq2sFf36uVPohE")]
     pub title: String,
     #[active_type(YrsString)]
+    #[property(id = "i2kBgC5IXbo8yXlBxZ1eZetrm69joZvToDCW-salKZM")]
     pub what: String,
     #[active_type(YrsString)]
+    #[property(id = "eH-ZqcoIcC96FABk6cf_HKwZKCyS3JfHw1SOHWM7nj4")]
     pub why: String,
     #[active_type(YrsString)]
+    #[property(id = "zW8lWRp5MUP37WR3uFqiI-eUrYkPmvgW4Y41ep-F2aE")]
     pub done_when: String,
     #[active_type(LWW)]
+    #[property(id = "2010qyoWFMap5_AUSk76c43Ur67C-zjbMC0N1qIR6tY")]
     pub status: TaskStatus,
     /// The reason the task is on hold. Set means held.
     #[active_type(LWW)]
+    #[property(id = "_BqydT7p2z9GNcMMVybQkCkcqEjgq-_vW3JiA2o4V2U")]
     pub hold: Option<String>,
     /// 0 is most urgent.
     #[active_type(LWW)]
+    #[property(id = "guiu-VI_31x6RXS2K7x7x3SNGnjsJP54XH_lwETHXjY")]
     pub priority: Option<i64>,
     /// An array of strings.
+    #[property(id = "6TM5QGG5VRvtXBSqwdg3-ohmJ1q2BNV_Sb9hlpf8Wfo")]
     pub labels: Json,
 }

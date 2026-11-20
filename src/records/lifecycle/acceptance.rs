@@ -25,11 +25,14 @@ string_enum!(AcceptanceStatus);
 #[model(no_ffi)]
 pub struct Acceptance {
     #[active_type(LWW)]
+    #[property(id = "Pg3gkQMidFKKcnyiifxC6lu_IjptqHI2WKHJ5ahMQQ4")]
     pub status: AcceptanceStatus,
     /// Who answered. None while the record is proposed.
     #[active_type(LWW)]
+    #[property(id = "ocYOENr4MIrzykeI50bIyBnZYgbgKEVQScPMTdPaYLM")]
     pub by: Option<Ref<Principal>>,
     /// When it was answered. None while the record is proposed.
     #[active_type(LWW)]
+    #[property(id = "Mwc6ua0n6wjoNYPAup2fX7ElTgcbsfLRayVPKJXgrfU")]
     pub answered: Option<Timestamp>,
 }

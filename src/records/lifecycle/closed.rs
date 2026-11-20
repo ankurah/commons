@@ -17,15 +17,19 @@ use serde::{Deserialize, Serialize};
 #[model(no_ffi)]
 pub struct Closed {
     #[active_type(LWW)]
+    #[property(id = "PF26Ux3-82XoWD_gSrdZH5rIlraucNAJTdghBRGuLlE")]
     pub closed: Option<Timestamp>,
     #[active_type(LWW)]
+    #[property(id = "jSXliJhbzAxIhPBoS0qqsqqUnuj6I7rmq9wBg1XEl-U")]
     pub by: Option<Ref<Principal>>,
     /// How it ended, as one word in snake case: an intention `fulfilled` or
     /// `withdrawn`; a decision `superseded` or `repealed`; a message
     /// `resolved` or `deleted`; an expectation `held`, `failed` or
     /// `inconclusive`; a scope `done` or `abandoned`.
     #[active_type(LWW)]
+    #[property(id = "Pz8uI2UII5DiKMoa1MXLGUKharPn1dtMmen3ZK7C0bY")]
     pub outcome: Option<String>,
     #[active_type(LWW)]
+    #[property(id = "pvDpaO5E8DWlt4Ik9_xOzXknPydsdnT-8n2iYnBuLBc")]
     pub reason: Option<String>,
 }
