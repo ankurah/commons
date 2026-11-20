@@ -15,8 +15,11 @@ use serde::{Deserialize, Serialize};
 #[model(no_ffi)]
 pub struct Message {
     #[active_type(YrsString)]
+    #[property(id = "HGgN3Tv-a_yhGS2DpsapOGK8L3KbXp-17TeZcUJADRA")]
     pub content: String,
+    #[property(id = "fRuMFZ3if9rZLjbVQgvin6MLU0h3nkGeyNxb5m-6SFg")]
     pub reply_to: Option<Ref<Message>>,
     /// The first message of the thread this one belongs to.
+    #[property(id = "DmnIbHs6iAFp2EXXJZlGidreEH6iHOB9aH-DrqLjS4A")]
     pub thread: Option<Ref<Message>>,
 }

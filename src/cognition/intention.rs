@@ -12,7 +12,9 @@ use serde::{Deserialize, Serialize};
 #[model(no_ffi)]
 pub struct Intention {
     #[active_type(LWW)]
+    #[property(id = "BPKD7qvFa6kENqdAWQc62bzM_3lnAnaLbpEUYIxJDVA")]
     pub title: String,
     #[active_type(LWW)]
+    #[property(id = "iDl_GO55nXHHAgtTXOPJFECE_Luscg5XcT5LYRTyiv0")]
     pub description: String,
 }

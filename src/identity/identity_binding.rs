@@ -10,10 +10,12 @@ use serde::{Deserialize, Serialize};
 #[model(id = "vWU3HdKaBasO5kRllSoq1yZmNGvORMT24tH1lv5Fd0k")]
 #[model(no_ffi)]
 pub struct IdentityBinding {
+    #[property(id = "6tZXfKjev23XhjBRqKMipFu3ITlb0dGfd6GA_ZxvkYY")]
     pub principal: Ref<Principal>,
     /// For a person, the account at the service that signed them in, such as
     /// `github:<numeric id>`. For an agent, the session it runs in, such as
     /// `claude-code:<session>/<agent>`.
     #[active_type(LWW)]
+    #[property(id = "TCCXz_n-W51q-SN5hHb2Hr_1GkvdzN1EzCK1z0KOkrU")]
     pub subject: String,
 }

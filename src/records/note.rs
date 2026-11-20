@@ -8,5 +8,6 @@ use serde::{Deserialize, Serialize};
 #[model(no_ffi)]
 pub struct Note {
     #[active_type(LWW)]
+    #[property(id = "I6awDLf1K9r3euif_oIvZ40xUFTyhZFrlw-wfX5aqu8")]
     pub note: Option<String>,
 }

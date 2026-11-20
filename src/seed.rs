@@ -127,7 +127,7 @@ fn kept_mint() -> Result<Vec<Attested<Event>>, SeedError> {
 mod tests {
     use super::*;
     use crate::namespaces::NAMESPACES;
-    use ankurah::{core::schema::ModelStructDescriptor, proto::EntityState, EntityId, ModelId, PermissiveAgent};
+    use ankurah::{core::schema::ModelStructDescriptor, proto::EntityState, EntityId, ModelId, PermissiveAgent, PropertyId};
     use ankurah_storage_sled::SledStorageEngine;
     use ankurah_storage_sqlite::SqliteStorageEngine;
     use std::sync::Arc;
@@ -149,13 +149,18 @@ mod tests {
     }
 
     /// Registration binds a model through the catalog's local resolution before it would
-    /// register anything; every model resolves there to its minted definition, so registering
-    /// it mints nothing. The kinds of edge read as the table states them.
+    /// register anything; every model resolves there to its minted definition, and each of its
+    /// properties to the id its field declares, so registering it mints nothing and nothing
+    /// binds by name. The kinds of edge read as the table states them.
     async fn every_model_binds_to_its_minted_definition<SE: StorageEngine + Send + Sync + 'static>(engine: SE) {
         let node = seeded(engine).await;
         let epoch = node.system.system_epoch().unwrap();
         for (descriptor, id) in declared_models() {
             assert_eq!(descriptor.bind_local(&node.catalog, epoch).unwrap(), ModelId::EntityId(id), "{}", descriptor.label);
+            for property in descriptor.properties {
+                let declared = EntityId::from_base64(property.explicit_id.expect("every property declares its minted id")).unwrap();
+                assert_eq!(property.resolved_id(epoch).unwrap(), PropertyId::EntityId(declared), "{}.{}", descriptor.label, property.field);
+            }
         }
         #[cfg(feature = "graph")]
         {

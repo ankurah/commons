@@ -12,7 +12,9 @@ use serde::{Deserialize, Serialize};
 #[model(no_ffi)]
 pub struct Claim {
     #[active_type(LWW)]
+    #[property(id = "F1hEoa4E8S3xslilO0RED7M52SDpH9FPE_wOQ6ZJssY")]
     pub title: String,
     #[active_type(LWW)]
+    #[property(id = "ScTsNP3ag-Kl8VkaqkUFRYFTqWqvcId6maYzX2kgqEc")]
     pub words: String,
 }

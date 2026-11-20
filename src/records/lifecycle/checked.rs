@@ -16,7 +16,9 @@ use serde::{Deserialize, Serialize};
 #[model(no_ffi)]
 pub struct Checked {
     #[active_type(LWW)]
+    #[property(id = "H7fSKvRKOrZmG_2z3voFMLQ4eeO06OM15IDZ4wuPkyE")]
     pub checked: Option<Timestamp>,
     #[active_type(LWW)]
+    #[property(id = "2oBVJ-u-dW072-V7p5wt6a9foW_7WwUNUqMxiVRU89Q")]
     pub by: Option<Ref<Principal>>,
 }

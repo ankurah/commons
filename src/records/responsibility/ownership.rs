@@ -10,5 +10,6 @@ use serde::{Deserialize, Serialize};
 #[model(id = "QDbyx81eSYyg0U4Q6zFygOV8USLByHAYRnOPo5BcIkA")]
 #[model(no_ffi)]
 pub struct Ownership {
+    #[property(id = "HZGDHguUBj2jRPaUFU-stkebCMx7zMxQP2GSb6MpjAI")]
     pub owner: Ref<Principal>,
 }

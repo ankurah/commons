@@ -16,8 +16,10 @@ use serde::{Deserialize, Serialize};
 pub struct Mention {
     /// Its place among the names in the text, counted from one.
     #[active_type(LWW)]
+    #[property(id = "GiVpFVJWTm8bqYZ6FzJiPCbRW9ClmvEG32Y5rsWpXuw")]
     pub ordinal: i64,
     /// True when an edit of the message added the name, and not the first
     /// writing of it.
+    #[property(id = "iSVc8q7vV0139lJjIz0xkyq5TnN-O0p8Dk36oBSyacg")]
     pub added_by_edit: bool,
 }

@@ -3,13 +3,17 @@
 //!
 //! One module per namespace, one file per model. Each namespace is behind the cargo
 //! feature of the same name, which also turns on the namespaces its models refer to.
-//! `property` holds the property types the namespaces share, in every build.
+//! `property` holds the property types the namespaces share, in every build. `dimension`
+//! holds one for applications built on the Commons.
 //!
 //! The models' definitions are minted once and kept beside their structs, as events in the
-//! text form of `akev`. `seed` loads them into a durable node, so that the models take the
-//! minted ids there; `registration` makes the events of any declaration.
+//! text form of `akev`, and each struct declares the minted ids of its model and of each of
+//! its properties. `seed` loads them into a durable node, where a model and each of its
+//! properties bind by those ids, never by label or name; `registration` makes the events of
+//! any declaration.
 
 pub mod akev;
+pub mod dimension;
 pub mod namespaces;
 pub mod property;
 pub mod registration;

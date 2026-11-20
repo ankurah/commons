@@ -22,10 +22,13 @@ string_enum!(PrincipalKind);
 #[model(no_ffi)]
 pub struct Principal {
     #[active_type(LWW)]
+    #[property(id = "SNpy8mNteUTuGD6sCFVjH_za0g0Y4PcFvHvL4oZItBo")]
     pub kind: PrincipalKind,
     /// The name others type. Not unique.
     #[active_type(LWW)]
+    #[property(id = "d8hkaJmIk-bvv_Nqoh-HakCLfy8V9XXdLKtUhwjm3d0")]
     pub handle: String,
     #[active_type(LWW)]
+    #[property(id = "rZShtG3Z-n1Iq4nQOY8jgmhBPc5u57D8adSW4C7JHuU")]
     pub display_name: String,
 }

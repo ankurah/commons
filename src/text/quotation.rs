@@ -12,11 +12,14 @@ use serde::{Deserialize, Serialize};
 #[model(no_ffi)]
 pub struct Quotation {
     #[active_type(LWW)]
+    #[property(id = "95tSKcm6MH1wnFNnw2K_AEcW_QkwyLn4h4gi7dA0djI")]
     pub text: String,
     /// When the words were said, where known.
     #[active_type(LWW)]
+    #[property(id = "ymCkWj0VZjVMc6gRzrMgwazCc_G04wM0brtjyS9H8J4")]
     pub said: Option<Timestamp>,
     /// The record the words were said or written in, such as a message, where
     /// known.
+    #[property(id = "1B3hxhMRFIWLZG1i3NS3Rixs_kI88YL13FJbcKfbX5o")]
     pub source: Option<DynRef>,
 }

@@ -8,5 +8,6 @@ use serde::{Deserialize, Serialize};
 #[model(id = "WBfBouIRGwozhLge5M5YCwLarOaPLr4ngTYr6IFafDo")]
 #[model(no_ffi)]
 pub struct Distance {
+    #[property(id = "-_XFMjEA3xhBpOIqiv0OUIn9vmMqK2UK6BguEcnF36E")]
     pub meters: f64,
 }

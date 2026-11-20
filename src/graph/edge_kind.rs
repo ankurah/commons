@@ -12,8 +12,10 @@ use serde::{Deserialize, Serialize};
 pub struct EdgeKind {
     /// In snake case, such as `depends_on`.
     #[active_type(LWW)]
+    #[property(id = "so_9VblgkIP3qLuG-Bo4doL6exXukhP0SGHyDqgKeZ8")]
     pub name: String,
     #[active_type(LWW)]
+    #[property(id = "sN0v89SyyA4FGQBZBU4uwV_p1BqPGCFEfMH-LNIt_kI")]
     pub description: String,
 }
 

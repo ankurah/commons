@@ -44,20 +44,32 @@ of each namespace in the list below it:
 3. writes the events into `<model>.akev` beside the `<model>.rs` that declares the model;
 4. gives the struct its model's id: it parses the source and replaces the literal of the
    `id` option of the struct's `#[model(...)]` attributes, or, when the struct declares
-   none, adds `#[model(id = "<id>")]` after the attribute that gives its label. Other
-   options, attributes and comments stay as written.
+   none, adds `#[model(id = "<id>")]` after the attribute that gives its label;
+5. gives each field that declares a property that property's id, the same way: it
+   replaces the literal of the `id` option of the field's `#[property(...)]` attributes,
+   or, when the field declares none, adds `#[property(id = "<id>")]` directly above the
+   field, after its doc comment and its other attributes. The fields it gives ids are the
+   ones the derive makes properties of: every named field but one marked
+   `#[model(ephemeral)]`.
 
-Every file's text is made before any file is written, so a struct that declares two ids,
-or whose attributes do not read, stops the mint with every file as it was.
+Other options, such as a property's `renamed_from`, attributes and comments stay as
+written. A model and each of its properties then bind by their ids, never by label or
+name.
 
-It does the same for a record of each kind of edge in the table in the `graph`
-namespace's source (`EDGE_KINDS`), its name and description, after `EdgeKind`'s
-definitions in `src/graph/edge_kind.akev`.
+Every file's text is made before any file is written, so a struct or a field that
+declares two ids, a struct whose properties are not those the tool was built with, or
+attributes that do not read, stop the mint with every file as it was.
+
+It mints a record of each kind of edge in the table in the `graph` namespace's source
+(`EDGE_KINDS`), its name and description, as it mints a definition, and writes it after
+`EdgeKind`'s definitions in `src/graph/edge_kind.akev`. A record is not a definition, so
+nothing declares its id; `EdgeKind`'s fields declare their properties' ids as every
+model's do.
 
 Minting a kept mint again therefore changes nothing unless a declaration changed: an
 event whose operations no declaration needs any more gives way to one drawn anew, with a
-new id, and `mint` says how many it drew. It ignores the ids the structs declare: a
-struct that declares none yet, or an old one, is minted all the same.
+new id, and `mint` says how many it drew. It ignores the ids the structs and their fields
+declare: one that declares none yet, or an old one, is minted all the same.
 
 Tests compare the mint with Ankurah itself. Each of the Commons' models is registered,
 without the id it declares, on a fresh durable node; `registration` makes its events from
@@ -148,9 +160,10 @@ It checks, stopping at the first file that fails:
 3. Each file states exactly the events its model's declaration needs, and, for
    `graph.edge_kind`, the records of the kinds of the `graph` namespace's table: minting
    again would keep every one of its events and draw none. The struct declares the id the
-   file states for its model. The declarations are the ones the tool was built with, so
-   after a mint that changed an id, `verify` passes once the tool is built again, as
-   `cargo run` does.
+   file states for its model, and each field that declares a property the id the file
+   states for that property; a failure names the file, the struct and the field. The
+   declarations are the ones the tool was built with, so after a mint that changed an id,
+   `verify` passes once the tool is built again, as `cargo run` does.
 
 It does not establish:
 
@@ -169,8 +182,8 @@ fails naming the first one missing on either side.
 
 The text of the kept mint is not in that list: `src/seed.rs` compiles it in, in a list of
 its own, so that the tool builds from the declarations alone. A model declared anew is
-listed with no id, and `mint` writes its file and gives its struct the id; its file is
-then added to the seed's list, which the crate's seed test checks.
+listed with no id, and `mint` writes its file and gives its struct and its fields their
+ids; its file is then added to the seed's list, which the crate's seed test checks.
 
 It relies on one convention more: a model is a struct with `#[derive(Model, ..)]` written
 directly on it, in a file under its namespace's directory in `src/`. A model declared

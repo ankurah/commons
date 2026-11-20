@@ -11,13 +11,17 @@ use serde::{Deserialize, Serialize};
 #[model(no_ffi)]
 pub struct Decision {
     #[active_type(LWW)]
+    #[property(id = "MlBySwOiMNUUic5TRD1yMTQCvzaoWWRLmGCAK-A4bsY")]
     pub title: String,
     #[active_type(LWW)]
+    #[property(id = "f4BAhrdmvd6NquujwcGmyFiJ8IUvs90OwZvEGn6FDrk")]
     pub decision: String,
     /// What led to it, where recorded.
     #[active_type(LWW)]
+    #[property(id = "zpa2AmqBRSy0nN1NkNg4uaYGaXtvYpjfAPuyg-RVo64")]
     pub context: Option<String>,
     /// What follows from it, where recorded.
     #[active_type(LWW)]
+    #[property(id = "mJKAzxaKJqrIIT1vpLxwEa-lETHbrl1uNTPppxOPnJs")]
     pub consequences: Option<String>,
 }

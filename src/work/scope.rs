@@ -15,5 +15,6 @@ use serde::{Deserialize, Serialize};
 #[model(no_ffi)]
 pub struct Scope {
     #[active_type(LWW)]
+    #[property(id = "Plt5j-bbvzLDTdpgDGcNwEr5E9DfN5UU98Ncmapejg4")]
     pub title: String,
 }
