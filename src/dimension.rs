@@ -72,6 +72,7 @@ impl Property for Dimension {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use serde_json::json;
 
     #[test]
     fn a_dimension_is_stored_as_its_millimetres() {
@@ -89,5 +90,16 @@ mod tests {
             assert!(matches!(read, Err(PropertyError::InvalidValue { .. })), "{refused}");
         }
         assert!(matches!(Dimension::from_value(Some(Value::I64(4))), Err(PropertyError::InvalidVariant { .. })));
+        assert!(matches!(Dimension::from_value(None), Err(PropertyError::Missing)));
+        assert!(Dimension::from_millimeters(0.0).is_ok(), "nothing is still a size");
+    }
+
+    // Serde is a second way in, which must refuse what `from_millimeters` refuses.
+    #[test]
+    fn a_dimension_is_a_bare_number_in_json_and_is_checked_when_read() {
+        let width: Dimension = serde_json::from_value(json!(101.6)).unwrap();
+        assert_eq!(width.millimeters(), 101.6);
+        assert_eq!(serde_json::to_value(width).unwrap(), json!(101.6));
+        assert!(serde_json::from_value::<Dimension>(json!(-1.0)).is_err());
     }
 }
